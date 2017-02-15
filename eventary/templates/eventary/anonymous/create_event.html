@@ -1,0 +1,27 @@
+{% extends 'eventary/base.html' %}
+
+{% load bootstrap_tags %}
+{% load static %}
+
+{% block 'extra_head' %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+{{ timedateform.media }}
+{% endblock %}
+
+{% block 'content' %}
+<h2>Propose an event for {{ calendar.title }}</h2>
+
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <table>
+    {{ eventform|as_bootstrap }}
+    {{ timedateform|as_bootstrap }}
+    {{ groupingform|as_bootstrap }}
+    </table>
+    {% for hidden in timedateform.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    <input type="submit" value="OK">
+</form>
+
+{% endblock %}

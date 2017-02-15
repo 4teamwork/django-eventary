@@ -1,0 +1,21 @@
+<a
+class="btn btn-default btn-xs"
+href="{% url 'eventary:editorial-update_event' event.calendar.pk event.pk %}"
+role="button"
+title="Update {{ event.title }}">
+    <i class="glyphicon glyphicon-pencil"></i>
+</a>
+<a
+class="btn btn-default btn-xs"
+href="{% url 'eventary:editorial-publish_event' event.calendar.pk event.pk %}"
+role="button"
+title="Publish {{ event.title }}">
+    <i class="glyphicon glyphicon-ok"></i>
+</a>
+<a
+class="btn btn-default btn-xs"
+href="{% url 'eventary:editorial-delete_event' event.calendar.pk event.pk %}"
+role="button"
+title="Delete {{ event.title }}">
+    <i class="glyphicon glyphicon-trash"></i>
+</a>

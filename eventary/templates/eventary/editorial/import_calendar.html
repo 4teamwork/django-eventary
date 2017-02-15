@@ -1,0 +1,58 @@
+{% extends 'eventary/base.html' %}
+
+{% load eventary_tags %}
+{% load bootstrap_tags %}
+
+{% block 'extra_head' %}
+{{ calendarimportform.media }}
+{% endblock 'extra_head' %}
+
+{% block 'content' %}
+
+    <h1>Calendar import</h1>
+    
+    <form class="form-inline" method="get">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        {{ calendarimportform|as_bootstrap }}
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary glyphicon glyphicon-search"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% if google_cal %}
+    <h2>{{ google_cal.summary }}</h2>
+
+    <p>{{ google_cal.description }}</p>
+
+    <form method="post">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Import</th>
+                    <th>Title</th>
+                    <th>Information</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for field in otherform %}
+                <tr>
+                    <td>{{ field }}</td>
+                    <td>{{ field.label_tag }}</td>
+                    <td>{{ field.help_text|safe|linebreaksbr}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary glyphicon glyphicon-search"></button>
+    </form>
+    {% endif %}
+
+{% endblock %}

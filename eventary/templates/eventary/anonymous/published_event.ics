@@ -1,0 +1,10 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:eventary {{ object.calendar.pk }} {{ object.pk }} -//- 4teamwork AG -//-
+DTSTAMP:{{ object.proposed|date:"omd" }}T120000
+DTSTART:{{ object.eventtimedate_set.first.start_date|date:"omd" }}T{{ object.eventtimedate_set.first.start_time|time:"Hi" }}00
+DTEND:{{ object.eventtimedate_set.first.end_date|date:"omd" }}T{{ object.eventtimedate_set.first.end_time|time:"Hi" }}00
+SUMMARY:{{ object.description }}
+END:VEVENT
+END:VCALENDAR

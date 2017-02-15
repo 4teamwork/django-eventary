@@ -1,0 +1,89 @@
+{% extends 'eventary/base.html' %}
+
+{% load eventary_tags %}
+{% load bootstrap_tags %}
+
+{% block 'extra_head' %}
+{{ form.media }}
+{% endblock %}
+
+{% block 'content' %}
+<h2>{{ calendar.title }}</h2>
+
+<h3>Upcoming proposals</h3>
+
+<form class="form-inline" method="get">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="input-group">
+                    {{ form|as_bootstrap }}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-search"></button>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% if object_list|length %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Actions</th>
+                <th>Date & Time</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for proposal in object_list %}
+            <tr>
+                <td>{{ proposal.title }}</td>
+                <td>
+                    <a
+                    class="btn btn-default btn-xs"
+                    href="{% url 'eventary:anonymous-proposal_details' calendar.pk proposal.pk proposal.secret.secret %}"
+                    role="button"
+                    title="View {{ proposal.title }}">
+                        <i class="glyphicon glyphicon-eye-open"></i>
+                    </a>
+                    <a
+                    class="btn btn-default btn-xs"
+                    href="{% url 'eventary:editorial-update_event' calendar.pk proposal.pk %}"
+                    role="button"
+                    title="Update {{ proposal.title }}">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </a>
+                    <a
+                    class="btn btn-default btn-xs"
+                    href="{% url 'eventary:editorial-delete_event' calendar.pk proposal.pk %}"
+                    role="button"
+                    title="Delete {{ proposal.title }}">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+                <td>{{ proposal|to_full_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if paginator.num_pages > 1 %}
+    <div>
+        {% if page.has_previous %}
+        <a href="?{% url_replace request 'page' page.previous_page_number %}">previous</a>
+        {% endif %}
+        <span>Page {{ page.number }} of {{ paginator.num_pages }}.</span>
+        {% if page.has_next %}
+        <a href="?{% url_replace request 'page' page.next_page_number %}">next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endif %}
+
+<p>Cannot find the proposal you're looking for? <a
+    href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
+    title="Propose an event">Make a new proposal now!</a></p>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'eventary/base.html' %}
+
+{% load eventary_tags %}
+
+{% block 'content' %}
+
+<h1>Calendars</h1>
+
+{% if object_list|length %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Actions</th>
+                <th>Groupings</th>
+                <th># Events</th>
+                <th># Proposals</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for calendar in object_list %}
+            <tr>
+                <td>
+                    <a
+                     href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+                     title="View {{ calendar.title }}">
+                        {{ calendar.title }}
+                    </a>
+                </td>
+                <td>{{ calendar|actions:request.user }}</td>
+                <td>{{ calendar.grouping_set.all|join:", " }}</td>
+                <td>{{ calendar.num_events }}</td>
+                <td>{{ calendar.num_proposals }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<p>Cannot find the calendar you're looking for? <a
+    href="{% url 'eventary:management-create_calendar' %}"
+    title="Create a calendar">Add a new calendar now!</a></p>
+{% endblock %}

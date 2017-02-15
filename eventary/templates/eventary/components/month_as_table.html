@@ -1,0 +1,17 @@
+<table>
+  <tr><th>MO</th><th>DI</th><th>MI</th><th>DO</th><th>FR</th><th>SA</th><th>SO</th></tr>
+{% for week in overview %}
+  <tr>
+  {% for day, events in week %}
+    <td>
+    {% if day %}
+      <span>{{ day }}</span>
+      {% for event in events %}
+        <div><a href="{% url 'eventary:event_details' calendar.pk event.pk %}" title="{{ event }}">{{ event|truncatechars:9 }}</a></div>
+      {% endfor %}
+    {% endif %}
+    </td>
+  {% endfor %}
+  </tr>
+{% endfor %}
+</table>

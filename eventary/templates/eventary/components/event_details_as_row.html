@@ -1,0 +1,12 @@
+{% load eventary_tags %}
+<tr>
+    <td>{{ event|to_full_date }}</td>
+    <td>{{ event.calendar.title }}</td>
+    <td><a
+	{% if event.published %}
+	href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
+ 	{% else %}
+	href="{% url 'eventary:anonymous-proposal_details' event.calendar.pk event.pk event.secret.secret %}"
+ 	{% endif %}
+	title="{{ event.title }}">{{ event.title }}</a></td>
+</tr>

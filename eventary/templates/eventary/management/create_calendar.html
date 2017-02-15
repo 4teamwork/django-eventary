@@ -1,0 +1,13 @@
+{% extends 'eventary/base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block 'content' %}
+<h2>Add a new calendar</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form|as_bootstrap }}
+    <input type="submit" value="add">
+</form>
+{% endblock %}

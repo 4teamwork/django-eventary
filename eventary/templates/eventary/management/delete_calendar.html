@@ -1,0 +1,12 @@
+{% extends 'eventary/base.html' %}
+
+
+{% block 'content' %}
+<h2>Delete {{ calendar.title }}</h2>
+
+<form method="post">
+    <p>Are you sure you want to delete "{{ calendar.title }}"?</p>
+    {% csrf_token %}
+    <input type="submit" value="Confirm">
+</form>
+{% endblock %}

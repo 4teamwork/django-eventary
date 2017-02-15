@@ -1,0 +1,31 @@
+{% extends 'eventary/base.html' %}
+
+{% load static %}
+{% load eventary_tags %}
+
+{% block 'content' %}
+<h2>{{ event.title }}</h2>
+
+<div>
+    {{ event|actions:request.user }}
+</div>
+
+{% if event.image %}
+    <img src="{% static event.image.url %}" title="" alt="" />
+{% endif %}
+
+{% include 'eventary/components/event_details_as_table.html' %}
+
+{% if event.description %}
+<h3>Description</h3>
+<p>{{ event.description }}</p>
+{% endif %}
+
+{% if event.document %}
+<h3>Downloads</h3>
+<div><a href="{% static event.document.url %}" title="">Download info sheet</a></div>
+{% endif %}
+
+<p>Back to <a href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}" title="Back to {{ event.calendar.title }}">{{ event.calendar.title }}</a></p>
+
+{% endblock %}
