@@ -1,6 +1,7 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load i18n %}
 {% load static %}
 
 {% block 'extra_head' %}
@@ -9,7 +10,7 @@
 {% endblock %}
 
 {% block 'content' %}
-<h2>Update {{ event.title }}</h2>
+<h2>{% blocktrans with event_title=event.title %}Update {{ event_title }}{% endblocktrans %}</h2>
 
 <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
@@ -20,7 +21,7 @@
     {% for hidden in timedateform.hidden_fields %}
         {{ hidden }}
     {% endfor %}
-    <input type="submit" value="OK">
+    <input type="submit" value="{% trans 'update' %}">
 </form>
 
 {% endblock %}
