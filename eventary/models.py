@@ -66,7 +66,7 @@ class Event(models.Model):
                                 verbose_name=_('prize'))
     recurring = models.BooleanField(default=False,
                                     help_text=_('recurring event'),
-                                    label=_('recurring event'))
+                                    verbose_name=_('recurring event'))
 
     def __str__(self):
         return "{0} @ {1} by {2}".format(self.title, self.location, self.host)
