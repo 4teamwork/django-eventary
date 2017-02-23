@@ -397,7 +397,7 @@ msgstr "Anzahl Veranstaltungsvorschläge"
 #: templates/eventary/management/list_calendars.html:27
 #, python-format
 msgid "View %(calendar_title)s"
-msgstr "%(calendar_title) ansehen"
+msgstr "%(calendar_title)s ansehen"
 
 #: templates/eventary/anonymous/list_calendars.html:8
 msgid "calendars"
