@@ -1,11 +1,12 @@
 {% load eventary_tags %}
+{% load i18n %}
 
 <table class="table table-striped table-hover">
     <tr>
-        <th>Date & time</th><td>{{ event|to_full_date }}</td>
+        <th>{% trans 'Date & time' %}</th><td>{{ event|to_full_date }}</td>
     </tr>
     <tr>
-        <th>Location</th><td>{{ event.location }}</td>
+        <th>{% trans 'Location' %}</th><td>{{ event.location }}</td>
     </tr>
     {% for grouping, groups in groupings.items %}
     <tr>
@@ -13,9 +14,9 @@
     </tr>
     {% endfor %}
     <tr>
-        <th>Entry fee</th><td>{{ event.prize }}</td>
+        <th>{% trans 'Entry fee' %}</th><td>{{ event.prize }}</td>
     </tr>
     <tr>
-        <th>Host</th><td>{{ event.host }}</td>
+        <th>{% trans 'Host' %}</th><td>{{ event.host }}</td>
     </tr>
 </table>

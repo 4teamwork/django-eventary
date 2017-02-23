@@ -1,6 +1,7 @@
 import datetime
 
 from django import forms
+from django.utils.translation import ugettext as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
 from django_select2.forms import Select2MultipleWidget
@@ -10,14 +11,18 @@ from .models import Calendar, Grouping, Group, Event
 
 class GenericFilterForm(forms.Form):
 
-    from_date = forms.DateField(widget=DateTimePicker(options={
-        "format": "YYYY-MM-DD",
-        "pickTime": False
-    }), required=False)
-    to_date = forms.DateField(widget=DateTimePicker(options={
-        "format": "YYYY-MM-DD",
-        "pickTime": False
-    }), required=False)
+    from_date = forms.DateField(
+        label=_('from'),
+        required=False,
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False})
+    )
+    to_date = forms.DateField(
+        label=_('to'),
+        required=False,
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False})
+    )
 
     def __init__(self, *args, **kwargs):
         super(GenericFilterForm, self).__init__(*args, **kwargs)
@@ -64,14 +69,18 @@ class GenericFilterForm(forms.Form):
 
 class FilterForm(forms.Form):
 
-    from_date = forms.DateField(widget=DateTimePicker(options={
-        "format": "YYYY-MM-DD",
-        "pickTime": False
-    }), required=False)
-    to_date = forms.DateField(widget=DateTimePicker(options={
-        "format": "YYYY-MM-DD",
-        "pickTime": False
-    }), required=False)
+    from_date = forms.DateField(
+        label=_('from'),
+        required=False,
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False})
+    )
+    to_date = forms.DateField(
+        label=_('from'),
+        required=False,
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False})
+    )
 
     def __init__(self, *args, **kwargs):
         calendar = kwargs.pop('calendar', None)
@@ -125,6 +134,7 @@ class FilterForm(forms.Form):
 class CalendarForm(forms.ModelForm):
 
     groupings = forms.MultipleChoiceField(
+        label=_('groupings'),
         required=False,
         widget=forms.CheckboxSelectMultiple
     )
@@ -166,11 +176,9 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = [
-            'title', 'host', 'location', 'image', 'document',
-            'homepage', 'description', 'comment', 'prize',
-            'recurring'
-        ]
+        fields = ['title', 'host', 'location', 'image', 'document',
+                  'homepage', 'description', 'comment', 'prize',
+                  'recurring']
 
 
 class EventEditorialForm(forms.ModelForm):
@@ -181,22 +189,30 @@ class EventEditorialForm(forms.ModelForm):
 
 
 class TimeDateForm(forms.Form):
-    start_date = forms.DateField(widget=DateTimePicker(options={
-        "format": "YYYY-MM-DD",
-        "pickTime": False
-    }), required=True)
-    start_time = forms.TimeField(widget=DateTimePicker(options={
-        "format": "HH:mm",
-        "pickDate": False
-    }), required=False)
-    end_date = forms.DateField(widget=DateTimePicker(options={
-        "format": "YYYY-MM-DD",
-        "pickTime": False
-    }), required=False)
-    end_time = forms.TimeField(widget=DateTimePicker(options={
-        "format": "HH:mm",
-        "pickDate": False
-    }), required=False)
+    start_date = forms.DateField(
+        label=_('start date'),
+        required=True,
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False})
+    )
+    start_time = forms.TimeField(
+        label=_('start time'),
+        required=False,
+        widget=DateTimePicker(options={"format": "HH:mm",
+                                       "pickDate": False})
+    )
+    end_date = forms.DateField(
+        label=_('end date'),
+        required=False,
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False})
+    )
+    end_time = forms.TimeField(
+        label=_('end time'),
+        required=False,
+        widget=DateTimePicker(options={"format": "HH:mm",
+                                       "pickDate": False})
+    )
 
 
 class EventGroupingForm(forms.Form):

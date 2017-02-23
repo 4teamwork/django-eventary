@@ -1,7 +1,8 @@
 {% extends 'eventary/base.html' %}
 
-{% load eventary_tags %}
 {% load bootstrap_tags %}
+{% load eventary_tags %}
+{% load i18n %}
 
 {% block 'extra_head' %}
 {{ form.media }}
@@ -9,23 +10,25 @@
 
 {% block 'content' %}
 
-<h1>Eventary - an inventary for events</h1>
+<h1>{% trans 'Eventary - an inventary for events' %}</h1>
 
-<h2>Calendars</h2>
+<h2>{% trans 'Calendars' %}</h2>
 
 {% if calendar_list|length %}
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>Title</th>
-                <th># Events</th>
-                <th># Proposals</th>
+                <th>{% trans 'Title' %}</th>
+                <th>{% trans '# Events' %}</th>
+                <th>{% trans '# Proposals' %}</th>
             </tr>
         </thead>
         {% for calendar in calendar_list %}
         <tr>
             <td>
-                <a href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}" title="View {{ calendar.title }}">
+                <a
+                 href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+                 title="{% blocktrans with calendar_title=calendar.title %}View {{ calendar_title }}{% endblocktrans %}">
                 {{ calendar.title }}
                 </a>
             </td>
@@ -58,11 +61,11 @@
     <table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>Event</th>
-            <th>Actions</th>
-            <th>Calendar</th>
-            <th>Date & time</th>
-            <th>Location</th>
+            <th>{% trans 'Event' %}</th>
+            <th>{% trans 'Actions' %}</th>
+            <th>{% trans 'Calendar' %}</th>
+            <th>{% trans 'Date & time' %}</th>
+            <th>{% trans 'Location' %}</th>
         </tr>
     </thead>
     <tbody>
@@ -70,8 +73,8 @@
         <tr>
             <td>
                 <a
-                href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
-                title="View {{ event.title }}">
+                 href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
+                 title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
                     {{ event.title }}
                 </a>
             </td>
@@ -89,18 +92,20 @@
         {% if event_list.has_previous %}
         <a
          href="?{% url_replace request 'event_page' event_list.previous_page_number %}"
-         title="previous page">previous</a>
+         title="{% trans 'previous page' %}">{% trans 'previous' %}</a>
         {% endif %}
-        <span>Page {{ event_list.number }} of {{ event_list.paginator.num_pages }}</span>
+        <span>{% blocktrans with page_num=event_list.number num_pages=event_list.paginator.num_pages %}
+            Page {{ page_num }} of {{ num_pages }}
+        {% endblocktrans %}</span>
         {% if event_list.has_next %}
         <a 
             href="?{% url_replace request 'event_page' event_list.next_page_number %}"
-            title="next page">next</a>
+            title="{% trans 'next page' %}">{% trans 'next' %}</a>
         {% endif %}
     </div>
     {% endif %}
 {% else %}
-    <p>No upcoming events!</p>
+    <p>{% trans 'No upcoming events!' %}</p>
 {% endif %}
 
 {% endblock %}

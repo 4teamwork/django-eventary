@@ -1,17 +1,18 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load i18n %}
 
 {% block 'extra_head' %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
 {% endblock %}
 
 {% block 'content' %}
-<h2>Edit {{ calendar.title }}</h2>
+<h2>{% blocktrans with calendar_title=calendar.title %}Update {{ calendar_title }}{% endblocktrans %}</h2>
 
 <form method="post">
     {% csrf_token %}
     {{ form|as_bootstrap }}
-    <input type="submit" value="change">
+    <input type="submit" value="{% trans 'update' %}">
 </form>
 {% endblock %}

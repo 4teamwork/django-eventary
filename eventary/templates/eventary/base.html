@@ -1,27 +1,27 @@
 {% load eventary_tags %}
 {% load bootstrap_tags %}
 {% load bootstrap_themes %}
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{% block 'title' %}Eventary{% endblock %}</title>
+        <title>{% block 'title' %}{% trans 'eventary' %}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="charset" content="utf-8">
-
         {% block 'head' %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         {% bootstrap_styles theme='flatly' type='min.css' %}
         {% bootstrap_script use_min=True %}
-        {% block 'extra_head' %}
-        {% endblock %}
+            {% block 'extra_head' %}
+            {% endblock %}
         {% endblock %}
     </head>
     <body style="padding-top: 60px;">
         {% block 'body' %}
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
-		{{ request.user|navigation }}
+		        {{ request.user|navigation }}
             </div>
         </nav>
         <div class="container">

@@ -1,12 +1,15 @@
 {% extends 'eventary/base.html' %}
 
+{% load i18n %}
 
 {% block 'content' %}
-<h2>Delete {{ event.title }}</h2>
+<h2>{% trans 'Delete' %} {{ event.title }}</h2>
 
 <form method="post">
-    <p>Are you sure you want to delete "{{ event.title }}"?</p>
+    <p>{% blocktrans with event_title=event.title %}
+    Are you sure you want to delete "{{ event_title }}"?
+    {% endblocktrans %}</p>
     {% csrf_token %}
-    <input type="submit" value="Confirm">
+    <input type="submit" value="{% trans 'confirm' %}">
 </form>
 {% endblock %}

@@ -1,14 +1,15 @@
+{% load i18n %}
 <a
-class="btn btn-default btn-xs"
-href="{% url 'eventary:management-update_calendar' calendar.pk %}"
-role="button"
-title="Update {{ calendar.title }}">
+ class="btn btn-default btn-xs"
+ href="{% url 'eventary:management-update_calendar' calendar.pk %}"
+ role="button"
+ title="{% blocktrans with calendar_title=calendar.title %}Update {{ calendar_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-pencil"></i>
 </a>
 <a
-class="btn btn-default btn-xs"
-href="{% url 'eventary:management-delete_calendar' calendar.pk %}"
-role="button"
-title="Delete {{ calendar.title }}">
+ class="btn btn-default btn-xs"
+ href="{% url 'eventary:management-delete_calendar' calendar.pk %}"
+ role="button"
+ title="{% blocktrans with calendar_title=calendar.title %}Delete {{ calendar_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-trash"></i>
 </a>
