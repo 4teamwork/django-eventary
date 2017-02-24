@@ -1,18 +1,33 @@
 from django.core.urlresolvers import reverse
+from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import DeleteView, SingleObjectMixin
-from django.views.generic import View
+from django.views.generic import ListView, View
 from django.shortcuts import get_object_or_404, redirect
 
 from .anonymous import CalendarDetailView, EventCreateView
 from .management import LandingView as ManagementLandingView
-from .management import CalendarListView as ManagementCalendarListView
 
-from ..models import Event
+from ..models import Calendar, Event
 
 
-class CalendarListView(ManagementCalendarListView):
+class CalendarListView(ListView):
 
+    model = Calendar
     template_name = 'eventary/editorial/list_calendars.html'
+
+    def get_queryset(self):
+        qs = super(CalendarListView, self).get_queryset()
+        qs = qs.annotate(
+            num_events=Sum(Case(When(
+                event__published=True,
+                then=1
+            )), output_field=IntegerField(), distinct=True),
+            num_proposals=Sum(Case(When(
+                event__published=False,
+                then=1
+            )), output_field=IntegerField(), distinct=True),
+        )
+        return qs
 
 
 class EventDeleteView(DeleteView):
