@@ -7,8 +7,10 @@ from django.views.generic import ListView, TemplateView
 from ..forms import CalendarForm, GenericFilterForm
 from ..models import Calendar, Event, EventTimeDate
 
+from .mixins import ManagementRequiredMixin
 
-class CalendarCreateView(CreateView):
+
+class CalendarCreateView(ManagementRequiredMixin, CreateView):
 
     form_class = CalendarForm
     model = Calendar
@@ -24,7 +26,7 @@ class CalendarCreateView(CreateView):
         )
 
 
-class CalendarDeleteView(DeleteView):
+class CalendarDeleteView(ManagementRequiredMixin, DeleteView):
 
     model = Calendar
     template_name = 'eventary/management/delete_calendar.html'
@@ -33,7 +35,7 @@ class CalendarDeleteView(DeleteView):
         return reverse('eventary:management-list_calendars')
 
 
-class CalendarListView(ListView):
+class CalendarListView(ManagementRequiredMixin, ListView):
 
     model = Calendar
     template_name = 'eventary/management/list_calendars.html'
@@ -53,7 +55,7 @@ class CalendarListView(ListView):
         return qs
 
 
-class CalendarUpdateView(UpdateView):
+class CalendarUpdateView(ManagementRequiredMixin, UpdateView):
 
     form_class = CalendarForm
     model = Calendar
@@ -63,7 +65,7 @@ class CalendarUpdateView(UpdateView):
         return reverse('eventary:management-list_calendars')
 
 
-class LandingView(TemplateView):
+class LandingView(ManagementRequiredMixin, TemplateView):
 
     template_name = 'eventary/management/landing.html'
 

@@ -9,8 +9,10 @@ from .management import LandingView as ManagementLandingView
 
 from ..models import Calendar, Event
 
+from .mixins import EditorialOrManagementRequiredMixin
 
-class CalendarListView(ListView):
+
+class CalendarListView(EditorialOrManagementRequiredMixin, ListView):
 
     model = Calendar
     template_name = 'eventary/editorial/list_calendars.html'
@@ -30,7 +32,7 @@ class CalendarListView(ListView):
         return qs
 
 
-class EventDeleteView(DeleteView):
+class EventDeleteView(EditorialOrManagementRequiredMixin, DeleteView):
 
     model = Event
     template_name = 'eventary/editorial/delete_event.html'
@@ -39,7 +41,7 @@ class EventDeleteView(DeleteView):
         return reverse('eventary:redirector')
 
 
-class EventEditView(EventCreateView):
+class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
 
     template_name = 'eventary/editorial/update_event.html'
 
@@ -118,7 +120,9 @@ class EventEditView(EventCreateView):
         return to_return
 
 
-class EventPublishView(SingleObjectMixin, View):
+class EventPublishView(EditorialOrManagementRequiredMixin,
+                       SingleObjectMixin,
+                       View):
 
     model = Event
 
@@ -129,12 +133,12 @@ class EventPublishView(SingleObjectMixin, View):
         return redirect('eventary:redirector')
 
 
-class LandingView(ManagementLandingView):
+class LandingView(EditorialOrManagementRequiredMixin, ManagementLandingView):
 
     template_name = 'eventary/editorial/landing.html'
 
 
-class ProposalListView(CalendarDetailView):
+class ProposalListView(EditorialOrManagementRequiredMixin, CalendarDetailView):
 
     template_name = 'eventary/editorial/list_proposals.html'
 
