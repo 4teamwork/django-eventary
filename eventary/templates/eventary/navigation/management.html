@@ -1,3 +1,4 @@
+{% load eventary_tags %}
 {% load i18n %}
 <div class="navbar-header">
   <a class="navbar-brand" href="{% url 'eventary:redirector' %}">{% trans 'Home' %}</a>
@@ -16,9 +17,18 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu">
-        <li><a href="{% url 'eventary:management-list_calendars' %}">{% trans 'List Calendars' %}</a></li>
-        <li><a href="{% url 'eventary:management-create_calendar' %}">{% trans 'Add Calendar' %}</a></li>
+        <li><a href="{% url 'eventary:management-list_calendars' %}">
+          {% trans 'List Calendars' %}
+        </a></li>
+        <li><a href="{% url 'eventary:management-create_calendar' %}">
+          {% trans 'Add Calendar' %}
+        </a></li>
       </ul>
     </li>
   </ul>
+
+  <p class="navbar-text navbar-right">
+    {% trans 'signed in as:' as label %}{{ label|capfirst }}
+    {{ user|eventary_auth_group|capfirst }}
+  </p>
 </div>
