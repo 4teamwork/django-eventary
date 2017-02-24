@@ -1,3 +1,4 @@
+{% load eventary_tags %}
 {% load i18n %}
 <div class="navbar-header">
     <a class="navbar-brand" href="{% url 'eventary:redirector' %}">{% trans 'Home' %}</a>
@@ -20,4 +21,9 @@
       </ul>
     </li>
   </ul>
+
+  <p class="navbar-text navbar-right">
+    {% trans 'signed in as:' as label %}{{ label|capfirst }}
+    {{ user|eventary_auth_group|capfirst }}
+  </p>
 </div>
