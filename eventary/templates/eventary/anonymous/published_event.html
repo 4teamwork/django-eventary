@@ -12,7 +12,7 @@
 </div>
 
 {% if event.image %}
-<img src="{% static event.image.url %}" title="{{ event.title }}" alt="{{ event.title }}" />
+<img src="{% get_media_prefix %}{{event.image.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
 {% endif %}
 
 {% include 'eventary/components/event_details_as_table.html' %}
@@ -25,7 +25,7 @@
 {% if event.document %}
 <h3>{% trans 'Downloads' %}</h3>
 <div><a
-      href="{% static event.document.url %}"
+      href="{% get_media_prefix %}{{ event.document.url }}"
       title="{% trans 'download info sheet' %}">{% trans 'download info sheet' %}</a></div>
 {% endif %}
 
