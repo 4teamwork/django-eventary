@@ -89,19 +89,19 @@ urlpatterns = [
         name='anonymous-create_event'
     ),
     url(  # detailed event view
-        r'cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]*)/$',
+        r'cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]+)/$',
         anonymous.EventDetailView.as_view(),
         name='anonymous-event_details'
     ),
     url(  # detailed view of a proposal
-        r'cal_(?P<cal_pk>[0-9]+)/prop_(?P<pk>[0-9]+)/(?P<secret>[0-9a-f\-]{36})/$',
+        r'cal_(?P<calendar_pk>[0-9]+)/prop_(?P<pk>[0-9]+)/(?P<secret>[0-9a-f\-]{36})/$',
         anonymous.ProposalDetailView.as_view(),
         name='anonymous-proposal_details'
     ),
 
     # views that require porting to class views
     url(
-        r'^cal_(?P<calendar_id>[0-9]*)/event_(?P<pk>[0-9]*).ics$',
+        r'^cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]+).ics$',
         anonymous.EventICSExportView.as_view(),
         name='anonymous-export_event_to_ics'
     ),
