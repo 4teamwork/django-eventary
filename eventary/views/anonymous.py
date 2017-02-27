@@ -110,6 +110,7 @@ class EventCreateView(SingleObjectMixin, TemplateView):
         if self.request.method == 'POST':
             self.event_form = EventForm(
                 self.request.POST,
+                self.request.FILES,
                 initial=get_initial()
             )
         else:
