@@ -1,10 +1,20 @@
+import os
 import uuid
 
 from django.contrib.auth.models import User as DjangoUser
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from autoslug import AutoSlugField
+
+
+def _get_upload_path(event, filename):
+    return os.path.join(
+        'calendar_{slug}'.format(slug=event.calendar.slug),
+        'event_{slug}'.format(slug=event.slug),
+        filename
+    )
 
 
 class Calendar(models.Model):
@@ -31,11 +41,11 @@ class Event(models.Model):
     calendar = models.ForeignKey(Calendar, verbose_name=_('calendar'))
     image = models.ImageField(blank=True,
                               null=True,
-                              upload_to='cal/images/%Y/%m/%d',
+                              upload_to=_get_upload_path,
                               verbose_name=_('image'))
     document = models.FileField(blank=True,
                                 null=True,
-                                upload_to='cal/documents/%Y/%m/%d',
+                                upload_to=_get_upload_path,
                                 verbose_name=_('document'))
     host = models.CharField(max_length=255, verbose_name=_('host'))
     title = models.CharField(max_length=255, verbose_name=_('title'))
@@ -70,6 +80,12 @@ class Event(models.Model):
 
     def __str__(self):
         return "{0} @ {1} by {2}".format(self.title, self.location, self.host)
+
+    def slug():
+        def fget(self):
+            return slugify(self.title)
+        return locals()
+    slug = property(**slug())
 
 
 class EventTimeDate(models.Model):
