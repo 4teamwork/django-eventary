@@ -2,10 +2,12 @@ from datetime import datetime
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Case, IntegerField, Sum, When
+from django.http import HttpResponseForbidden
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import ugettext as _
 
 from ..forms import EventForm, FilterForm, TimeDateForm, EventGroupingForm
 from ..forms import GenericFilterForm
@@ -195,7 +197,7 @@ class EventCreateView(SingleObjectMixin, TemplateView):
             # redirect the user to the calendar's details
             return redirect(
                 'eventary:anonymous-proposal_details',
-                cal_pk=self.object.pk,
+                calendar_pk=self.object.pk,
                 pk=event.pk,
                 secret=str(secret.secret)
             )
@@ -355,14 +357,15 @@ class ProposalDetailView(EventDetailView):
             self.secret.last_call = today
             self.secret.calls += 1
             self.secret.save()
-            if self.secret.calls > 5:
-                # todo: complain, max views reached
-                pass
+            if self.secret.calls > self.secret.event.calendar.view_limit:
+                return HttpResponseForbidden(
+                    _('maximum amount of daily views reached')
+                )
 
         # try to get the event for the given calendar and secret
         self.event = get_object_or_404(
             Event,
-            calendar__pk=kwargs.get('cal_pk'),
+            calendar__pk=kwargs.get('calendar_pk'),
             pk=kwargs.get('pk'),
             secret=self.secret
         )
