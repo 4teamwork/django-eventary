@@ -176,21 +176,3 @@ class EditorialUserAccess(TestCase):
             self.assertEquals(response.status_code,
                               status,
                               name)
-
-    def test_business_logic(self):
-        # login the editor
-        self.login()
-
-        # view proposal view_limit + 1 times
-
-        # edit the proposal
-
-        # publish the proposal
-
-        # access the published proposal (event details view)
-
-        # edit the published proposal (event)
-
-        # check if the publication status is set to false
-
-        # delete the proposal
