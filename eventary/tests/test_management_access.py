@@ -133,11 +133,3 @@ class ManagementUserAccess(TestCase):
             self.assertEquals(response.status_code,
                               status,
                               name)
-
-    def test_business_logic(self):
-        # login the editor
-        self.login()
-
-        # create a calendar
-        # update a calendar
-        # remove a calendar
