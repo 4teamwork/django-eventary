@@ -144,28 +144,3 @@ class AnonymousUserAccess(TestCase):
             response = self.client.get(url)
 
             self.assertEquals(response.status_code, status)
-
-    def test_business_logic(self):
-
-        # create an event
-        url = reverse('eventary:anonymous-create_event',
-                      kwargs={'pk': self.calendar.pk})
-        response = self.client.post(url, {
-            'title': 'TestEvent',
-            'host': 'TestHost',
-            'start_date': datetime.today().strftime('%Y-%m-%d'),
-        })
-
-        # if creation was successful, then we get a redirection and the
-        # response object has an url with the secret
-        self.assertEquals(response.status_code, 302)
-        self.assertTrue(getattr(response, 'url', False))
-
-        # now access the event with the given secret url
-        secret_url = response.url
-        response = self.client.get(secret_url)
-        self.assertEquals(response.status_code, 200)
-
-        # a second access should be denied (since the view limit is set to 1)
-        response = self.client.get(secret_url)
-        self.assertEquals(response.status_code, 403)
