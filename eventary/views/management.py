@@ -115,24 +115,21 @@ class LandingView(ManagementRequiredMixin, TemplateView):
         proposal_list = self.filter_qs(proposal_list)
 
         # create some paginators
-        event_list, event_paginator = self.paginate_qs(
+        event_page, event_paginator = self.paginate_qs(
             event_list,
             prefix='event'
         )
-        proposal_list, proposal_paginator = self.paginate_qs(
+        proposal_page, proposal_paginator = self.paginate_qs(
             proposal_list,
             prefix='proposal'
         )
 
-        context.update({
-            'event_list':    event_list,
-            'proposal_list': proposal_list
-        })
-
-        context.update({
-            'event_paginator': event_paginator,
-            'proposal_paginator': proposal_paginator
-        })
+        context.update({'event_page': event_page,
+                        'event_list': event_list,
+                        'proposal_page': proposal_page,
+                        'proposal_list': proposal_list,
+                        'event_paginator': event_paginator,
+                        'proposal_paginator': proposal_paginator})
 
         return context
 
