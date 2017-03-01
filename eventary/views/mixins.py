@@ -60,12 +60,15 @@ class EventFilterFormMixin(FormMixin):
         # find the right filter
         if fdate is not None and tdate is not None:
             return (Q(eventtimedate__start_date__gte=fdate,
-                      eventtimedate__start_date__lte=tdate) |
-                    Q(eventtimedate__end_date__isnull=False,
+                      eventtimedate__start_date__lte=tdate,
+                      eventtimedate__end_date__isnull=True) |
+                    Q(eventtimedate__start_date__gte=fdate,
+                      eventtimedate__end_date__isnull=False,
                       eventtimedate__end_date__gte=fdate,
                       eventtimedate__end_date__lte=tdate))
         elif tdate is not None:
-            return (Q(eventtimedate__start_date__lte=tdate) |
+            return (Q(eventtimedate__start_date__lte=tdate,
+                      eventtimedate__end_date__isnull=True) |
                     Q(eventtimedate__end_date__isnull=False,
                       eventtimedate__end_date__lte=tdate))
         elif fdate is not None:
