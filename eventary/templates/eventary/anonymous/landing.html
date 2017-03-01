@@ -14,7 +14,7 @@
 
 <h2>{% trans 'Calendars' %}</h2>
 
-{% if calendar_list|length %}
+{% if calendar_list %}
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -57,7 +57,7 @@
     </div>
 </form>
 
-{% if event_list|length %}
+{% if event_page %}
     <table class="table table-striped table-hover">
     <thead>
         <tr>
@@ -69,7 +69,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for event in event_list %}
+        {% for event in event_page %}
         <tr>
             <td>
                 <a
@@ -87,19 +87,19 @@
     </tbody>
     </table>
 
-    {% if event_list.paginator.num_pages > 1 %}
+    {% if event_page.paginator.num_pages > 1 %}
     <div class="pagination">
-        {% if event_list.has_previous %}
+        {% if event_page.has_previous %}
         <a
-         href="?{% url_replace request 'event_page' event_list.previous_page_number %}"
+         href="?{% url_replace request 'event_page' event_page.previous_page_number %}"
          title="{% trans 'previous page' %}">{% trans 'previous' %}</a>
         {% endif %}
-        <span>{% blocktrans with page_num=event_list.number num_pages=event_list.paginator.num_pages %}
+        <span>{% blocktrans with page_num=event_page.number num_pages=event_page.paginator.num_pages %}
             Page {{ page_num }} of {{ num_pages }}
         {% endblocktrans %}</span>
-        {% if event_list.has_next %}
+        {% if event_page.has_next %}
         <a 
-            href="?{% url_replace request 'event_page' event_list.next_page_number %}"
+            href="?{% url_replace request 'event_page' event_page.next_page_number %}"
             title="{% trans 'next page' %}">{% trans 'next' %}</a>
         {% endif %}
     </div>
