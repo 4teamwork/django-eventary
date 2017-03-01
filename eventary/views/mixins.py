@@ -59,20 +59,38 @@ class EventFilterFormMixin(FormMixin):
 
         # find the right filter
         if fdate is not None and tdate is not None:
-            return (Q(eventtimedate__start_date__gte=fdate,
+            return (Q(recurring=False,
+                      eventtimedate__start_date__gte=fdate,
                       eventtimedate__start_date__lte=tdate,
                       eventtimedate__end_date__isnull=True) |
-                    Q(eventtimedate__start_date__gte=fdate,
+                    Q(recurring=False,
+                      eventtimedate__start_date__gte=fdate,
                       eventtimedate__end_date__isnull=False,
                       eventtimedate__end_date__gte=fdate,
-                      eventtimedate__end_date__lte=tdate))
+                      eventtimedate__end_date__lte=tdate) |
+                    Q(recurring=True,
+                      eventtimedate__start_date__gte=fdate,
+                      eventtimedate__start_date__lte=tdate,
+                      eventtimedate__end_date__isnull=False) |
+                    Q(recurring=True,
+                      eventtimedate__end_date__gte=fdate,
+                      eventtimedate__end_date__lte=tdate,
+                      eventtimedate__end_date__isnull=False))
         elif tdate is not None:
-            return (Q(eventtimedate__start_date__lte=tdate,
+            return (Q(recurring=False,
+                      eventtimedate__start_date__lte=tdate,
                       eventtimedate__end_date__isnull=True) |
-                    Q(eventtimedate__end_date__isnull=False,
-                      eventtimedate__end_date__lte=tdate))
+                    Q(recurring=False,
+                      eventtimedate__end_date__isnull=False,
+                      eventtimedate__end_date__lte=tdate) |
+                    Q(recurring=True,
+                      eventtimedate__start_date__lte=tdate,
+                      eventtimedate__end_date__isnull=False))
         elif fdate is not None:
-            return Q(eventtimedate__start_date__gte=fdate)
+            return (Q(recurring=False,
+                      eventtimedate__start_date__gte=fdate) |
+                    Q(recurring=True,
+                      eventtimedate__end_date__gte=fdate))
 
         return Q()
 
