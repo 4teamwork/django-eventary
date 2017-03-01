@@ -76,9 +76,7 @@ def full_date(value):
 
                 # generally, the start format is just the day, but we
                 # might change it if some of the values do not coincide
-                startformat = "%d."
-                if timedate.start_date.month != timedate.end_date.month:
-                    startformat += "%m."
+                startformat = "%d.%m."
                 if timedate.start_date.year != timedate.end_date.year:
                     startformat += "%Y"
 
