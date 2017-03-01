@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.db.models import Case, IntegerField, Sum, Q, When
+from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView, TemplateView
 
