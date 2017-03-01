@@ -142,5 +142,7 @@ class ProposalListView(EditorialOrManagementRequiredMixin, CalendarDetailView):
 
     template_name = 'eventary/editorial/list_proposals.html'
 
-    def get_queryset(self):
-        return self.object.event_set.filter(published=False)
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Calendar.objects.all())
+        self.event_list = self.object.event_set.filter(published=False)
+        return super(CalendarDetailView, self).get(request, *args, **kwargs)

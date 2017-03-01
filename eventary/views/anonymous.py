@@ -1,76 +1,48 @@
 from datetime import datetime
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Case, IntegerField, Sum, When
 from django.http import HttpResponseForbidden
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext as _
 
-from ..forms import EventForm, FilterForm, TimeDateForm, EventGroupingForm
-from ..forms import GenericFilterForm
+from ..forms import EventForm, TimeDateForm, EventGroupingForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
 
+from .mixins import EventFilterFormMixin
 
-class CalendarDetailView(FormMixin, SingleObjectMixin, ListView):
 
-    form_class = FilterForm
+class CalendarDetailView(EventFilterFormMixin,
+                         SingleObjectMixin,
+                         TemplateView):
+
     model = Calendar
     template_name = 'eventary/anonymous/calendar_details.html'
 
-    def filter_qs(self, qs):
-        form = self.get_form()
-        if form.is_valid():
-            data = form.clean()
-            # filter by date
-            if data['from_date'] is not None:
-                qs = qs.exclude(
-                    eventtimedate__start_date__lt=data['from_date']
-                )
-            if data['to_date'] is not None:
-                qs = qs.exclude(
-                    eventtimedate__end_date__gt=data['to_date']
-                )
-            # filter by the selected groups
-            groups = form.groups()
-            if len(groups) > 0:
-                qs = qs.filter(group__in=groups)
-        return qs.distinct()
+    def __init__(self, *args, **kwargs):
+        super(CalendarDetailView, self).__init__(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Calendar.objects.all())
+        self.event_list = self.object.event_set.filter(published=True)
         return super(CalendarDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(CalendarDetailView, self).get_context_data(**kwargs)
         context['calendar'] = self.object
 
-        # filter the list of events with the form data
-        object_qs = self.get_queryset()
-        object_qs = self.filter_qs(object_qs)
-
-        # paginate the querysets
-        paginator, page, object_list, is_paginated = self.paginate_queryset(
-            object_qs,
-            25
-        )
+        page, paginator = self.paginate_qs(self.event_list)
 
         # update the context
         context.update({
             'paginator': paginator,
             'page': page,
-            'object_list': object_list,
-            'event_list': object_list
+            'object_list': self.event_list,
+            'event_list': self.event_list
         })
 
         return context
-
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-        return form_class(**self.get_form_kwargs(), calendar=self.object)
 
     def get_form_kwargs(self):
         kwargs = {'initial': self.get_initial()}
@@ -79,9 +51,6 @@ class CalendarDetailView(FormMixin, SingleObjectMixin, ListView):
                 'data': self.request.GET
             })
         return kwargs
-
-    def get_queryset(self):
-        return self.object.event_set.filter(published=True)
 
 
 class EventCreateView(SingleObjectMixin, TemplateView):
@@ -235,33 +204,9 @@ class EventICSExportView(EventDetailView):
     template_name = 'eventary/anonymous/published_event.ics'
 
 
-class LandingView(TemplateView):
+class LandingView(EventFilterFormMixin, TemplateView):
 
     template_name = 'eventary/anonymous/landing.html'
-
-    def filter_qs(self, qs):
-
-        if self.form.is_valid():
-
-            data = self.form.clean()
-
-            # filter the queryset with the given date range / date
-            if data['from_date'] is not None and data['to_date'] is not None:
-                qs = qs.exclude(
-                    eventtimedate__start_date__gte=data['to_date'],
-                    eventtimedate__end_date__lte=data['from_date']
-                )
-            elif data['to_date'] is not None:
-                qs = qs.exclude(eventtimedate__start_date__gte=data['to_date'])
-            elif data['from_date'] is not None:
-                qs = qs.exclude(eventtimedate__end_date__gt=data['from_date'])
-
-            # filter the queryset by the selected groups
-            groups = self.form.groups()
-            if len(groups) > 0:
-                qs = qs.filter(group__in=groups)
-
-        return qs
 
     def get_context_data(self, **kwargs):
         context = super(LandingView, self).get_context_data(**kwargs)
@@ -270,37 +215,20 @@ class LandingView(TemplateView):
         context.update({
             'calendar_list':  self.get_queryset(),
             'event_count':    Event.objects.filter(published=True).count(),
-            'proposal_count': Event.objects.filter(published=False).count(),
             'timedate_count': EventTimeDate.objects.count()
         })
 
-        # upcoming events and proposals
-        event_list = Event.objects.filter(published=True).distinct()
-
-        # filter the events and proposals
-        form = self.get_form()
-        context.update({'form': form})
-        event_list = self.filter_qs(event_list)
-
         # create some paginators
-        event_list, event_paginator = self.paginate_qs(
-            event_list,
+        event_page, event_paginator = self.paginate_qs(
+            self.event_list,
             prefix='event'
         )
 
-        context.update({
-            'event_list':    event_list,
-            'event_paginator': event_paginator,
-        })
+        context.update({'event_page': event_page,
+                        'event_list': self.event_list,
+                        'event_paginator': event_paginator})
 
         return context
-
-    def get_form(self):
-        if len(self.request.GET):
-            self.form = GenericFilterForm(self.request.GET, prefix='filter')
-        else:
-            self.form = GenericFilterForm(prefix='filter')
-        return self.form
 
     def get_queryset(self):
         qs = Calendar.objects.annotate(
@@ -308,25 +236,8 @@ class LandingView(TemplateView):
                 event__published=True,
                 then=1
             )), output_field=IntegerField(), distinct=True),
-            num_proposals=Sum(Case(When(
-                event__published=False,
-                then=1
-            )), output_field=IntegerField(), distinct=True),
         ).order_by()
         return qs
-
-    def paginate_qs(self, qs, prefix='paginator'):
-        paginator = Paginator(qs, 25)
-
-        page = self.request.GET.get('{0}_page'.format(prefix), 1)
-        try:
-            obj_list = paginator.page(page)
-        except PageNotAnInteger:
-            obj_list = paginator.page(1)
-        except EmptyPage:
-            obj_list = paginator.page(paginator.num_pages)
-
-        return obj_list, paginator
 
 
 class ProposalDetailView(EventDetailView):
