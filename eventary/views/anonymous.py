@@ -25,7 +25,6 @@ class CalendarDetailView(EventFilterFormMixin,
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Calendar.objects.all())
-        self.event_list = self.object.event_set.filter(published=True)
         return super(CalendarDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
