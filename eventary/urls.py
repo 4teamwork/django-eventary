@@ -98,11 +98,14 @@ urlpatterns = [
         anonymous.ProposalDetailView.as_view(),
         name='anonymous-proposal_details'
     ),
-
-    # views that require porting to class views
-    url(
+    url(  # exports an event to ics
         r'^cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]+).ics$',
         anonymous.EventICSExportView.as_view(),
         name='anonymous-export_event_to_ics'
     ),
+    url(  # when viewing a secret url too many times
+        r'^too_many_views/$',
+        anonymous.TooManyViewsView.as_view(),
+        name='anonymous-too_many_views'
+    )
 ]
