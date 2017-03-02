@@ -65,9 +65,9 @@ class EventFilterFormMixin(FormMixin):
                       eventtimedate__end_date__isnull=True) |
                     Q(recurring=False,
                       eventtimedate__start_date__gte=fdate,
-                      eventtimedate__end_date__isnull=False,
                       eventtimedate__end_date__gte=fdate,
-                      eventtimedate__end_date__lte=tdate) |
+                      eventtimedate__end_date__lte=tdate,
+                      eventtimedate__end_date__isnull=False) |
                     Q(recurring=True,
                       eventtimedate__start_date__gte=fdate,
                       eventtimedate__start_date__lte=tdate,
@@ -75,6 +75,10 @@ class EventFilterFormMixin(FormMixin):
                     Q(recurring=True,
                       eventtimedate__end_date__gte=fdate,
                       eventtimedate__end_date__lte=tdate,
+                      eventtimedate__end_date__isnull=False) |
+                    Q(recurring=True,
+                      eventtimedate__start_date__lte=fdate,
+                      eventtimedate__end_date__gte=tdate,
                       eventtimedate__end_date__isnull=False))
         elif tdate is not None:
             return (Q(recurring=False,
