@@ -41,6 +41,9 @@ class EventFilterFormMixin(FormMixin):
         if len(groups) > 0:
             self.event_list = self.event_list.filter(group__in=groups)
 
+        # put the recurring events at the last position
+        self.event_list = self.event_list.order_by('-recurring')
+
     def get(self, request, *args, **kwargs):
 
         form = self.get_form()
@@ -138,3 +141,6 @@ class FilterFormMixin(EventFilterFormMixin):
         groups = form.groups()
         if len(groups) > 0:
             self.proposal_list = self.proposal_list.filter(group__in=groups)
+
+        # put the recurring events at the last position
+        self.proposal_list = self.proposal_list.order_by('-recurring')
