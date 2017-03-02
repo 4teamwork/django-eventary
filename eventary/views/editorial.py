@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from .anonymous import CalendarDetailView, EventCreateView
 from .management import LandingView as ManagementLandingView
 
-from ..models import Calendar, Event
+from ..models import Calendar, Event, EventTimeDate
 
 from .mixins import EditorialOrManagementRequiredMixin
 
@@ -69,12 +69,22 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
 
         # get the forms
         form_event = self.get_form_event()
+        form_timedate = self.get_form_timedate()
         form_grouping = self.get_form_grouping()
 
-        if (form_event.is_valid() and form_grouping.is_valid()):
+        if (form_event.is_valid() and
+            form_timedate.is_valid() and
+            form_grouping.is_valid()):
+
             # update the event using the form
             data = form_event.clean()
             Event.objects.filter(pk=kwargs.get('event_pk')).update(**data)
+
+            # update the times using the form
+            data = form_timedate.clean()
+            EventTimeDate.objects.filter(
+                event=kwargs.get('event_pk')
+            ).update(**data)
 
             # update the groupings using the form
             data = form_grouping.clean()
@@ -118,6 +128,14 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
                 to_return[group.grouping.title] = []
             to_return[group.grouping.title].append(group.pk)
         return to_return
+
+    def get_form_timedate_initial(self):
+        return {
+            key: getattr(self.event.eventtimedate, key)
+            for key in [
+                'start_date', 'end_date', 'start_time', 'end_time'
+            ]
+        }
 
 
 class EventPublishView(EditorialOrManagementRequiredMixin,

@@ -190,7 +190,7 @@ class EventDetailView(DetailView):
             groupings[group.grouping].append(group)
 
         context.update({
-            'timedates': self.object.eventtimedate_set.all(),
+            'timedates': self.object.eventtimedate,
             'groupings': groupings
         })
 
