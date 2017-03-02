@@ -129,6 +129,14 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
             to_return[group.grouping.title].append(group.pk)
         return to_return
 
+    def get_form_timedate_initial(self):
+        return {
+            key: getattr(self.event.eventtimedate, key)
+            for key in [
+                'start_date', 'end_date', 'start_time', 'end_time'
+            ]
+        }
+
 
 class EventPublishView(EditorialOrManagementRequiredMixin,
                        SingleObjectMixin,
