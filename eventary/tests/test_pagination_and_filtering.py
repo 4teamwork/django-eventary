@@ -9,7 +9,7 @@ from django.test import Client, TestCase
 from ..models import Calendar, Event, EventTimeDate, Secret
 
 
-class FilterTest(TestCase):
+class EventFilterTest(TestCase):
 
     def setUp(self):
 
@@ -37,235 +37,244 @@ class FilterTest(TestCase):
             view_limit=1
         )
 
-    def single_filter_data(self, max_counter=5):
+    def create_data(self, nr_events=5, event_length=None, recurring=False):
+        # create published events
+        events = [Event.objects.create(
+            calendar=self.calendar,
+            title='{0} Event'.format(i),
+            host='TestHost',
+            location='TestLocation',
+            published=True,
+            recurring=recurring,
+        ) for i in range(nr_events)]
+
+        # create the timedates for the events
+        if event_length is not None:
+            [EventTimeDate.objects.create(
+                event=events[i],
+                start_date=self.today + td(days=i),
+                end_date=self.today + td(days=i + event_length)
+            ) for i in range(nr_events)]
+        else:
+            [EventTimeDate.objects.create(
+                event=events[i],
+                start_date=self.today + td(days=i)
+            ) for i in range(nr_events)]
+
+        # create the proposed events
+        proposals = [Event.objects.create(
+            calendar=self.calendar,
+            title='{0} Proposal'.format(i),
+            host='TestHost',
+            location='TestLocation',
+            published=False,
+            recurring=recurring,
+        ) for i in range(nr_events)]
+
+        # create the secrets for the proposals
+        [Secret.objects.create(event=proposals[i]) for i in range(nr_events)]
+
+        # create the timedates for the proposals
+        if event_length is not None:
+            [EventTimeDate.objects.create(
+                event=proposals[i],
+                start_date=self.today + td(days=i),
+                end_date=self.today + td(days=i + event_length)
+            ) for i in range(nr_events)]
+        else:
+            [EventTimeDate.objects.create(
+                event=proposals[i],
+                start_date=self.today + td(days=i)
+            ) for i in range(nr_events)]
+
+        return events, proposals
+
+    def single_filter_data(self, nr_events=5):
         """Returns the request data for the expected number of count events"""
 
-        # ay-yeah! list comprehension in a dict comprehension
+        # if we have n events, we want to generate data to test filtering of
+        #     0, 1, ..., n events
+        # setting
+        #     `from_date` and `to_date`
+        #     `from_date` only
+        #     `to_date` only
         return {
-            (max_counter - counter): [
-                ({'filter-from_date': (
-                    self.today + td(days=i)
-                  ).strftime('%Y-%m-%d'),
-                  'filter-to_date': (
-                    self.today + td(days=i + (max_counter - counter) - 1)
-                  ).strftime('%Y-%m-%d')}, 'from & to')
-                for i in range(counter + 1)
-            ] + [
-                ({'filter-from_date': (self.today + td(days=counter)).strftime(
-                    '%Y-%m-%d'
-                )}, 'from only'),
-                ({'filter-to_date': (
-                    self.today + td(days=max_counter - 1 - counter)
-                ).strftime('%Y-%m-%d')}, 'to only')
-            ] for counter in range(max_counter+1)
+            (nr_events - counter): {
+                'from & to': [
+                    {'filter-from_date': (
+                        self.today + td(days=i)
+                     ).strftime('%Y-%m-%d'),
+                     'filter-to_date': (
+                        self.today + td(days=i + (nr_events - counter) - 1)
+                     ).strftime('%Y-%m-%d')}
+                    for i in range(counter + 1)
+                ],
+                'from only': [{'filter-from_date': (
+                    self.today + td(days=counter)
+                ).strftime('%Y-%m-%d')}],
+                'to only': [{'filter-to_date': (
+                    self.today + td(days=nr_events - 1 - counter)
+                ).strftime('%Y-%m-%d')}]
+            }
+            for counter in range(nr_events+1)
         }
+
+    def multiple_filter_data(self, event_length=2, nr_events=5):
+        """Returns the request data for the expected number of count events"""
+
+        # if we have n events, we want to generate data to test filtering of
+        #     0, 1, ..., n events
+        # setting
+        #     `from_date` and `to_date`
+        #     `from_date` only
+        #     `to_date` only
+        return {(nr_events - c): {
+            'from & to': [
+                {'filter-from_date': (
+                    self.today + td(days=c - i)
+                ).strftime('%Y-%m-%d'),
+                 'filter-to_date': (
+                    self.today + td(days=nr_events - 1 - i + event_length)
+                ).strftime('%Y-%m-%d')}
+                for i in range(c + 1)
+            ],
+            'from only': [{
+                'filter-from_date': (
+                    self.today + td(days=c)
+                ).strftime('%Y-%m-%d')
+            }],
+            'to only': [{
+                'filter-to_date': (
+                    self.today + td(days=nr_events - 1 - c + event_length)
+                 ).strftime('%Y-%m-%d')
+            }],
+        } for c in range(nr_events)}
+
+    def recurring_filter_data(self, event_length=5, nr_events=5):
+        """Returns the request data for the expected number of count events"""
+
+        # if we have n events, we want to generate data to test filtering of
+        #     0, 1, ..., n events
+        # setting
+        #     `from_date` and `to_date`
+        #     `from_date` only
+        #     `to_date` only
+        return {nr_events - c: {
+            'from & to': [
+                {'filter-from_date': (
+                    self.today + td(days=i)
+                 ).strftime('%Y-%m-%d'),
+                 'filter-to_date': (
+                    self.today + td(days=nr_events - 1 - c)
+                 ).strftime('%Y-%m-%d')}
+                for i in range(nr_events - c)
+            ] + [
+                {'filter-from_date': (
+                    self.today + td(days=nr_events + c)
+                 ).strftime('%Y-%m-%d'),
+                 'filter-to_date': (
+                    self.today + td(days=nr_events + c + i)
+                 ).strftime('%Y-%m-%d')}
+                for i in range(event_length)
+            ],
+            'from only': [{
+                'filter-from_date': (
+                    self.today + td(days=event_length + c)
+                ).strftime('%Y-%m-%d')
+            }],
+            'to only': [{
+                'filter-to_date': (
+                    self.today + td(days=nr_events - 1 - c)
+                ).strftime('%Y-%m-%d')
+            }],
+        } for c in range(nr_events + 1)}
+
+    def _test_filter_run(self, events, proposals, data):
+
+        # AS MANAGEMENT
+        self.client.login(username='manager', password='m4n4g3r')
+        url = reverse('eventary:management-landing')
+
+        # go through all the possible filters
+        for count, labeled_filters in data.items():
+            for message, parameters_list in labeled_filters.items():
+                for filter_parameters in parameters_list:
+                    response = self.client.get(url, filter_parameters)
+                    self.assertEquals(
+                        response.context['event_list'].count(),
+                        count,
+                        'events {0}: {1}'.format(count, message)
+                    )
+                    self.assertEquals(
+                        response.context['proposal_list'].count(),
+                        count,
+                        'proposals {0}: {1}'.format(count, message)
+                    )
+
+        self.client.logout()
+
+        # AS EDITORIAL
+        self.client.login(username='editor', password='3d1t0r')
+        url = reverse('eventary:editorial-landing')
+
+        # go through all the possible filters
+        for count, labeled_filters in data.items():
+            for message, parameters_list in labeled_filters.items():
+                for filter_parameters in parameters_list:
+                    response = self.client.get(url, filter_parameters)
+                    self.assertEquals(
+                        response.context['event_list'].count(),
+                        count,
+                        message
+                    )
+                    self.assertEquals(
+                        response.context['proposal_list'].count(),
+                        count,
+                        message
+                    )
+
+        self.client.logout()
+
+        # AS ANONYMOUS
+        url = reverse('eventary:anonymous-landing')
+
+        # go through all the possible filters
+        for count, labeled_filters in data.items():
+            for message, parameters_list in labeled_filters.items():
+                for filter_parameters in parameters_list:
+                    response = self.client.get(url, filter_parameters)
+                    self.assertEquals(
+                        response.context['event_list'].count(),
+                        count,
+                        message
+                    )
+
+        url = reverse('eventary:anonymous-calendar_details',
+                      kwargs={'pk': self.calendar.pk})
+
+        # go through all the possible filters
+        for count, labeled_filters in data.items():
+            for message, parameters_list in labeled_filters.items():
+                for filter_parameters in parameters_list:
+                    response = self.client.get(url, filter_parameters)
+                    self.assertEquals(
+                        response.context['event_list'].count(),
+                        count,
+                        message
+                    )
 
     def test_single_day_event_filters(self):
-
-        # create published events
-        events = [Event.objects.create(
-            calendar=self.calendar,
-            title='{0} Event'.format(i),
-            host='TestHost',
-            location='TestLocation',
-            published=True,
-        ) for i in range(5)]
-
-        # create the timedates for the events
-        [EventTimeDate.objects.create(
-            event=events[i],
-            start_date=self.today + td(days=i)
-        ) for i in range(5)]
-
-        # create the proposed events
-        proposals = [Event.objects.create(
-            calendar=self.calendar,
-            title='{0} Proposal'.format(i),
-            host='TestHost',
-            location='TestLocation',
-            published=False,
-        ) for i in range(5)]
-
-        # create the secrets for the proposals
-        [Secret.objects.create(event=proposals[i]) for i in range(5)]
-
-        # create the timedates for the proposals
-        [EventTimeDate.objects.create(
-            event=proposals[i],
-            start_date=self.today + td(days=i)
-        ) for i in range(5)]
-
-        # AS MANAGEMENT
-        self.client.login(username='manager', password='m4n4g3r')
-        url = reverse('eventary:management-landing')
-
-        # go through all the possible filters
-        for count, parameters_list in self.single_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-                self.assertEquals(response.context['proposal_list'].count(),
-                                  count,
-                                  message)
-
-        self.client.logout()
-
-        # AS EDITORIAL
-        self.client.login(username='editor', password='3d1t0r')
-        url = reverse('eventary:editorial-landing')
-
-        # go through all the possible filters
-        for count, parameters_list in self.single_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-                self.assertEquals(response.context['proposal_list'].count(),
-                                  count,
-                                  message)
-
-        self.client.logout()
-
-        # AS ANONYMOUS
-        url = reverse('eventary:anonymous-landing')
-
-        # go through all the possible filters
-        for count, parameters_list in self.single_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-        response = self.client.get(url)
-
-        url = reverse('eventary:anonymous-calendar_details',
-                      kwargs={'pk': self.calendar.pk})
-
-        # go through all the possible filters
-        for count, parameters_list in self.single_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-
-    def multiple_filter_data(self, max_counter=5):
-        """Returns the request data for the expected number of count events"""
-
-        # ay-yeah! list comprehension in a dict comprehension
-        return {
-            (max_counter - counter): [
-                ({'filter-from_date': (
-                    self.today + td(days=counter - number)
-                  ).strftime('%Y-%m-%d'),
-                  'filter-to_date': (
-                    self.today + td(days=max_counter - 1 - number + 2)
-                  ).strftime('%Y-%m-%d')}, 'from & to')
-                for number in range(1 + counter)
-            ] + [
-                ({'filter-from_date': (self.today + td(days=counter)).strftime(
-                    '%Y-%m-%d'
-                )}, 'from only'),
-                ({'filter-to_date': (
-                    self.today + td(days=max_counter - 1 - counter + 2)
-                ).strftime('%Y-%m-%d')}, 'to only')
-            ]
-            for counter in range(max_counter)
-        }
+        events, proposals = self.create_data()
+        self._test_filter_run(events, proposals, self.single_filter_data())
 
     def test_multiple_day_event_filters(self):
+        events, proposals = self.create_data(event_length=2)
+        self._test_filter_run(events,
+                              proposals,
+                              self.multiple_filter_data(event_length=2))
 
-        # create published events
-        events = [Event.objects.create(
-            calendar=self.calendar,
-            title='{0} Event'.format(i),
-            host='TestHost',
-            location='TestLocation',
-            published=True,
-        ) for i in range(5)]
-
-        # create the timedates for the events
-        [EventTimeDate.objects.create(
-            event=events[i],
-            start_date=self.today + td(days=i),
-            end_date=self.today + td(days=i + 2)
-        ) for i in range(5)]
-
-        # create the proposed events
-        proposals = [Event.objects.create(
-            calendar=self.calendar,
-            title='{0} Proposal'.format(i),
-            host='TestHost',
-            location='TestLocation',
-            published=False,
-        ) for i in range(5)]
-
-        # create the secrets for the proposals
-        [Secret.objects.create(event=proposals[i]) for i in range(5)]
-
-        # create the timedates for the proposals
-        [EventTimeDate.objects.create(
-            event=proposals[i],
-            start_date=self.today + td(days=i),
-            end_date=self.today + td(days=i + 2)
-        ) for i in range(5)]
-
-        # AS MANAGEMENT
-        self.client.login(username='manager', password='m4n4g3r')
-        url = reverse('eventary:management-landing')
-
-        # go through all the possible filters
-        for count, parameters_list in self.multiple_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-                self.assertEquals(response.context['proposal_list'].count(),
-                                  count,
-                                  message)
-
-        self.client.logout()
-
-        # AS EDITORIAL
-        self.client.login(username='editor', password='3d1t0r')
-        url = reverse('eventary:editorial-landing')
-
-        # go through all the possible filters
-        for count, parameters_list in self.multiple_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-                self.assertEquals(response.context['proposal_list'].count(),
-                                  count,
-                                  message)
-
-        self.client.logout()
-
-        # AS ANONYMOUS
-        url = reverse('eventary:anonymous-landing')
-
-        # go through all the possible filters
-        for count, parameters_list in self.multiple_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
-        response = self.client.get(url)
-
-        url = reverse('eventary:anonymous-calendar_details',
-                      kwargs={'pk': self.calendar.pk})
-
-        # go through all the possible filters
-        for count, parameters_list in self.multiple_filter_data().items():
-            for filter_parameters, message in parameters_list:
-                response = self.client.get(url, filter_parameters)
-                self.assertEquals(response.context['event_list'].count(),
-                                  count,
-                                  message)
+    def test_recurring_event_filters(self):
+        events, proposals = self.create_data(event_length=5, recurring=True)
+        self._test_filter_run(events,
+                              proposals,
+                              self.recurring_filter_data(event_length=5))
