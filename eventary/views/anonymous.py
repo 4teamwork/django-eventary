@@ -248,15 +248,11 @@ class ProposalDetailView(EventDetailView):
         self.object = self.get_object()
 
         # try to get the secret from kwargs or GET params
-        # if the secret cannot be found, display a form asking for the secret
-        try:
-            self.secret = Secret.objects.get(
-                secret=kwargs.get('secret', request.GET.get('secret', None))
-            )
-        # todo: except the right exception 'DoesNoExist'
-        except Exception as xcptn:
-            # todo: display a form to type in the secret
-            pass
+        self.secret = get_object_or_404(
+            Secret,
+            secret=kwargs.get('secret',
+                              request.GET.get('secret', None))
+        )
 
         # update the secret's
         today = datetime.today().date()
@@ -269,9 +265,7 @@ class ProposalDetailView(EventDetailView):
             self.secret.calls += 1
             self.secret.save()
             if self.secret.calls > self.secret.event.calendar.view_limit:
-                return HttpResponseForbidden(
-                    _('maximum amount of daily views reached')
-                )
+                return redirect('eventary:anonymous-too_many_views')
 
         # try to get the event for the given calendar and secret
         self.event = get_object_or_404(
@@ -290,3 +284,8 @@ class ProposalDetailView(EventDetailView):
             'calendar': self.object.calendar,
         })
         return context
+
+
+class TooManyViewsView(TemplateView):
+
+    template_name = 'eventary/anonymous/too_many_views.html'
