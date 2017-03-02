@@ -89,7 +89,7 @@ class Event(models.Model):
 
 
 class EventTimeDate(models.Model):
-    event = models.ForeignKey(Event, verbose_name=_('event'))
+    event = models.OneToOneField(Event, verbose_name=_('event'))
     start_date = models.DateField(help_text=_('start date'),
                                   verbose_name=_('start date'))
     start_time = models.TimeField(blank=True,
