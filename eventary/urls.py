@@ -66,6 +66,11 @@ urlpatterns = [
         editorial.EventEditView.as_view(),
         name='editorial-update_event'
     ),
+    url(  # hides an event
+        r'^cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]+)/hide/$',
+        editorial.EventHideView.as_view(),
+        name='editorial-hide_event'
+    ),
     url(  # approves an event
         r'^cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]+)/publish/$',
         editorial.EventPublishView.as_view(),
