@@ -78,6 +78,7 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
 
             # update the event using the form
             data = form_event.clean()
+            data['published'] = False
             Event.objects.filter(pk=kwargs.get('event_pk')).update(**data)
 
             # update the times using the form
@@ -136,6 +137,19 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
                 'start_date', 'end_date', 'start_time', 'end_time'
             ]
         }
+
+
+class EventHideView(EditorialOrManagementRequiredMixin,
+                    SingleObjectMixin,
+                    View):
+
+    model = Event
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.published = False
+        self.object.save()
+        return redirect('eventary:redirector')
 
 
 class EventPublishView(EditorialOrManagementRequiredMixin,
