@@ -101,9 +101,9 @@ class BusinessLogicTest(TestCase):
             response = self.client.get(secret_url)
             self.assertEquals(response.status_code, 200)
 
-        # a second access should be denied (since view limit is set to 1)
+        # a second access is redirected (since view limit is set to 1)
         response = self.client.get(secret_url)
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 302)
 
         # AS EDITORIAL
         self.client.login(username='editor', password='3d1t0r')

@@ -3,10 +3,52 @@ from datetime import timedelta as td
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, User
-from django.shortcuts import reverse
 from django.test import Client, TestCase
 
 from ..models import Calendar, Event, EventTimeDate, Secret
+
+
+class AccessTestMixin(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.calendar = Calendar.objects.create(
+            title='TestCalendar',
+            view_limit=1,
+        )
+        self.event = Event.objects.create(
+            calendar=self.calendar,
+            title='Event',
+            host='TestHost',
+            published=True,
+        )
+        self.proposal = Event.objects.create(
+            calendar=self.calendar,
+            title='Proposal',
+            host='TestHost',
+            published=False,
+        )
+        self.event_to_hide = Event.objects.create(
+            calendar=self.calendar,
+            title='EventToHide',
+            host='TestHost',
+            published=True,
+        )
+        self.eventtimedate = EventTimeDate.objects.create(
+            event=self.event,
+            start_date=datetime.today(),
+        )
+        self.proposaltimedate = EventTimeDate.objects.create(
+            event=self.proposal,
+            start_date=datetime.today()
+        )
+        self.eventtohidetimedate = EventTimeDate.objects.create(
+            event=self.event_to_hide,
+            start_date=datetime.today(),
+        )
+        self.secret = Secret.objects.create(
+            event=self.proposal
+        )
 
 
 class EventTestMixin(TestCase):
