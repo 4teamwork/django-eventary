@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from .anonymous import CalendarDetailView, EventCreateView
 from .management import LandingView as ManagementLandingView
 
-from ..models import Calendar, Event, EventTimeDate
+from ..models import Calendar, Event, EventTimeDate, Secret
 
 from .mixins import EditorialOrManagementRequiredMixin
 
@@ -80,6 +80,9 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
             data = form_event.clean()
             data['published'] = False
             Event.objects.filter(pk=kwargs.get('event_pk')).update(**data)
+            Secret.objects.create(
+                event=Event.objects.get(pk=kwargs.get('event_pk'))
+            )
 
             # update the times using the form
             data = form_timedate.clean()
@@ -148,6 +151,8 @@ class EventHideView(EditorialOrManagementRequiredMixin,
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.published = False
+        # every proposal needs an access secret
+        Secret.objects.create(event=self.object)
         self.object.save()
         return redirect('eventary:redirector')
 
