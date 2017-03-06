@@ -243,7 +243,7 @@ class TimeDateForm(forms.Form):
         end_time = cleaned_data.get('end_time')
 
         def _consistent(start=None, end=None):
-            return start and end and start <= end
+            return not end or start and end and start <= end
 
         # the start date should not be greater than the end date
         if not _consistent(start_date, end_date):
