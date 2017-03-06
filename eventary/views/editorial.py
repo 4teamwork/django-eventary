@@ -80,7 +80,7 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
             data = form_event.clean()
             data['published'] = False
             Event.objects.filter(pk=kwargs.get('event_pk')).update(**data)
-            Secret.objects.create(
+            Secret.objects.get_or_create(
                 event=Event.objects.get(pk=kwargs.get('event_pk'))
             )
 
