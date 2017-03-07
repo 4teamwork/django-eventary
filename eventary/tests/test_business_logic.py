@@ -78,13 +78,15 @@ class BusinessLogicTest(TestCase):
         url = reverse('eventary:anonymous-create_event',
                       kwargs={'pk': calendar.pk})
         self.client.post(url, {
+            'name': 'HostName',
+            'phone': 'some phone number',
             'title': 'BadTestEvent',
-            'host': 'TestHost',
             'start_date': datetime.today().strftime('%Y-%m-%d'),
         })
         response = self.client.post(url, {
+            'name': 'HostName',
+            'phone': 'some phone number',
             'title': 'GoodTestEvent',
-            'host': 'TestHost',
             'start_date': datetime.today().strftime('%Y-%m-%d'),
         })
         bad, good = list(Event.objects.filter(title__in=['BadTestEvent',
@@ -143,6 +145,8 @@ class BusinessLogicTest(TestCase):
         response = self.client.get(url)
         self.assertTrue('csrf_token' in response.context, 'no csrf token')
         response = self.client.post(url, {
+            'name': 'HostName',
+            'phone': 'some phone number',
             'title': 'GoodEvent',
             'csrf_token': response.context['csrf_token'].format(),
             'host': 'Host',

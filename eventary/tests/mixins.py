@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
 
-from ..models import Calendar, Event, EventTimeDate, Secret
+from ..models import Calendar, Event, EventTimeDate, EventHost, Secret
 
 
 class AccessTestMixin(TestCase):
@@ -16,22 +16,26 @@ class AccessTestMixin(TestCase):
             title='TestCalendar',
             view_limit=1,
         )
+        self.host = EventHost.objects.create(
+            name='TestHost',
+            phone='some phone number'
+        )
         self.event = Event.objects.create(
             calendar=self.calendar,
+            host=self.host,
             title='Event',
-            host='TestHost',
             published=True,
         )
         self.proposal = Event.objects.create(
             calendar=self.calendar,
+            host=self.host,
             title='Proposal',
-            host='TestHost',
             published=False,
         )
         self.event_to_hide = Event.objects.create(
             calendar=self.calendar,
+            host=self.host,
             title='EventToHide',
-            host='TestHost',
             published=True,
         )
         self.eventtimedate = EventTimeDate.objects.create(
@@ -84,7 +88,6 @@ class EventTestMixin(TestCase):
         events = [Event.objects.create(
             calendar=self.calendar,
             title='{0} Event'.format(i),
-            host='TestHost',
             location='TestLocation',
             published=True,
             recurring=recurring,
@@ -107,7 +110,6 @@ class EventTestMixin(TestCase):
         proposals = [Event.objects.create(
             calendar=self.calendar,
             title='{0} Proposal'.format(i),
-            host='TestHost',
             location='TestLocation',
             published=False,
             recurring=recurring,
