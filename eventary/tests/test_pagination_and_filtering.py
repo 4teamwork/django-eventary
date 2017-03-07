@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from .mixins import EventTestMixin
 
+
 class EventFilterTest(EventTestMixin, TestCase):
 
     def single_filter_data(self, nr_events=5):
@@ -17,24 +18,44 @@ class EventFilterTest(EventTestMixin, TestCase):
         #     `from_date` only
         #     `to_date` only
         return {
-            (nr_events - counter): {
-                'from & to': [
-                    {'filter-from_date': (
-                        self.today + td(days=i)
-                     ).strftime('%Y-%m-%d'),
-                     'filter-to_date': (
-                        self.today + td(days=i + (nr_events - counter) - 1)
-                     ).strftime('%Y-%m-%d')}
-                    for i in range(counter + 1)
-                ],
-                'from only': [{'filter-from_date': (
-                    self.today + td(days=counter)
-                ).strftime('%Y-%m-%d')}],
-                'to only': [{'filter-to_date': (
-                    self.today + td(days=nr_events - 1 - counter)
-                ).strftime('%Y-%m-%d')}]
-            }
-            for counter in range(nr_events+1)
+            **{
+                (nr_events - counter): {
+                    'from & to': [
+                        {'filter-from_date': (
+                            self.today + td(days=i)
+                         ).strftime('%Y-%m-%d'),
+                         'filter-to_date': (
+                            self.today + td(days=i + (nr_events - counter) - 1)
+                         ).strftime('%Y-%m-%d')}
+                        for i in range(counter)
+                    ],
+                    'from only': [{'filter-from_date': (
+                        self.today + td(days=counter)
+                    ).strftime('%Y-%m-%d')}],
+                    'to only': [{'filter-to_date': (
+                        self.today + td(days=nr_events - 1 - counter)
+                    ).strftime('%Y-%m-%d')}]
+                }
+                for counter in range(nr_events)
+            },
+            0: {'from & to': [{
+                    'filter-from_date': (self.today - td(days=2)).strftime(
+                        '%Y-%m-%d'
+                    ),
+                    'filter-to_date': (self.today - td(days=1)).strftime(
+                        '%Y-%m-%d'
+                    ),
+                }],
+                'from only': [{
+                    'filter-from_date': (self.today + td(days=6)).strftime(
+                        '%Y-%m-%d'
+                    ),
+                }],
+                'to only': [{
+                    'filter-to_date': (self.today - td(days=1)).strftime(
+                        '%Y-%m-%d'
+                    ),
+                }]}
         }
 
     def multiple_filter_data(self, event_length=2, nr_events=5):
@@ -121,12 +142,20 @@ class EventFilterTest(EventTestMixin, TestCase):
                     self.assertEquals(
                         response.context['event_list'].count(),
                         count,
-                        'events {0}: {1}'.format(count, message)
+                        '{2} expected {0} events, filters {1}'.format(
+                            count,
+                            message,
+                            'management'
+                        )
                     )
                     self.assertEquals(
                         response.context['proposal_list'].count(),
                         count,
-                        'proposals {0}: {1}'.format(count, message)
+                        '{2} expected {0} proposals, filters {1}'.format(
+                            count,
+                            message,
+                            'management'
+                        )
                     )
 
         self.client.logout()
