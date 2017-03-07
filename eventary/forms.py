@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 from bootstrap3_datetime.widgets import DateTimePicker
 from django_select2.forms import Select2MultipleWidget
 
-from .models import Calendar, Grouping, Group, Event
+from .models import Calendar, Grouping, Group, Event, EventHost
 
 
 class GenericFilterForm(forms.Form):
@@ -176,9 +176,8 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'host', 'location', 'image', 'document',
-                  'homepage', 'description', 'comment', 'prize',
-                  'recurring']
+        fields = ['title', 'location', 'image', 'document', 'homepage',
+                  'description', 'comment', 'prize', 'recurring']
 
 
 class EventEditorialForm(forms.ModelForm):
@@ -256,3 +255,10 @@ class EventGroupingForm(forms.Form):
                     choices=self._choices[grouping]
                 ) for grouping in self._groupings
             })
+
+
+class HostForm(forms.ModelForm):
+
+    class Meta:
+        model = EventHost
+        exclude = []
