@@ -39,6 +39,10 @@ class Event(models.Model):
     # some flexibility its split up into a custom model and
     # linked to the event through a one to many relation.
     calendar = models.ForeignKey(Calendar, verbose_name=_('calendar'))
+    host = models.ForeignKey('EventHost',
+                             blank=True,
+                             null=True,
+                             verbose_name=_('host'))
     image = models.ImageField(blank=True,
                               null=True,
                               upload_to=_get_upload_path,
@@ -47,7 +51,6 @@ class Event(models.Model):
                                 null=True,
                                 upload_to=_get_upload_path,
                                 verbose_name=_('document'))
-    host = models.CharField(max_length=255, verbose_name=_('host'))
     title = models.CharField(max_length=255, verbose_name=_('title'))
     location = models.CharField(blank=True,
                                 max_length=255,
@@ -170,23 +173,21 @@ class Group(models.Model):
         return self.title
 
 
-class Host(DjangoUser):
+class EventHost(models.Model):
     # The host contains all the information about the host.
     # The attributes of the DjangoUser are:
     #   username, password, email, first_name, last_name
     # For our purpose we need further fields
-    organization = models.CharField(help_text=_('hosting organization'),
-                                    max_length=49,
-                                    verbose_name=_('organization'))
-    phone = models.CharField(max_length=19, verbose_name=_('phone'))
-    homepage = models.URLField(verbose_name=_('homepage'))
-
-    def __str__(self):
-        return "{-1} {1} [{2}]".format(
-            self.first_name,
-            self.last_name,
-            self.organization
-        )
+    name = models.CharField(max_length=50, verbose_name=_('host name'))
+    info = models.CharField(blank=True,
+                            max_length=50,
+                            null=True,
+                            verbose_name=_('info'))
+    phone = models.CharField(max_length=20, verbose_name=_('phone'))
+    email = models.EmailField(blank=True, null=True, verbose_name=_('email'))
+    homepage = models.URLField(blank=True,
+                               null=True,
+                               verbose_name=_('homepage'))
 
 
 class Secret(models.Model):
