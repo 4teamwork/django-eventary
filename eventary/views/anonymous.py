@@ -1,13 +1,11 @@
 from datetime import datetime
 
 from django.db.models import Case, IntegerField, Sum, When
-from django.http import HttpResponseForbidden
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.translation import ugettext as _
 
-from ..forms import EventForm, TimeDateForm, EventGroupingForm
+from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
 
 from .mixins import EventFilterFormMixin
@@ -68,6 +66,7 @@ class EventCreateView(SingleObjectMixin, TemplateView):
             'calendar': self.object,
             'eventform': self.get_form_event(),
             'timedateform': self.get_form_timedate(),
+            'hostform': self.get_form_host(),
             'groupingform': self.get_form_grouping()
         })
 
@@ -100,6 +99,15 @@ class EventCreateView(SingleObjectMixin, TemplateView):
             )
         return self.grouping_form
 
+    def get_form_host(self):
+        get_initial = getattr(self, 'get_form_host_initial', lambda: {})
+        if self.request.method == 'POST':
+            self.host_form = HostForm(self.request.POST,
+                                      initial=get_initial())
+        else:
+            self.host_form = HostForm(initial=get_initial())
+        return self.host_form
+
     def get_form_timedate(self):
         get_initial = getattr(self, 'get_form_timedate_initial', lambda: {})
         if self.request.method == 'POST':
@@ -117,16 +125,21 @@ class EventCreateView(SingleObjectMixin, TemplateView):
         # get the forms
         form_event = self.get_form_event()
         form_timedate = self.get_form_timedate()
+        form_host = self.get_form_host()
         form_grouping = self.get_form_grouping()
 
-        if (
-            form_event.is_valid() and
+        if (form_event.is_valid() and
             form_timedate.is_valid() and
-            form_grouping.is_valid()
-        ):
+            form_host.is_valid() and
+            form_grouping.is_valid()):
+
+            # create the host
+            host = form_host.save()
+
             # prepare the event and store it
             event = form_event.save(commit=False)
             event.calendar = self.object
+            event.host = host
             event.published = False
             event.save()
 

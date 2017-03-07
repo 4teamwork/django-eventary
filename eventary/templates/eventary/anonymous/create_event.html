@@ -10,20 +10,24 @@
 {% endblock %}
 
 {% block 'content' %}
+
+{% trans 'host information' as h_host %}
+{% trans 'event information' as h_event %}
+{% trans 'grouping information' as h_grouping %}
+
 <h2>{% blocktrans with calendar_title=calendar.title %}
     Propose an event for "{{ calendar_title }}"
 {% endblocktrans %}</h2>
 
 <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
-    <table>
+    <h3>{{ h_host|capfirst }}</h3>
+    {{ hostform|as_bootstrap }}
+    <h3>{{ h_event|capfirst }}</h3>
     {{ eventform|as_bootstrap }}
     {{ timedateform|as_bootstrap }}
+    <h3>{{ h_grouping|capfirst }}</h3>
     {{ groupingform|as_bootstrap }}
-    </table>
-    {% for hidden in timedateform.hidden_fields %}
-        {{ hidden }}
-    {% endfor %}
     <input type="submit" value="{% trans 'propose' %}">
 </form>
 
