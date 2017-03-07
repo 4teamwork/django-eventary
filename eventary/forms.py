@@ -53,6 +53,17 @@ class GenericFilterForm(forms.Form):
 
         self.fields.update(_fields)
 
+    def clean(self):
+        cleaned_data = super(GenericFilterForm, self).clean()
+        from_date = cleaned_data.get('from_date')
+        to_date = cleaned_data.get('to_date')
+
+        if from_date and to_date and from_date > to_date:
+            raise forms.ValidationError(
+                _('"from date" is greater than "to date"')
+            )
+        return cleaned_data
+
     def groups(self):
         groups = []
         if self.is_valid():
@@ -116,6 +127,17 @@ class FilterForm(forms.Form):
         }
 
         self.fields.update(_fields)
+
+    def clean(self):
+        cleaned_data = super(GenericFilterForm, self).clean()
+        from_date = cleaned_data.get('from_date')
+        to_date = cleaned_data.get('to_date')
+
+        if from_date and to_date and from_date > to_date:
+            raise forms.ValidationError(
+                _('"from date" is greater than "to date"')
+            )
+        return cleaned_data
 
     def groups(self):
         groups = []
@@ -212,6 +234,36 @@ class TimeDateForm(forms.Form):
         widget=DateTimePicker(options={"format": "HH:mm",
                                        "pickDate": False})
     )
+
+    def clean(self):
+        cleaned_data = super(TimeDateForm, self).clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+
+        def _consistent(start=None, end=None):
+            return not end or start and end and start <= end
+
+        # the start date should not be greater than the end date
+        if not _consistent(start_date, end_date):
+            raise forms.ValidationError(
+                _('"start date" cannot be greater than "end date"')
+            )
+
+        # you can't know the ending if you don't know the starting
+        if end_time and not start_time:
+            raise forms.ValidationError(
+                _('"start time" cannot be left blank if "end time" is set')
+            )
+
+        # check time consistency (end time after start time) on single dates
+        if not end_date and not _consistent(start_time, end_time):
+            raise forms.ValidationError(
+                _('"start time" is greater than "end time"')
+            )
+
+        return cleaned_data
 
 
 class EventGroupingForm(forms.Form):

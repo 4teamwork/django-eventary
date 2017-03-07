@@ -77,24 +77,26 @@ class BusinessLogicTest(TestCase):
         # create a "bad" and a "good" event
         url = reverse('eventary:anonymous-create_event',
                       kwargs={'pk': calendar.pk})
-        self.client.post(url, {
+        response = self.client.post(url, {
             'name': 'HostName',
             'phone': 'some phone number',
             'title': 'BadTestEvent',
             'start_date': datetime.today().strftime('%Y-%m-%d'),
         })
+        # if creation was successful, then we get a redirection and the
+        self.assertEquals(response.status_code, 302)
         response = self.client.post(url, {
             'name': 'HostName',
             'phone': 'some phone number',
             'title': 'GoodTestEvent',
             'start_date': datetime.today().strftime('%Y-%m-%d'),
         })
+        # if creation was successful, then we get a redirection and the
+        self.assertEquals(response.status_code, 302)
         bad, good = list(Event.objects.filter(title__in=['BadTestEvent',
                                                          'GoodTestEvent']))
 
-        # if creation was successful, then we get a redirection and the
         # response object has an url with the secret
-        self.assertEquals(response.status_code, 302)
         self.assertTrue(getattr(response, 'url', False))
 
         # now access the event with the given secret url
