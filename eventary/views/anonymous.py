@@ -6,6 +6,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.shortcuts import get_object_or_404, redirect
 
 from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
+from ..forms import RecurrenceForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
 
 from .mixins import EventFilterFormMixin
@@ -66,6 +67,7 @@ class EventCreateView(SingleObjectMixin, TemplateView):
             'calendar': self.object,
             'eventform': self.get_form_event(),
             'timedateform': self.get_form_timedate(),
+            'recurrenceform': self.get_form_recurrence(),
             'hostform': self.get_form_host(),
             'groupingform': self.get_form_grouping()
         })
@@ -107,6 +109,15 @@ class EventCreateView(SingleObjectMixin, TemplateView):
         else:
             self.host_form = HostForm(initial=get_initial())
         return self.host_form
+    
+    def get_form_recurrence(self):
+        get_initial = getattr(self, 'get_form_recurrence_initial', lambda: {})
+        if self.request.method == 'POST':
+            self.recurrence_form = RecurrenceForm(self.request.POST,
+                                                  initial=get_initial())
+        else:
+            self.recurrence_form = RecurrenceForm(initial=get_initial())
+        return self.recurrence_form
 
     def get_form_timedate(self):
         get_initial = getattr(self, 'get_form_timedate_initial', lambda: {})
@@ -125,6 +136,7 @@ class EventCreateView(SingleObjectMixin, TemplateView):
         # get the forms
         form_event = self.get_form_event()
         form_timedate = self.get_form_timedate()
+        form_recurrence = self.get_form_recurrence()
         form_host = self.get_form_host()
         form_grouping = self.get_form_grouping()
 
@@ -142,6 +154,12 @@ class EventCreateView(SingleObjectMixin, TemplateView):
             event.host = host
             event.published = False
             event.save()
+
+            # if the event is recurring, create the recurrence instance
+            if event.recurring and form_recurrence.is_valid():
+                recurrence = form_recurrence.save(commit=False)
+                recurrence.event = event
+                recurrence.save()
 
             # create the time date objects for the event
             timedatedata = form_timedate.clean()

@@ -42,6 +42,7 @@ setup(
         'django-bootstrap3-datetimepicker',
         'django-forms-bootstrap',
         'django-jquery',
+        'django-recurrence',
         'django-searchable-select',
         'Django-Select2',
         'olefile',

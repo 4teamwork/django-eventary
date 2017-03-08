@@ -7,6 +7,13 @@
 {% block 'extra_head' %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
 {{ timedateform.media }}
+{{ recurrenceform.media }}
+<link
+ rel="stylesheet"
+ href="{% static 'css/recurrences.css' %}"
+ type="text/css"
+ media="all">
+<script src="{% static 'js/recurrences.js' %}"></script>
 {% endblock %}
 
 {% block 'content' %}
@@ -26,6 +33,7 @@
     <h3>{{ h_event|capfirst }}</h3>
     {{ eventform|as_bootstrap }}
     {{ timedateform|as_bootstrap }}
+    <div class="recurrenceform">{{ recurrenceform }}</div>
     <h3>{{ h_grouping|capfirst }}</h3>
     {{ groupingform|as_bootstrap }}
     <input type="submit" value="{% trans 'propose' %}">
