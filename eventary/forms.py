@@ -319,6 +319,10 @@ class HostForm(forms.ModelForm):
 
 class RecurrenceForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(RecurrenceForm, self).__init__(*args, **kwargs)
+        self.fields['recurrences'].required = False
+
     class Meta:
         model = EventRecurrence
         fields = ['recurrences']

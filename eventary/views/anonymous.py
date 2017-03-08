@@ -109,10 +109,11 @@ class EventCreateView(SingleObjectMixin, TemplateView):
         else:
             self.host_form = HostForm(initial=get_initial())
         return self.host_form
-    
+
     def get_form_recurrence(self):
         get_initial = getattr(self, 'get_form_recurrence_initial', lambda: {})
-        if self.request.method == 'POST':
+        if (self.request.method == 'POST' and
+            'recurrences' in self.request.POST):
             self.recurrence_form = RecurrenceForm(self.request.POST,
                                                   initial=get_initial())
         else:

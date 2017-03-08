@@ -1,10 +1,12 @@
+from datetime import datetime
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.views.generic.edit import FormMixin
 
 from ..forms import GenericFilterForm
-from ..models import Event
+from ..models import Event, EventRecurrence
 
 
 class ManagementRequiredMixin(PermissionRequiredMixin):
@@ -58,44 +60,100 @@ class EventFilterFormMixin(FormMixin):
         fdate = data.get('from_date', None)
         tdate = data.get('to_date', None)
 
+        # this is needed a few times here
+        def _to_datetime(date, min_or_max='min'):
+            if min_or_max not in ['min', 'max']:
+                raise ValueError('min_or_max has to be either "min" or "max"')
+            _border = getattr(datetime, min_or_max, datetime.min)
+            return datetime.combine(date, _border.time())
+
         # find the right filter
         if fdate is not None and tdate is not None:
-            return (Q(recurring=False,
-                      eventtimedate__start_date__gte=fdate,
+
+            # recurrences requires a datetime object
+            fdatetime = _to_datetime(fdate)
+            tdatetime = _to_datetime(tdate, min_or_max='max')
+
+            # find the the recurrences of the events in between 'from' and 'to'
+            recurrences = EventRecurrence.objects.filter(
+                Q(event__recurring=True) & (
+                    # events with start and end dates
+                    Q(event__eventtimedate__start_date__lte=tdate,
+                      event__eventtimedate__end_date__gte=fdate,
+                      event__eventtimedate__end_date__isnull=False) |
+                    # events without end dates
+                    Q(event__eventtimedate__start_date__lte=tdate,
+                      event__eventtimedate__end_date__isnull=True)
+                )
+            )
+
+            # now find all the events that have recurrences in the given span
+            event_pk = [recurrence.event.pk
+                        for recurrence in recurrences
+                        if len(recurrence.recurrences.between(fdatetime,
+                                                              tdatetime))]
+
+            return (Q(recurring=False) & (
+                    Q(eventtimedate__start_date__gte=fdate,
                       eventtimedate__start_date__lte=tdate,
                       eventtimedate__end_date__isnull=True) |
-                    Q(recurring=False,
-                      eventtimedate__start_date__gte=fdate,
+                    Q(eventtimedate__start_date__gte=fdate,
                       eventtimedate__end_date__gte=fdate,
                       eventtimedate__end_date__lte=tdate,
-                      eventtimedate__end_date__isnull=False) |
-                    Q(recurring=True,
-                      eventtimedate__start_date__gte=fdate,
-                      eventtimedate__start_date__lte=tdate,
-                      eventtimedate__end_date__isnull=False) |
-                    Q(recurring=True,
-                      eventtimedate__end_date__gte=fdate,
-                      eventtimedate__end_date__lte=tdate,
-                      eventtimedate__end_date__isnull=False) |
-                    Q(recurring=True,
-                      eventtimedate__start_date__lte=fdate,
-                      eventtimedate__end_date__gte=tdate,
-                      eventtimedate__end_date__isnull=False))
+                      eventtimedate__end_date__isnull=False)) |
+                    Q(pk__in=event_pk))
+
         elif tdate is not None:
-            return (Q(recurring=False,
-                      eventtimedate__start_date__lte=tdate,
+
+            # convert the to date to a datetime object
+            tdatetime = _to_datetime(tdate, 'max')
+
+            # find all the recurrences before the given date
+            recurrences = EventRecurrence.objects.filter(
+                event__recurring=True,
+                event__eventtimedate__start_date__lte=tdate,
+            )
+
+            # now find all events with occurrences in the given span
+            event_pk = [
+                recurrence.event.pk
+                for recurrence in recurrences
+                if len(recurrence.recurrences.between(
+                    _to_datetime(recurrence.event.eventtimedate.start_date),
+                    tdatetime
+                ))
+            ]
+
+            return (Q(recurring=False) & (
+                    Q(eventtimedate__start_date__lte=tdate,
                       eventtimedate__end_date__isnull=True) |
-                    Q(recurring=False,
-                      eventtimedate__end_date__isnull=False,
-                      eventtimedate__end_date__lte=tdate) |
-                    Q(recurring=True,
-                      eventtimedate__start_date__lte=tdate,
-                      eventtimedate__end_date__isnull=False))
+                    Q(eventtimedate__end_date__isnull=False,
+                      eventtimedate__end_date__lte=tdate)) |
+                    Q(pk__in=event_pk))
         elif fdate is not None:
+
+            # convert the to date to a datetime object
+            fdatetime = _to_datetime(fdate, 'min')
+
+            # find all the recurrences before the given date
+            recurrences = EventRecurrence.objects.filter(
+                Q(event__recurring=True) & (
+                    Q(event__eventtimedate__end_date__isnull=True) |
+                    Q(event__eventtimedate__end_date__isnull=False,
+                      event__eventtimedate__end_date__gte=fdate)
+                )
+            )
+
+            # now find all events with occurrences in the given span
+            event_pk = [
+                recurrence.event.pk
+                for recurrence in recurrences
+                if len(recurrence.recurrences.after(fdatetime))
+            ]
+
             return (Q(recurring=False,
                       eventtimedate__start_date__gte=fdate) |
-                    Q(recurring=True,
-                      eventtimedate__end_date__gte=fdate))
+                    Q(pk__in=event_pk))
 
         return Q()
 
