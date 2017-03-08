@@ -6,7 +6,8 @@ from django.utils.translation import ugettext as _
 from bootstrap3_datetime.widgets import DateTimePicker
 from django_select2.forms import Select2MultipleWidget
 
-from .models import Calendar, Grouping, Group, Event, EventHost
+from .models import Calendar, Grouping, Group
+from .models import Event, EventHost, EventRecurrence
 
 
 class GenericFilterForm(forms.Form):
@@ -314,3 +315,10 @@ class HostForm(forms.ModelForm):
     class Meta:
         model = EventHost
         exclude = []
+
+
+class RecurrenceForm(forms.ModelForm):
+
+    class Meta:
+        model = EventRecurrence
+        fields = ['recurrences']

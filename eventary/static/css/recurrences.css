@@ -1,0 +1,13 @@
+.recurrenceform { margin-bottom: 15px; }
+div.recurrence-widget { float: none; }
+.recurrence-widget .limit { display: none; }
+.recurrence-widget .panels .panel { margin-bottom: 5px; }
+.recurrence-widget .panels .panel:first-child .mode,
+.recurrence-widget .panels .panel:first-child .remove { display: none; }
+.recurrence-widget .panels .panel .checkbox,
+.recurrence-widget .panels .panel .radio { min-height: none; display: inline; }
+.recurrence-widget .yearly .byday { float: left; }
+.recurrence-widget .yearly .byday .recurrence-label,
+.recurrence-widget .monthly .recurrence-label,
+.recurrence-widget .mode .recurrence-label { vertical-align: top; }
+

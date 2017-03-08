@@ -1,12 +1,12 @@
 import os
 import uuid
 
-from django.contrib.auth.models import User as DjangoUser
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from autoslug import AutoSlugField
+from recurrence.fields import RecurrenceField
 
 
 def _get_upload_path(event, filename):
@@ -141,6 +141,11 @@ class EventTimeDate(models.Model):
             )
 
         return line
+
+
+class EventRecurrence(models.Model):
+    event = models.OneToOneField(Event, verbose_name=_('event'))
+    recurrences = RecurrenceField()
 
 
 class GroupingType(models.Model):
