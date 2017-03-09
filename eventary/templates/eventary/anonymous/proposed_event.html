@@ -19,10 +19,6 @@
 
 <h2>{% trans 'Details' %}</h2>
 
-{% if event.image %}
-<img src="{{ event.image.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
-{% endif %}
-
 {% include 'eventary/components/event_details_as_table.html' %}
 
 {% if event.description %}

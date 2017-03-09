@@ -1,5 +1,12 @@
 {% load eventary_tags %}
 {% load i18n %}
+{% load imagekit %}
+
+{% if event.image %}
+{% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
+<img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
+{% endif %}
+
 
 <table class="table table-striped table-hover">
     <tr>

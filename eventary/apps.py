@@ -5,4 +5,4 @@ class EventaryConfig(AppConfig):
     name = 'eventary'
 
     def ready(self):
-        from eventary import signals  # noqa
+        from . import signals, specs  # noqa
