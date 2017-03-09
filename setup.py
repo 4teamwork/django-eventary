@@ -41,6 +41,7 @@ setup(
         'django-bootstrap-themes',
         'django-bootstrap3-datetimepicker',
         'django-forms-bootstrap',
+        'django-imagekit',
         'django-jquery',
         'django-recurrence',
         'django-searchable-select',
