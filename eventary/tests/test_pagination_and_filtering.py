@@ -1,7 +1,5 @@
 from datetime import timedelta as td
 
-import recurrence
-
 from django.shortcuts import reverse
 from django.test import TestCase
 
@@ -90,45 +88,6 @@ class EventFilterTest(EventTestMixin, TestCase):
                  ).strftime('%Y-%m-%d')
             }],
         } for c in range(nr_events)}
-
-    def recurring_filter_data(self, event_length=5, nr_events=5):
-        """Returns the request data for the expected number of count events"""
-
-        # if we have n events, we want to generate data to test filtering of
-        #     0, 1, ..., n events
-        # setting
-        #     `from_date` and `to_date`
-        #     `from_date` only
-        #     `to_date` only
-        return {nr_events - c: {
-            'from & to': [
-                {'filter-from_date': (
-                    self.today + td(days=i)
-                 ).strftime('%Y-%m-%d'),
-                 'filter-to_date': (
-                    self.today + td(days=nr_events - 1 - c)
-                 ).strftime('%Y-%m-%d')}
-                for i in range(nr_events - c)
-            ] + [
-                {'filter-from_date': (
-                    self.today + td(days=nr_events + c)
-                 ).strftime('%Y-%m-%d'),
-                 'filter-to_date': (
-                    self.today + td(days=nr_events + c + i)
-                 ).strftime('%Y-%m-%d')}
-                for i in range(event_length)
-            ],
-            'from only': [{
-                'filter-from_date': (
-                    self.today + td(days=event_length + c)
-                ).strftime('%Y-%m-%d')
-            }],
-            'to only': [{
-                'filter-to_date': (
-                    self.today + td(days=nr_events - 1 - c)
-                ).strftime('%Y-%m-%d')
-            }],
-        } for c in range(nr_events + 1)}
 
     def _test_filter_run(self, events, proposals, data):
 
@@ -221,16 +180,3 @@ class EventFilterTest(EventTestMixin, TestCase):
         self._test_filter_run(events,
                               proposals,
                               self.multiple_filter_data(event_length=2))
-
-    def test_recurring_event_filters(self):
-
-        # create the recurrence rule (weekly every wednesday)
-        rrule = recurrence.Rule(recurrence.DAILY,
-                                interval=2)
-        recurring = str(rrule.to_dateutil_rrule())
-
-        events, proposals = self.create_data(event_length=10,
-                                             recurring=recurring)
-        self._test_filter_run(events,
-                              proposals,
-                              self.recurring_filter_data(event_length=10))
