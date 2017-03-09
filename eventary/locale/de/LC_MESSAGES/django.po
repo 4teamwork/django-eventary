@@ -222,7 +222,7 @@ msgstr "Veranstaltung"
 #: templates/eventary/management/landing.html:132
 #: templates/eventary/management/list_calendars.html:15
 msgid "Actions"
-msgstr "Handlungen"
+msgstr "Optionen"
 
 #: templates/eventary/anonymous/calendar_details.html:43
 #: templates/eventary/anonymous/landing.html:66
@@ -342,7 +342,7 @@ msgid ""
 "    Propose an event for \"%(calendar_title)s\"\n"
 msgstr ""
 "\n"
-"    Schlage eine Veranstaltung für \"%(calendar_title)s\"\n"
+"    Schlage eine Veranstaltung für \"%(calendar_title)s\" vor\n"
 
 #: templates/eventary/anonymous/create_event.html:27
 msgid "propose"
@@ -619,8 +619,8 @@ msgid ""
 "and %(proposal_count)s proposed events on %(timedate_count)s dates.\n"
 msgstr ""
 "\n"
-"    Es hat %(calendar_count)s Kalendare mit %(event_count)s Veranstaltungen "
-"und %(proposal_count)s Veranstaltungsvorschläge an %(timedate_count)s Daten.\n"
+"    Es hat %(calendar_count)s Kalender mit %(event_count)s Veranstaltungen "
+"und %(proposal_count)s Veranstaltungsvorschlägen an %(timedate_count)s Daten.\n"
 
 #: templates/eventary/management/landing.html:51
 #: templates/eventary/management/list_calendars.html:41
