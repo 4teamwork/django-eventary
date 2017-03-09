@@ -11,7 +11,7 @@ class EventOrderTest(EventTestMixin, TestCase):
     # review these
 
     def test_sorting_management(self):
-        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil.rrule())
+        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil_rrule())
         events, proposals = self.create_data()
         recurring_events, recurring_proposals = self.create_data(
             recurring=recurring,
@@ -34,7 +34,7 @@ class EventOrderTest(EventTestMixin, TestCase):
         self.client.logout()
 
     def test_sorting_editorial(self):
-        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil.rrule())
+        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil_rrule())
         events, proposals = self.create_data()
         recurring_events, recurring_proposals = self.create_data(
             recurring=recurring,
@@ -55,7 +55,7 @@ class EventOrderTest(EventTestMixin, TestCase):
         self.client.logout()
 
     def test_sorting_anonymous(self):
-        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil.rrule())
+        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil_rrule())
         events, _ = self.create_data()
         recurring_events, _ = self.create_data(
             recurring=recurring,

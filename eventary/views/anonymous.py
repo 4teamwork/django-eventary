@@ -30,6 +30,8 @@ class CalendarDetailView(EventFilterFormMixin,
         context = super(CalendarDetailView, self).get_context_data(**kwargs)
         context['calendar'] = self.object
 
+        self.event_list = self.event_list.filter(calendar=self.object)
+
         page, paginator = self.paginate_qs(self.event_list)
 
         # update the context
