@@ -19,7 +19,7 @@
 
 <h2>{% trans 'Details' %}</h2>
 
-{% include 'eventary/components/event_details_as_table.html' %}
+{% include 'eventary/components/event_details_as_table.html' with event=event %}
 
 {% if event.description %}
 <h3>{% trans 'Description' %}</h3>
