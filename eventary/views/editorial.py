@@ -98,20 +98,12 @@ class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
                 groups += data[grouping]
             self.event.group_set.set(groups)
 
-            # redirect the user to the calendar's details
-            if self.event.published:
-                return redirect(
-                    'eventary:anonymous-event_details',
-                    self.object.pk,
-                    self.event.pk
-                )
-            else:
-                return redirect(
-                    'eventary:anonymous-proposal_details',
-                    self.object.pk,
-                    self.event.pk,
-                    str(self.event.secret.secret)
-                )
+            return redirect(
+                'eventary:anonymous-proposal_details',
+                self.object.pk,
+                self.event.pk,
+                str(Secret.objects.get(event__pk=self.event.pk).secret)
+            )
 
         return super(EventEditView, self).get(request, *args, **kwargs)
 
