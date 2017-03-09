@@ -103,7 +103,7 @@ def full_date(value):
 
             # now append the recursion information to the last entry
             results.append("{0} {1} {2}".format(
-                value.eventtimedate.end_date is None and _('from'),
+                value.eventtimedate.end_date is None and _('from') or '',
                 results.pop(),
                 ', '.join([
                     rule.to_text()
