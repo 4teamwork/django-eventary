@@ -1,5 +1,7 @@
 from datetime import timedelta as td
 
+import recurrence
+
 from django.shortcuts import reverse
 from django.test import TestCase
 
@@ -221,7 +223,14 @@ class EventFilterTest(EventTestMixin, TestCase):
                               self.multiple_filter_data(event_length=2))
 
     def test_recurring_event_filters(self):
-        events, proposals = self.create_data(event_length=5, recurring=True)
+
+        # create the recurrence rule (weekly every wednesday)
+        rrule = recurrence.Rule(recurrence.DAILY,
+                                interval=2)
+        recurring = str(rrule.to_dateutil_rrule())
+
+        events, proposals = self.create_data(event_length=10,
+                                             recurring=recurring)
         self._test_filter_run(events,
                               proposals,
-                              self.recurring_filter_data(event_length=5))
+                              self.recurring_filter_data(event_length=10))
