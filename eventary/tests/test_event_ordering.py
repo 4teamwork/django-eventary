@@ -3,13 +3,18 @@ from django.test import TestCase
 
 from .mixins import EventTestMixin
 
+import recurrence
+
 
 class EventOrderTest(EventTestMixin, TestCase):
 
+    # review these
+
     def test_sorting_management(self):
+        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil.rrule())
         events, proposals = self.create_data()
         recurring_events, recurring_proposals = self.create_data(
-            recurring=True,
+            recurring=recurring,
             event_length=5
         )
 
@@ -17,20 +22,22 @@ class EventOrderTest(EventTestMixin, TestCase):
 
         url = reverse('eventary:management-landing')
         response = self.client.get(url)
-        self.assertEquals([event.recurring
-                           for event in response.context['proposal_list']],
-                          [False] * len(proposals) + [True] * len(recurring_proposals))
-        self.assertEquals([event.recurring
-                           for event in response.context['event_list']],
-                          [False] * len(events) + [True] * len(recurring_events))
+        self.assertEquals([
+            event.recurring
+            for event in response.context['proposal_list']
+        ], [False] * len(proposals) + [True] * len(recurring_proposals))
+        self.assertEquals([
+            event.recurring
+            for event in response.context['event_list']
+        ], [False] * len(events) + [True] * len(recurring_events))
 
         self.client.logout()
 
     def test_sorting_editorial(self):
-
+        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil.rrule())
         events, proposals = self.create_data()
         recurring_events, recurring_proposals = self.create_data(
-            recurring=True,
+            recurring=recurring,
             event_length=5
         )
 
@@ -48,10 +55,10 @@ class EventOrderTest(EventTestMixin, TestCase):
         self.client.logout()
 
     def test_sorting_anonymous(self):
-        
+        recurring = str(recurrence.Rule(recurrence.DAILY).to_dateutil.rrule())
         events, _ = self.create_data()
         recurring_events, _ = self.create_data(
-            recurring=True,
+            recurring=recurring,
             event_length=5
         )
 

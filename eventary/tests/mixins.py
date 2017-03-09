@@ -5,7 +5,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
 
-from ..models import Calendar, Event, EventTimeDate, EventHost, Secret
+from ..models import Calendar, Event, EventTimeDate, EventHost
+from ..models import EventRecurrence, Secret
 
 
 class AccessTestMixin(TestCase):
@@ -90,8 +91,15 @@ class EventTestMixin(TestCase):
             title='{0} Event'.format(i),
             location='TestLocation',
             published=True,
-            recurring=recurring,
+            recurring=bool(recurring),
         ) for i in range(nr_events)]
+
+        # create the recurrence objects if needed
+        if recurring:
+            [EventRecurrence.objects.create(
+                event=event,
+                recurrences=recurring
+            ) for event in events]
 
         # create the timedates for the events
         if event_length is not None:
@@ -112,11 +120,18 @@ class EventTestMixin(TestCase):
             title='{0} Proposal'.format(i),
             location='TestLocation',
             published=False,
-            recurring=recurring,
+            recurring=bool(recurring),
         ) for i in range(nr_events)]
 
         # create the secrets for the proposals
         [Secret.objects.create(event=proposals[i]) for i in range(nr_events)]
+
+        # create the recurrence objects if needed
+        if recurring:
+            [EventRecurrence.objects.create(
+                event=proposal,
+                recurrences=recurring
+            ) for proposal in proposals]
 
         # create the timedates for the proposals
         if event_length is not None:
