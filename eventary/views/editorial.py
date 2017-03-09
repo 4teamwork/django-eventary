@@ -179,7 +179,11 @@ class ProposalListView(EditorialOrManagementRequiredMixin, CalendarDetailView):
 
     template_name = 'eventary/editorial/list_proposals.html'
 
+    def __init__(self, *args, **kwargs):
+        super(ProposalListView, self).__init__(*args, **kwargs)
+        self.event_list = Event.objects.filter(published=False).distinct()
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Calendar.objects.all())
-        self.event_list = self.object.event_set.filter(published=False)
-        return super(CalendarDetailView, self).get(request, *args, **kwargs)
+        self.event_list.filter(calendar=self.object)
+        return super(ProposalListView, self).get(request, *args, **kwargs)
