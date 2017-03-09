@@ -1,6 +1,7 @@
 from django import template
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext as _
 
 from ..models import Calendar, Event
 
@@ -66,6 +67,8 @@ def eventary_auth_group(user):
 def full_date(value):
     results = []
     if isinstance(value, Event):
+
+        # generate the time string
         timedate = value.eventtimedate
         if (
             timedate.end_date is not None and
@@ -94,6 +97,20 @@ def full_date(value):
                 (timedate.end_time and
                     timedate.end_time.strftime(" - %H:%M") or '')
             ))
+
+        # now check for a recurrence (and append its string)
+        if value.recurring and getattr(value, 'eventrecurrence', False):
+
+            # now append the recursion information to the last entry
+            results.append("{0} {1} {2}".format(
+                value.eventtimedate.end_date is None and _('from'),
+                results.pop(),
+                ', '.join([
+                    rule.to_text()
+                    for rule in value.eventrecurrence.recurrences.rrules
+                ])
+            ))
+
     return len(results) and ", ".join(results) or ""
 
 

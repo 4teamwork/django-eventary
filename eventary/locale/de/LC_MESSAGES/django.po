@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-23 13:37+0100\n"
+"POT-Creation-Date: 2017-03-09 12:02+0100\n"
 "PO-Revision-Date: 2017-02-23 14:10+0100\n"
 "Last-Translator: Pablo Vergés <pablo.verges@4teamwork.ch>\n"
 "Language-Team:  <@li.org>\n"
@@ -17,144 +17,168 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: forms.py:15 forms.py:73 forms.py:79
+#: forms.py:16 forms.py:85 forms.py:91 templatetags/eventary_tags.py:106
 msgid "from"
-msgstr "von"
+msgstr "ab"
 
-#: forms.py:21
+#: forms.py:22
 msgid "to"
 msgstr "bis"
 
-#: forms.py:137
+#: forms.py:64 forms.py:139
+msgid "\"from date\" is greater than \"to date\""
+msgstr "\"ab\" kann nicht nach \"bis\" liegen"
+
+#: forms.py:160
 msgid "groupings"
 msgstr "Gruppierungen"
 
-#: forms.py:193 models.py:77 models.py:78
+#: forms.py:215 models.py:96 models.py:97
 msgid "start date"
 msgstr "Datum Beginn"
 
-#: forms.py:199 models.py:80 models.py:82
+#: forms.py:221 models.py:99 models.py:101
 msgid "start time"
 msgstr "Startzeit"
 
-#: forms.py:205 models.py:84 models.py:86
+#: forms.py:227 models.py:103 models.py:105
 msgid "end date"
 msgstr "Datum Ende"
 
-#: forms.py:211 models.py:88 models.py:90
+#: forms.py:233 models.py:107 models.py:109
 msgid "end time"
 msgstr "Endzeit"
 
-#: models.py:14 models.py:41 models.py:135 models.py:147
+#: forms.py:252
+msgid "\"start date\" cannot be greater than \"end date\""
+msgstr "\"Datum Beginn\" kann nicht nach \"Datum Ende\" liegen"
+
+#: forms.py:258
+msgid "\"start time\" cannot be left blank if \"end time\" is set"
+msgstr ""
+"\"Startzeit\" kann nicht leer gelassen werden, falls \"Endzeit\" angegeben "
+"wird"
+
+#: forms.py:264
+msgid "\"start time\" is greater than \"end time\""
+msgstr "\"Startzeit\" kann nicht nach \"Endzeit\" liegen"
+
+#: models.py:24 models.py:54 models.py:159 models.py:171
 msgid "title"
 msgstr "Titel"
 
-#: models.py:15
+#: models.py:25
 msgid "slug"
 msgstr "Normalisierung"
 
-#: models.py:17
+#: models.py:27
 msgid "limits the number of daily anonymous views for proposed events"
-msgstr "limitiert die number der täglichen Zugriffe für nicht publizierte Veranstaltungen"
+msgstr ""
+"limitiert die number der täglichen Zugriffe für nicht publizierte "
+"Veranstaltungen"
 
-#: models.py:20
+#: models.py:30
 msgid "view limit"
 msgstr "Ansichtsbegrenzung"
 
-#: models.py:31 models.py:138
+#: models.py:41 models.py:162
 msgid "calendar"
 msgstr "Kalender"
 
-#: models.py:35
-msgid "image"
-msgstr "Bild"
-
-#: models.py:39
-msgid "document"
-msgstr "Dokument"
-
-#: models.py:40
+#: models.py:45
 msgid "host"
 msgstr "Veranstalter"
 
-#: models.py:45
+#: models.py:49
+msgid "image"
+msgstr "Bild"
+
+#: models.py:53
+msgid "document"
+msgstr "Dokument"
+
+#: models.py:58
 msgid "location"
 msgstr "Veranstaltungsort"
 
-#: models.py:48 models.py:166
+#: models.py:61 models.py:195
 msgid "homepage"
 msgstr "Homepage"
 
-#: models.py:49
+#: models.py:62
 msgid "publication status"
 msgstr "Publizierungsstatus"
 
-#: models.py:50
+#: models.py:63
 msgid "published"
 msgstr "Publiziert"
 
-#: models.py:52 models.py:54
+#: models.py:65 models.py:67
 #: templates/eventary/anonymous/published_event.html:21
 msgid "description"
 msgstr "Beschreibung"
 
-#: models.py:57 models.py:60 models.py:92 models.py:95
+#: models.py:70 models.py:73 models.py:111 models.py:114
 msgid "comment"
 msgstr "Kommentar"
 
-#: models.py:63 models.py:66
+#: models.py:76 models.py:79
 msgid "prize"
 msgstr "Preis"
 
-#: models.py:68 models.py:69
+#: models.py:81 models.py:82
 msgid "recurring event"
 msgstr "periodische Veranstaltung"
 
-#: models.py:76 models.py:178
+#: models.py:95 models.py:147 models.py:200
 msgid "event"
 msgstr "Veranstaltung"
 
-#: models.py:128
+#: models.py:152
 msgid "label"
 msgstr "Etikett"
 
-#: models.py:140
+#: models.py:164
 msgid "grouping type"
 msgstr "generischer Gruppierungstyp"
 
-#: models.py:148
+#: models.py:172
 msgid "grouping"
 msgstr "Gruppierung"
 
-#: models.py:151
+#: models.py:175
 msgid "events"
 msgstr "Veranstaltungen"
 
-#: models.py:162
-msgid "hosting organization"
+#: models.py:186
+msgid "host name"
 msgstr "Veranstalter"
 
-#: models.py:164
-msgid "organization"
-msgstr "Veranstalter"
+#: models.py:190
+msgid "info"
+msgstr "Information"
 
-#: models.py:165
+#: models.py:191
 msgid "phone"
-msgstr "tel. Kontakt"
+msgstr "telefonischer Kontakt"
 
-#: models.py:181
+#: models.py:192
+msgid "email"
+msgstr "E-Mail"
+
+#: models.py:203
 msgid "secret"
 msgstr "Geheimnis"
 
-#: models.py:182
+#: models.py:204
 msgid "calls"
 msgstr "Aufrufe"
 
-#: models.py:184
+#: models.py:206
 msgid "creation date"
 msgstr "Erstellungsdatum"
 
-#: models.py:186
+#: models.py:208
 msgid "last call"
 msgstr "letzter Aufruf"
 
@@ -185,7 +209,14 @@ msgstr "%(event_title)s herunterladen"
 msgid "Update %(event_title)s"
 msgstr "%(event_title)s aktualisieren"
 
+#: templates/eventary/actions/events_editorial.html:20
 #: templates/eventary/actions/events_management.html:20
+#, fuzzy, python-format
+#| msgid "View %(event_title)s"
+msgid "Hide %(event_title)s"
+msgstr "%(event_title)s ansehen"
+
+#: templates/eventary/actions/events_management.html:27
 #: templates/eventary/actions/proposals_editorial.html:20
 #: templates/eventary/actions/proposals_management.html:20
 #, python-format
@@ -199,8 +230,9 @@ msgid "Publish %(event_title)s"
 msgstr "%(event_title)s publizieren"
 
 #: templates/eventary/anonymous/calendar_details.html:19
+#: templates/eventary/anonymous/landing.html:42
 #: templates/eventary/editorial/landing.html:59
-#: templates/eventary/management/landing.html:73
+#: templates/eventary/management/landing.html:70
 msgid "Upcoming events"
 msgstr "bevorstehende Veranstaltungen"
 
@@ -208,7 +240,7 @@ msgstr "bevorstehende Veranstaltungen"
 #: templates/eventary/anonymous/landing.html:64
 #: templates/eventary/editorial/landing.html:65
 #: templates/eventary/editorial/list_proposals.html:35
-#: templates/eventary/management/landing.html:78
+#: templates/eventary/management/landing.html:75
 msgid "Event"
 msgstr "Veranstaltung"
 
@@ -217,9 +249,9 @@ msgstr "Veranstaltung"
 #: templates/eventary/editorial/landing.html:66
 #: templates/eventary/editorial/landing.html:119
 #: templates/eventary/editorial/list_proposals.html:36
-#: templates/eventary/management/landing.html:25
-#: templates/eventary/management/landing.html:79
-#: templates/eventary/management/landing.html:132
+#: templates/eventary/management/landing.html:22
+#: templates/eventary/management/landing.html:76
+#: templates/eventary/management/landing.html:129
 #: templates/eventary/management/list_calendars.html:15
 msgid "Actions"
 msgstr "Optionen"
@@ -228,8 +260,8 @@ msgstr "Optionen"
 #: templates/eventary/anonymous/landing.html:66
 #: templates/eventary/editorial/landing.html:67
 #: templates/eventary/editorial/landing.html:120
-#: templates/eventary/management/landing.html:80
-#: templates/eventary/management/landing.html:133
+#: templates/eventary/management/landing.html:77
+#: templates/eventary/management/landing.html:130
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -238,18 +270,18 @@ msgstr "Kalender"
 #: templates/eventary/components/event_details_as_table.html:6
 #: templates/eventary/editorial/landing.html:68
 #: templates/eventary/editorial/landing.html:121
-#: templates/eventary/management/landing.html:81
-#: templates/eventary/management/landing.html:134
+#: templates/eventary/management/landing.html:78
+#: templates/eventary/management/landing.html:131
 msgid "Date & time"
 msgstr "Datum & Uhrzeit"
 
 #: templates/eventary/anonymous/calendar_details.html:45
 #: templates/eventary/anonymous/landing.html:68
-#: templates/eventary/components/event_details_as_table.html:9
+#: templates/eventary/components/event_details_as_table.html:10
 #: templates/eventary/editorial/landing.html:69
 #: templates/eventary/editorial/landing.html:122
-#: templates/eventary/management/landing.html:82
-#: templates/eventary/management/landing.html:135
+#: templates/eventary/management/landing.html:79
+#: templates/eventary/management/landing.html:132
 msgid "Location"
 msgstr "Veranstaltungsort"
 
@@ -257,8 +289,8 @@ msgstr "Veranstaltungsort"
 #: templates/eventary/anonymous/landing.html:77
 #: templates/eventary/editorial/landing.html:78
 #: templates/eventary/editorial/landing.html:131
-#: templates/eventary/management/landing.html:91
-#: templates/eventary/management/landing.html:144
+#: templates/eventary/management/landing.html:88
+#: templates/eventary/management/landing.html:141
 #, python-format
 msgid "View %(event_title)s"
 msgstr "%(event_title)s ansehen"
@@ -266,8 +298,8 @@ msgstr "%(event_title)s ansehen"
 #: templates/eventary/anonymous/calendar_details.html:72
 #: templates/eventary/anonymous/landing.html:95
 #: templates/eventary/editorial/landing.html:96
-#: templates/eventary/management/landing.html:109
-#: templates/eventary/management/landing.html:162
+#: templates/eventary/management/landing.html:106
+#: templates/eventary/management/landing.html:159
 msgid "previous page"
 msgstr "vorige Seite"
 
@@ -276,8 +308,8 @@ msgstr "vorige Seite"
 #: templates/eventary/editorial/landing.html:96
 #: templates/eventary/editorial/landing.html:149
 #: templates/eventary/editorial/list_proposals.html:76
-#: templates/eventary/management/landing.html:109
-#: templates/eventary/management/landing.html:162
+#: templates/eventary/management/landing.html:106
+#: templates/eventary/management/landing.html:159
 msgid "previous"
 msgstr "vorige"
 
@@ -285,8 +317,8 @@ msgstr "vorige"
 #: templates/eventary/anonymous/landing.html:97
 #: templates/eventary/editorial/landing.html:98
 #: templates/eventary/editorial/landing.html:151
-#: templates/eventary/management/landing.html:111
-#: templates/eventary/management/landing.html:164
+#: templates/eventary/management/landing.html:108
+#: templates/eventary/management/landing.html:161
 #, python-format
 msgid ""
 "\n"
@@ -301,8 +333,8 @@ msgstr ""
 #: templates/eventary/anonymous/landing.html:103
 #: templates/eventary/editorial/landing.html:104
 #: templates/eventary/editorial/landing.html:157
-#: templates/eventary/management/landing.html:117
-#: templates/eventary/management/landing.html:170
+#: templates/eventary/management/landing.html:114
+#: templates/eventary/management/landing.html:167
 msgid "next page"
 msgstr "nächste Seite"
 
@@ -311,15 +343,15 @@ msgstr "nächste Seite"
 #: templates/eventary/editorial/landing.html:104
 #: templates/eventary/editorial/landing.html:157
 #: templates/eventary/editorial/list_proposals.html:82
-#: templates/eventary/management/landing.html:117
-#: templates/eventary/management/landing.html:170
+#: templates/eventary/management/landing.html:114
+#: templates/eventary/management/landing.html:167
 msgid "next"
 msgstr "nächste"
 
 #: templates/eventary/anonymous/calendar_details.html:86
 #: templates/eventary/anonymous/landing.html:108
 #: templates/eventary/editorial/landing.html:109
-#: templates/eventary/management/landing.html:122
+#: templates/eventary/management/landing.html:119
 msgid "No upcoming events!"
 msgstr "Keine bevorstehende Veranstaltungen!"
 
@@ -335,7 +367,25 @@ msgstr "Veranstaltung jetzt vorschlagen!"
 msgid "Propose your event now!"
 msgstr "Schlage deine Veranstaltung jetzt vor!"
 
-#: templates/eventary/anonymous/create_event.html:13
+#: templates/eventary/anonymous/create_event.html:21
+#, fuzzy
+#| msgid "Information"
+msgid "host information"
+msgstr "Information"
+
+#: templates/eventary/anonymous/create_event.html:22
+#, fuzzy
+#| msgid "Information"
+msgid "event information"
+msgstr "Information"
+
+#: templates/eventary/anonymous/create_event.html:23
+#, fuzzy
+#| msgid "Information"
+msgid "grouping information"
+msgstr "Information"
+
+#: templates/eventary/anonymous/create_event.html:25
 #, python-format
 msgid ""
 "\n"
@@ -344,7 +394,7 @@ msgstr ""
 "\n"
 "    Schlage eine Veranstaltung für \"%(calendar_title)s\" vor\n"
 
-#: templates/eventary/anonymous/create_event.html:27
+#: templates/eventary/anonymous/create_event.html:39
 msgid "propose"
 msgstr "vorschlagen"
 
@@ -358,8 +408,8 @@ msgstr "Veranstaltungskalender"
 #: templates/eventary/editorial/landing.html:15
 #: templates/eventary/management/landing.html:15
 #: templates/eventary/management/list_calendars.html:8
-#: templates/eventary/navigation/editorial.html:15
-#: templates/eventary/navigation/management.html:15
+#: templates/eventary/navigation/editorial.html:16
+#: templates/eventary/navigation/management.html:16
 msgid "Calendars"
 msgstr "Kalender"
 
@@ -368,7 +418,7 @@ msgstr "Kalender"
 #: templates/eventary/editorial/import_calendar.html:41
 #: templates/eventary/editorial/landing.html:21
 #: templates/eventary/editorial/list_calendars.html:14
-#: templates/eventary/management/landing.html:24
+#: templates/eventary/management/landing.html:21
 #: templates/eventary/management/list_calendars.html:14
 msgid "Title"
 msgstr "Titel"
@@ -376,7 +426,7 @@ msgstr "Titel"
 #: templates/eventary/anonymous/landing.html:22
 #: templates/eventary/editorial/landing.html:22
 #: templates/eventary/editorial/list_calendars.html:16
-#: templates/eventary/management/landing.html:27
+#: templates/eventary/management/landing.html:24
 #: templates/eventary/management/list_calendars.html:17
 msgid "# Events"
 msgstr "Anzahl Veranstaltungen"
@@ -384,7 +434,7 @@ msgstr "Anzahl Veranstaltungen"
 #: templates/eventary/anonymous/landing.html:23
 #: templates/eventary/editorial/landing.html:23
 #: templates/eventary/editorial/list_calendars.html:17
-#: templates/eventary/management/landing.html:28
+#: templates/eventary/management/landing.html:25
 #: templates/eventary/management/list_calendars.html:18
 msgid "# Proposals"
 msgstr "Anzahl Veranstaltungsvorschläge"
@@ -393,7 +443,7 @@ msgstr "Anzahl Veranstaltungsvorschläge"
 #: templates/eventary/anonymous/list_calendars.html:24
 #: templates/eventary/editorial/landing.html:31
 #: templates/eventary/editorial/list_calendars.html:26
-#: templates/eventary/management/landing.html:37
+#: templates/eventary/management/landing.html:34
 #: templates/eventary/management/list_calendars.html:27
 #, python-format
 msgid "View %(calendar_title)s"
@@ -466,15 +516,27 @@ msgstr "Zurück zu %(calendar_title)s"
 msgid "download info sheet"
 msgstr "Informationsbroschüre herunterladen"
 
+#: templates/eventary/anonymous/too_many_views.html:12
+msgid "Too many views"
+msgstr "Zu viele ansichten"
+
+#: templates/eventary/anonymous/too_many_views.html:14
+msgid ""
+"You are seeing this page, because the requested page has a daily view "
+"limitation."
+msgstr ""
+"Du siehst diese Seite, weil die Ansichtseinschränkung der angeforderten "
+"Seite erreicht wurde."
+
 #: templates/eventary/base.html:9
 msgid "eventary"
 msgstr "Veranstaltungskalender"
 
-#: templates/eventary/components/event_details_as_table.html:17
+#: templates/eventary/components/event_details_as_table.html:20
 msgid "Entry fee"
 msgstr "Eintrittskosten"
 
-#: templates/eventary/components/event_details_as_table.html:20
+#: templates/eventary/components/event_details_as_table.html:25
 msgid "Host"
 msgstr "Veranstalter"
 
@@ -510,28 +572,28 @@ msgid "Information"
 msgstr "Information"
 
 #: templates/eventary/editorial/landing.html:42
-#: templates/eventary/management/landing.html:56
+#: templates/eventary/management/landing.html:53
 msgid "Events & proposals"
 msgstr "Veranstaltungen & Veranstaltungsvorschläge"
 
 #: templates/eventary/editorial/landing.html:112
 #: templates/eventary/editorial/list_proposals.html:14
-#: templates/eventary/management/landing.html:125
+#: templates/eventary/management/landing.html:122
 msgid "Upcoming proposals"
 msgstr "bevorstehende Veranstaltungsvorschläge"
 
 #: templates/eventary/editorial/landing.html:118
-#: templates/eventary/management/landing.html:131
+#: templates/eventary/management/landing.html:128
 msgid "Proposed event"
 msgstr "Veranstaltungsvorschlag"
 
 #: templates/eventary/editorial/landing.html:162
-#: templates/eventary/management/landing.html:175
+#: templates/eventary/management/landing.html:172
 msgid "No upcoming proposed events!"
 msgstr "Keine bevorstehende Veranstaltungsvorschläge"
 
 #: templates/eventary/editorial/list_calendars.html:15
-#: templates/eventary/management/landing.html:26
+#: templates/eventary/management/landing.html:23
 #: templates/eventary/management/list_calendars.html:16
 msgid "Groupings"
 msgstr "Gruppierungen"
@@ -574,7 +636,7 @@ msgstr "Kannst du den Veranstaltungsvorschlag, den du suchst, nicht finden?"
 msgid "Make a new proposal now!"
 msgstr "Mache jetzt einen neuen Veranstaltungsvorschlag!"
 
-#: templates/eventary/editorial/update_event.html:24
+#: templates/eventary/editorial/update_event.html:25
 #: templates/eventary/management/update_calendar.html:16
 msgid "update"
 msgstr "aktualisieren"
@@ -611,39 +673,40 @@ msgstr ""
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: templates/eventary/management/landing.html:16
-#, python-format
-msgid ""
-"\n"
-"    There are %(calendar_count)s calendars with %(event_count)s published "
-"and %(proposal_count)s proposed events on %(timedate_count)s dates.\n"
-msgstr ""
-"\n"
-"    Es hat %(calendar_count)s Kalender mit %(event_count)s Veranstaltungen "
-"und %(proposal_count)s Veranstaltungsvorschlägen an %(timedate_count)s Daten.\n"
+#: templates/eventary/management/landing.html:48
+#: templates/eventary/management/list_calendars.html:41
+#, fuzzy
+#| msgid "Cannot find the event you're looking for?"
+msgid "Cannot find the calendar you're looking for?"
+msgstr "Kannst du die Veranstaltung, die du suchst, nicht finden?"
 
 #: templates/eventary/management/landing.html:51
-#: templates/eventary/management/list_calendars.html:41
-msgid "Cannot find the calendar you're looking for?"
-msgstr "Kannst du den Kalender, den du suchst, nicht finden?"
-
-#: templates/eventary/management/landing.html:54
 #: templates/eventary/management/list_calendars.html:43
+#, fuzzy
+#| msgid "Add a new calendar"
 msgid "Add a new calendar now!"
-msgstr "Füge ein neuer Kalender jetzt hinzu!"
-
+msgstr "Einen neuen Kalender hinzufügen"
 
 #: templates/eventary/navigation/anonymous.html:3
-#: templates/eventary/navigation/editorial.html:3
-#: templates/eventary/navigation/management.html:3
+#: templates/eventary/navigation/editorial.html:4
+#: templates/eventary/navigation/management.html:4
 msgid "Home"
-msgstr "Start"
+msgstr "Übersicht"
 
-#: templates/eventary/navigation/editorial.html:19
-#: templates/eventary/navigation/management.html:19
+#: templates/eventary/navigation/editorial.html:20
+#: templates/eventary/navigation/management.html:21
+#, fuzzy
+#| msgid "Calendars"
 msgid "List Calendars"
-msgstr "Kalender auflisten"
+msgstr "Kalender"
 
-#: templates/eventary/navigation/management.html:20
+#: templates/eventary/navigation/editorial.html:26
+#: templates/eventary/navigation/management.html:31
+msgid "signed in as:"
+msgstr "angemeldet als:"
+
+#: templates/eventary/navigation/management.html:24
+#, fuzzy
+#| msgid "Calendar"
 msgid "Add Calendar"
-msgstr "Kalender hinzufügen"
+msgstr "Kalender"
