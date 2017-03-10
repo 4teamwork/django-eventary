@@ -252,7 +252,7 @@ msgstr "%(event_title)s aktualisieren"
 #: templates/eventary/actions/events_management.html:17
 #, python-format
 msgid "Hide %(event_title)s"
-msgstr "%(event_title)s ansehen"
+msgstr "%(event_title)s verbergen"
 
 #. Translators: Title (first header)
 #: templates/eventary/actions/events_management.html:23
