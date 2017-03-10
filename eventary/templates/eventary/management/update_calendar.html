@@ -8,11 +8,23 @@
 {% endblock %}
 
 {% block 'content' %}
-<h2>{% blocktrans with calendar_title=calendar.title %}Update {{ calendar_title }}{% endblocktrans %}</h2>
+
+{% comment %}Translators: Calendar delete view {% endcomment %}
+{% comment %}Translators: Submit button title{% endcomment %}
+{% trans 'update the calendar' as btn_update_title %}
+{% comment %}Translators: Submit button text{% endcomment %}
+{% trans 'update' as btn_update_text %}
+
+{% comment %}Translators: Title{% endcomment %}
+<h1></h1>>{% blocktrans with calendar_title=calendar.title %}Update {{ calendar_title }}{% endblocktrans %}</h1>
 
 <form method="post">
     {% csrf_token %}
     {{ form|as_bootstrap }}
-    <input type="submit" value="{% trans 'update' %}">
+    <button type="submit"
+            class="btn btn-primary"
+            title="{{ btn_update_title|capfirst }}">
+        {{ btn_update_text|capfirst }}
+    </button>
 </form>
 {% endblock %}

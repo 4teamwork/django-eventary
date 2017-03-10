@@ -3,15 +3,23 @@
 {% load i18n %}
 
 {% block 'content' %}
-<h2>{% blocktrans with calendar_title=calendar.title %}
-    Delete {{ calendar_title }}
-{% endblocktrans %}</h2>
+
+{% comment %}Translators: Calendar delete view {% endcomment %}
+{% comment %}Translators: Submit button title{% endcomment %}
+{% trans 'delete the calendar' as btn_delete_title %}
+{% comment %}Translators: Submit button text{% endcomment %}
+{% trans 'delete' as btn_delete_text %}
+
+{% comment %}Translators: Title {% endcomment %}
+<h1>{% blocktrans with calendar_title=calendar.title %}Delete {{ calendar_title }}{% endblocktrans %}</h1>
 
 <form method="post">
-    <p>{% blocktrans with calendar_title=calendar.title %}
-        Are you sure you want to delete "{{ calendar_title }}"?
-    {% endblocktrans %}</p>
+    <p>{% blocktrans with calendar_title=calendar.title %}Are you sure you want to delete "{{ calendar_title }}"?{% endblocktrans %}</p>
     {% csrf_token %}
-    <input type="submit" value="{% trans 'Confirm' %}">
+    <button type="submit"
+            class="btn btn-primary"
+            title="{{ btn_delete_title|capfirst }}">
+        {{ btn_delete_text|capfirst }}
+    </button>
 </form>
 {% endblock %}

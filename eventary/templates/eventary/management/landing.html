@@ -10,48 +10,91 @@
 
 {% block 'content' %}
 
-<h1>{% trans 'Eventary - an inventary for events' %}</h1>
+{% comment %}Translators: Landing page for management users{% endcomment %}
+{% comment %}Translators: Title (first header){% endcomment %}
+{% trans 'Eventary - an inventary for events' as h_title %}
+{% comment %}Translators: Headers{% endcomment %}
+{% trans 'calendars' as h_calendars %}
+{% trans 'filter events' as h_event_filter %}
+{% trans 'upcoming events' as h_upcoming_events %}
+{% trans 'upcoming proposals' as h_upcoming_proposals %}
+{% comment %}Translators: Table headers{% endcomment %}
+{% trans 'title' as th_title %}
+{% trans 'actions' as th_actions %}
+{% trans '# events' as th_nr_events %}
+{% trans '# proposals' as th_nr_proposals %}
+{% trans 'event' as th_event %}
+{% trans 'proposal' as th_proposal %}
+{% trans 'calendar' as th_calendar %}
+{% trans 'date & time' as th_date_time %}
+{% trans 'location' as th_location %}
+{% comment %}Translators: Search button title{% endcomment %}
+{% trans 'search events matching the filter parameters' as btn_search_title %}
+{% trans 'search' as btn_search_text %}
+{% comment %}Translators: Event pagination{% endcomment %}
+{% comment %}Translators: Title of the previous page link{% endcomment %}
+{% trans 'previous page' as pag_prev_title %}
+{% comment %}Translators: Text of the previous page link{% endcomment %}
+{% trans 'previous' as pag_prev_text %}
+{% comment %}Translators: Title of the next page link{% endcomment %}
+{% trans 'next page' as pag_next_title %}
+{% trans 'next' as pag_next_text %}
+{% comment %}Translators: Replacement text when no event was found{% endcomment %}
+{% trans 'No upcoming events!' as no_events %}
+{% comment %}Translators: Text to incite the user to propose a calendar{% endcomment %}
+{% trans "You cannot find the calendar you're looking for?" as cannot_find_calendar %}
+{% comment %}Translators: The title of the ropose event button {% endcomment %}
+{% trans 'Add a calendar now!' as btn_calendar_title %}
+{% comment %}Translators: The text of the ropose event button {% endcomment %}
+{% trans 'Add your calendar now!' as btn_calendar_text %}
+{% comment %}Translators: Text to incite the user to propose an event{% endcomment %}
+{% trans "You cannot find the event you're looking for?" as cannot_find_event %}
+{% comment %}Translators: The title of the propose event button {% endcomment %}
+{% trans 'Propose an event now!' as btn_propose_title %}
+{% comment %}Translators: The text of the propose event button {% endcomment %}
+{% trans 'Propose your event now!' as btn_propose_text %}
+{% comment %}Translators: Replacement text when no proposal was found{% endcomment %}
+{% trans 'No proposed events!' as no_events %}
 
-<h2>{% trans 'Calendars' %}</h2>
+<h1>{{ h_title|capfirst }}</h1>
 
-{% if calendar_list|length %}
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>{% trans 'Title' %}</th>
-                <th>{% trans 'Actions' %}</th>
-                <th>{% trans 'Groupings' %}</th>
-                <th>{% trans '# Events' %}</th>
-                <th>{% trans '# Proposals' %}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for calendar in calendar_list %}
-            <tr>
-                <td>
-                    <a
-                    href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
-                    title="{% blocktrans with calendar_title=calendar.title %}View {{ calendar_title }}{% endblocktrans %}">
-                        {{ calendar.title }}
-                    </a>
-                </td>
-                <td>{{ calendar|actions:request.user }}</td>
-                <td>{{ calendar.grouping_set.all|join:", " }}</td>
-                <td>{{ calendar.num_events }}</td>
-                <td>{{ calendar.num_proposals }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<h2>{{ h_calendars|capfirst }}</h2>
+{% if calendar_list.count > 1 %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>{{ th_title|capfirst }}</th>
+            <th>{{ th_actions|capfirst }}</th>
+            <th>{{ th_nr_events|capfirst }}</th>
+            <th>{{ th_nr_proposals|capfirst }}</th>
+        </tr>
+    </thead>
+    {% for calendar in calendar_list %}
+    <tr>
+        <td>
+            <a href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+               {% comment %}Translators: The title of the link to the calendar details view{% endcomment %}
+               title="{% blocktrans with calendar_title=calendar.title %}View {{ calendar_title }}.{% endblocktrans %}">
+                {{ calendar.title }}
+            </a>
+        </td>
+        <td>{{ calendar|actions:request.user }}</td>
+        <td>{{ calendar.num_events }}</td>
+        <td>{{ calendar.num_proposals }}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endif %}
+<p>
+    {{ cannot_find_calendar }}
+    <a class="btn btn-primary"
+       href="{% url 'eventary:management-create_calendar' %}"
+       title="{{ btn_calendar_title|capfirst }}">
+        {{ btn_calendar_text|capfirst }}
+    </a>
+</p>
 
-<p>{% trans "Cannot find the calendar you're looking for?" %}
-<a
- href="{% url 'eventary:management-create_calendar' %}"
- title="{% trans 'Add a new calendar now!' %}">{% trans 'Add a new calendar now!' %}</a></p>
-
-<h2>{% trans 'Events & proposals' %}</h2>
-
+<h2>{{ h_event_filter|capfirst }}</h2>
 <form class="form-inline" method="get">
     <div class="container">
         <div class="row">
@@ -61,31 +104,35 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary glyphicon glyphicon-search"></button>
+                <button type="submit"
+                        class="btn btn-primary glyphicon glyphicon-search"
+                        title="{{ btn_search_title|capfirst }}">
+                    {{ btn_search_text|capfirst }}
+                </button>
             </div>
         </div>
     </div>
 </form>
 
-<h3>{% trans 'Upcoming events' %}</h3>
+<h2>{{ h_upcoming_events|capfirst }}</h2>
 {% if event_page %}
-    <table class="table table-striped table-hover">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>{% trans 'Event' %}</th>
-            <th>{% trans 'Actions' %}</th>
-            <th>{% trans 'Calendar' %}</th>
-            <th>{% trans 'Date & time' %}</th>
-            <th>{% trans 'Location' %}</th>
+            <th>{{ th_event|capfirst }}</th>
+            <th>{{ th_actions|capfirst }}</th>
+            <th>{{ th_calendar|capfirst }}</th>
+            <th>{{ th_date_time|capfirst }}</th>
+            <th>{{ th_location|capfirst }}</th>
         </tr>
     </thead>
     <tbody>
         {% for event in event_page %}
         <tr>
             <td>
-                <a
-                 href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
-                 title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
+                <a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
+                   {% comment %}Translators: The title of the link to the event details view{% endcomment %}
+                   title="{% blocktrans with event_title=event.title %}View {{ event_title }}.{% endblocktrans %}">
                     {{ event.title }}
                 </a>
             </td>
@@ -96,80 +143,116 @@
         </tr>
         {% endfor %}
     </tbody>
-    </table>
+</table>
 
     {% if event_page.paginator.num_pages > 1 %}
-    <div class="pagination">
+    <ul class="pagination">
         {% if event_page.has_previous %}
-        <a
-         href="?{% url_replace request 'event_page' event_page.previous_page_number %}"
-         title="{% trans 'previous page' %}">{% trans 'previous' %}</a>
+        <li class="page-item">
+            <a href="?{% url_replace request 'event_page' event_page.previous_page_number %}"
+               title="{{ pag_prev_title|capfirst }}">
+                {{ pag_prev_text|capfirst }}
+            </a>
+        </li>
         {% endif %}
-        <span>{% blocktrans with page_num=event_page.number num_pages=event_page.paginator.num_pages %}
-            Page {{ page_num }} of {{ num_pages }}
-        {% endblocktrans %}</span>
+        {% for page_number in event_page.paginator.page_range %}
+        <li class="page-item">
+            <a href="?{% url_replace request 'event_page' page_number %}"
+               {% comment %}Translators: The title of the link to a given page number in the paginator{% endcomment %}
+               title="{% blocktrans %}Go to {{ page_number }}.{% endblocktrans %}">
+                {{ page_number }}
+            </a>
+        </li>
+        {% endfor %}
         {% if event_page.has_next %}
-        <a 
-            href="?{% url_replace request 'event_page' event_page.next_page_number %}"
-            title="{% trans 'next page' %}">{% trans 'next' %}</a>
+        <li class="page-item">
+            <a href="?{% url_replace request 'event_page' event_page.next_page_number %}"
+               title="{{ pag_next_title|capfirst }}">
+                {{ pag_next_text|capfirst }}
+            </a>
+        </li>
         {% endif %}
-    </div>
+    </ul>
     {% endif %}
+
 {% else %}
-<p>{% trans 'No upcoming events!' %}</p>
+<em>{{ no_events}}</em>
 {% endif %}
 
-<h3>{% trans 'Upcoming proposals' %}</h3>
-
+<h2>{{ h_upcoming_proposals|capfirst }}</h2>
 {% if proposal_page %}
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>{% trans 'Proposed event' %}</th>
-                <th>{% trans 'Actions' %}</th>
-                <th>{% trans 'Calendar' %}</th>
-                <th>{% trans 'Date & time' %}</th>
-                <th>{% trans 'Location' %}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for event in proposal_page %}
-            <tr>
-                <td>
-                    <a
-                     href="{% url 'eventary:anonymous-proposal_details' event.calendar.pk event.pk event.secret.secret %}"
-                     title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
-                        {{ event.title }}
-                    </a>
-                </td>
-                <td>{{ event|actions:request.user }}</td>
-                <td>{{ event.calendar.title }}</td>
-                <td>{{ event|to_full_date }}</td>
-                <td>{{ event.location }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>{{ th_proposal|capfirst }}</th>
+            <th>{{ th_actions|capfirst }}</th>
+            <th>{{ th_calendar|capfirst }}</th>
+            <th>{{ th_date_time|capfirst }}</th>
+            <th>{{ th_location|capfirst }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for event in proposal_page %}
+        <tr>
+            <td>
+                <a href="{% url 'eventary:anonymous-proposal_details' event.calendar.pk event.pk event.secret.secret %}"
+                   {% comment %}Translators: The title of the link to the proposal details view{% endcomment %}
+                   title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
+                    {{ event.title }}
+                </a>
+            </td>
+            <td>{{ event|actions:request.user }}</td>
+            <td>{{ event.calendar.title }}</td>
+            <td>{{ event|to_full_date }}</td>
+            <td>{{ event.location }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
     {% if proposal_page.paginator.num_pages > 1 %}
-    <div class="pagination">
+    <ul class="pagination">
         {% if proposal_page.has_previous %}
-        <a
-         href="?{% url_replace request 'proposal_page' proposal_page.previous_page_number %}"
-         title="{% trans 'previous page' %}">{% trans 'previous' %}</a>
+        <li class="page-item">
+            <a href="?{% url_replace request 'proposal_page' proposal_page.previous_page_number %}"
+               title="{{ pag_prev_title|capfirst }}">
+                {{ pag_prev_text|capfirst }}
+            </a>
+        </li>
         {% endif %}
-        <span>{% blocktrans with page_num=proposal_page.number num_pages=proposal_page.paginator.num_pages %}
-            Page {{ page_num }} of {{ num_pages }}
-        {% endblocktrans %}</span>
+        {% for page_number in proposal_page.paginator.page_range %}
+        <li class="page-item">
+            <a href="?{% url_replace request 'proposal_page' page_number %}"
+               {% comment %}Translators: The title of the link to a given page number in the paginator{% endcomment %}
+               title="{% blocktrans %}Go to {{ page_number }}.{% endblocktrans %}">
+                {{ page_number }}
+            </a>
+        </li>
+        {% endfor %}
         {% if proposal_page.has_next %}
-        <a 
-         href="?{% url_replace request 'proposal_page' proposal_page.next_page_number %}"
-         title="{% trans 'next page' %}">{% trans 'next' %}</a>
+        <li class="page-item">
+            <a href="?{% url_replace request 'event_page' proposal_page.next_page_number %}"
+               title="{{ pag_next_title|capfirst }}">
+                {{ pag_next_text|capfirst }}
+            </a>
+        </li>
         {% endif %}
-    </div>
+    </ul>
     {% endif %}
+
 {% else %}
-    <p>{% trans 'No upcoming proposed events!' %}</p>
+<em>{{ no_proposals}}</em>
+{% endif %}
+
+{% if calendar_list.count == 1 %}
+<p>
+    {{ cannot_find_event }}
+    <a class="btn btn-primary"
+       href="{% url 'eventary:anonymous-create_event' calendar_list.first.pk %}"
+       title="{{ btn_propose_title|capfirst }}">
+        {{ btn_propose_text|capfirst }}
+    </a>
+</p>
 {% endif %}
 
 {% endblock %}

@@ -9,8 +9,14 @@
 {% endblock %}
 
 {% block 'content' %}
-<h2>{% trans 'Too many views' %}</h2>
 
-<p>{%trans 'You are seeing this page, because the requested page has a daily view limitation.' %}</p>
+{% comment %}Translators: Access limit reached page{% endcomment %}
+{% comment %}Translators: Limit access reached title {% endcomment %}
+{% trans 'too many views' as h_too_many %}
+{% comment %}Translators: Limit access reached message {% endcomment %}
+{% trans 'You are seeing this page, because the requested page has a daily view limitation.' as too_many_accesses %}
+
+<h1>{{ h_too_many|capfirst }}</h1>
+<p>{{ too_many_accesses }}</p>
 
 {% endblock %}
