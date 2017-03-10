@@ -4,11 +4,22 @@
 {% load i18n %}
 
 {% block 'content' %}
-<h2>{% trans 'Add a new calendar' %}</h2>
+
+{% comment %}Translators: Calendar creation page{% endcomment %}
+{% comment %}Translators: Title {% endcomment %}
+{% trans 'add a new calendar' as h_title %}
+{% trans 'add calendar' as btn_create_title %}
+{% trans 'add' as btn_create_text %}
+
+<h2>{{ h_title|capfirst }}</h2>
 
 <form method="post">
     {% csrf_token %}
     {{ form|as_bootstrap }}
-    <input type="submit" value="{% trans 'add' %}">
+    <button type="submit"
+            class="btn btn-primary"
+            title="{{ btn_create_title|capfirst }}">
+        {{ btn_create_text|capfirst }}
+    </button>
 </form>
 {% endblock %}

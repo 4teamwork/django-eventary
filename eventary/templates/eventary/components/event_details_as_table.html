@@ -2,19 +2,23 @@
 {% load i18n %}
 {% load imagekit %}
 
+{% trans 'date & time' as th_date %}
+{% trans 'location' as th_location %}
+{% trans 'entry fee' as th_fee %}
+{% trans 'host' as th_host %}
+
 {% if event.image %}
 {% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
 <img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
 {% endif %}
 
-
 <table class="table table-striped table-hover">
     <tr>
-        <th>{% trans 'Date & time' %}</th>
+        <th>{{ th_date|capfirst }}</th>
         <td>{{ event|to_full_date }}</td>
     </tr>
     <tr>
-        <th>{% trans 'Location' %}</th>
+        <th>{{ th_location|capfirst }}</th>
         <td>{{ event.location }}</td>
     </tr>
     {% for grouping, groups in groupings.items %}
@@ -24,12 +28,12 @@
     </tr>
     {% endfor %}
     <tr>
-        <th>{% trans 'Entry fee' %}</th>
+        <th>{{ th_fee|capfirst }}</th>
         <td>{{ event.prize }}</td>
     </tr>
     {% if event.host %}
     <tr>
-        <th>{% trans 'Host' %}</th>
+        <th>{{ th_host|capfirst }}</th>
         <td>{{ event.host.name }}<br />
             {{ event.host.info }}<br />
             {% if event.host.email %}

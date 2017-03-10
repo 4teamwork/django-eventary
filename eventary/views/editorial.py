@@ -144,7 +144,7 @@ class EventHideView(EditorialOrManagementRequiredMixin,
         self.object = self.get_object()
         self.object.published = False
         # every proposal needs an access secret
-        Secret.objects.create(event=self.object)
+        Secret.objects.get_or_create(event=self.object)
         self.object.save()
         return redirect('eventary:redirector')
 
@@ -158,6 +158,7 @@ class EventPublishView(EditorialOrManagementRequiredMixin,
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.published = True
+        Secret.objects.filter(event=self.object).delete()
         self.object.save()
         return redirect('eventary:redirector')
 

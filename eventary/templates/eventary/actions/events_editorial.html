@@ -1,22 +1,19 @@
 {% load i18n %}
-<a
- class="btn btn-default btn-xs"
- href="{% url 'eventary:anonymous-export_event_to_ics' event.calendar.pk event.pk %}"
- role="button"
- title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:anonymous-export_event_to_ics' event.calendar.pk event.pk %}"
+   role="button"
+   title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-download"></i>
 </a>
-<a
- class="btn btn-default btn-xs"
- href="{% url 'eventary:editorial-update_event' event.calendar.pk event.pk %}"
- role="button"
- title="{% blocktrans with event_title=event.title %}Update {{ event_title }}{% endblocktrans %}">
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:editorial-update_event' event.calendar.pk event.pk %}"
+   role="button"
+   title="{% blocktrans with event_title=event.title %}Update {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-pencil"></i>
 </a>
-<a
- class="btn btn-default btn-xs"
- href="{% url 'eventary:editorial-hide_event' event.calendar.pk event.pk %}"
- role="button"
- title="{% blocktrans with event_title=event.title %}Hide {{ event_title }}{% endblocktrans %}">
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:editorial-hide_event' event.calendar.pk event.pk %}"
+   role="button"
+   title="{% blocktrans with event_title=event.title %}Hide {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-eye-close"></i>
 </a>

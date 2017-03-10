@@ -1,0 +1,7 @@
+{% load i18n %}
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
+   role="button"
+   title="{% blocktrans with calendar_title=calendar.title %}Propose event for {{ calendar_title }}{% endblocktrans %}">
+    <i class="glyphicon glyphicon-plus"></i>
+</a>

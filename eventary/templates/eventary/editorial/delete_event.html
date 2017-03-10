@@ -3,13 +3,23 @@
 {% load i18n %}
 
 {% block 'content' %}
-<h2>{% trans 'Delete' %} {{ event.title }}</h2>
+
+{% comment %}Translators: Delete confirmation page for events{% endcomment %}
+{% comment %}Translators: Submit button title{% endcomment %}
+{% trans 'delete the event' as btn_submit_title %}
+{% comment %}Translators: Submit button text{% endcomment %}
+{% trans 'delete' as btn_submit_text %}
+
+{% comment %}Translators: Title (first header){% endcomment %}
+<h1>{% blocktrans with event_title=event.title %}Delete {{ event_title }}{% endblocktrans %}</h1>
 
 <form method="post">
-    <p>{% blocktrans with event_title=event.title %}
-    Are you sure you want to delete "{{ event_title }}"?
-    {% endblocktrans %}</p>
+    <p>{% blocktrans with event_title=event.title %}Are you sure you want to delete "{{ event_title }}"?{% endblocktrans %}</p>
     {% csrf_token %}
-    <input type="submit" value="{% trans 'confirm' %}">
+    <button type="submit"
+            class="btn btn-primary"
+            title="{{ btn_submit_title|capfirst }}">
+        {{ btn_submit_text|capfirst }}
+    </button>
 </form>
 {% endblock %}

@@ -5,37 +5,58 @@
 {% load static %}
 
 {% block 'content' %}
-<h1>{% trans 'Proposal:' %} {{ event.title }}</h1>
 
-<div>
-    {{ event|actions:request.user }}
-</div>
+{% comment %}Translators: Proposal detail page{% endcomment %}
+{% comment %}Translators: Headers {% endcomment %}
+{% trans 'details' as h_details %}
+{% trans 'description' as h_description %}
+{% trans 'downloads' as h_downloads %}
+{% comment %}Translators: Download link title{% endcomment %}
+{% trans 'download info sheet' as btn_download_title %}
+{% comment %}Translators: Download link text{% endcomment %}
+{% trans 'download info sheet' as bnt_download_text %}
 
-<p>{% blocktrans with calls=secret.calls %}
-    Today's number of anonymous views: {{ calls }}.
-{% endblocktrans %}{% if secret.last_call %}{% blocktrans with last_call=secret.last_call|date %}
-    Last anonymous call {{ last_call }}.
-{% endblocktrans %}{% endif %}</p>
+{% comment %}Translators: Title (first header){% endcomment %}
+<h1>{% blocktrans with event_title=event.title %}Proposal: {{ event_title }}{% endblocktrans %}</h1>
 
-<h2>{% trans 'Details' %}</h2>
+<div>{{ event|actions:request.user }}</div>
 
+<p>
+{% comment %}Translators: Message about page accesses{% endcomment %}
+{% blocktrans with calls=secret.calls %}Today's number of anonymous views: {{ calls }}.{% endblocktrans %}
+{% if secret.last_call %}
+    {% comment %}Translators: Message about last access{% endcomment %}
+    {% blocktrans with last_call=secret.last_call|date %}Last anonymous call {{ last_call }}.{% endblocktrans %}
+{% endif %}
+</p>
+
+<h2>{{ h_details|capfirst }}</h2>
 {% include 'eventary/components/event_details_as_table.html' with event=event %}
 
 {% if event.description %}
-<h3>{% trans 'Description' %}</h3>
+<h3>{{ h_description|capfirst }}</h3>
 <p>{{ event.description }}</p>
 {% endif %}
 
 {% if event.document %}
-<h3>{% trans 'Downloads' %}</h3>
-<div><a
-      href="{{ event.document.url }}"
-      title="{% trans 'Download info sheet' %}">{% trans 'Download info sheet' %}</a></div>
+<h3>{{ h_downloads|capfirst}}</h3>
+<div>
+    <a class="btn btn-primary"
+       href="{{ event.document.url }}"
+       title="{{ btn_download_title|capfirst }}">
+        {{ btn_download_text|capfirst }}
+    </a>
+</div>
 {% endif %}
 
-<p><a
-    href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
-    title="{% blocktrans with calendar_title=calendar.title %}Back to {{ calendar_title }} {% endblocktrans %}">
-    {% blocktrans with calendar_title=calendar.title %}Back to {{ calendar_title }}{% endblocktrans %}</a></p>
+<p>
+    <a class="btn btn-primary"
+       href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+       {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
+       title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
+        {% comment %}Translators: Text of link back to calendar details page{% endcomment %}
+        {% blocktrans with calendar_title=calendar.title %}Back to {{ calendar_title }}{% endblocktrans %}
+    </a>
+</p>
 
 {% endblock %}

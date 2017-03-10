@@ -63,7 +63,15 @@ msgstr ""
 msgid "\"start time\" is greater than \"end time\""
 msgstr "\"Startzeit\" kann nicht nach \"Endzeit\" liegen"
 
+#. Translators: Table headers
 #: models.py:24 models.py:54 models.py:159 models.py:171
+#: templates/eventary/anonymous/landing.html:20
+#: templates/eventary/anonymous/list_calendars.html:12
+#: templates/eventary/editorial/import_calendar.html:21
+#: templates/eventary/editorial/landing.html:22
+#: templates/eventary/editorial/list_calendars.html:12
+#: templates/eventary/management/landing.html:22
+#: templates/eventary/management/list_calendars.html:12
 msgid "title"
 msgstr "Titel"
 
@@ -81,11 +89,13 @@ msgstr ""
 msgid "view limit"
 msgstr "Ansichtsbegrenzung"
 
-#: models.py:41 models.py:162
+#: models.py:41 models.py:162 templates/eventary/anonymous/landing.html:25
+#: templates/eventary/editorial/landing.html:28
+#: templates/eventary/management/landing.html:28
 msgid "calendar"
 msgstr "Kalender"
 
-#: models.py:45
+#: models.py:45 templates/eventary/components/event_details_as_table.html:8
 msgid "host"
 msgstr "Veranstalter"
 
@@ -97,7 +107,12 @@ msgstr "Bild"
 msgid "document"
 msgstr "Dokument"
 
-#: models.py:58
+#: models.py:58 templates/eventary/anonymous/calendar_details.html:24
+#: templates/eventary/anonymous/landing.html:27
+#: templates/eventary/components/event_details_as_table.html:6
+#: templates/eventary/editorial/landing.html:30
+#: templates/eventary/editorial/list_proposals.html:23
+#: templates/eventary/management/landing.html:30
 msgid "location"
 msgstr "Veranstaltungsort"
 
@@ -114,7 +129,8 @@ msgid "published"
 msgstr "Publiziert"
 
 #: models.py:65 models.py:67
-#: templates/eventary/anonymous/published_event.html:21
+#: templates/eventary/anonymous/proposed_event.html:12
+#: templates/eventary/anonymous/published_event.html:12
 msgid "description"
 msgstr "Beschreibung"
 
@@ -130,7 +146,13 @@ msgstr "Preis"
 msgid "recurring event"
 msgstr "periodische Veranstaltung"
 
+#. Translators: Table headers
 #: models.py:95 models.py:147 models.py:200
+#: templates/eventary/anonymous/calendar_details.html:21
+#: templates/eventary/anonymous/landing.html:24
+#: templates/eventary/editorial/landing.html:26
+#: templates/eventary/editorial/list_proposals.html:20
+#: templates/eventary/management/landing.html:26
 msgid "event"
 msgstr "Veranstaltung"
 
@@ -182,345 +204,377 @@ msgstr "Erstellungsdatum"
 msgid "last call"
 msgstr "letzter Aufruf"
 
-#: templates/eventary/actions/calendars_management.html:6
-#: templates/eventary/management/update_calendar.html:11
+#: templates/eventary/actions/calendars_anonymous.html:5
+#: templates/eventary/actions/calendars_editorial.html:5
+#: templates/eventary/actions/calendars_management.html:5
+#, python-format
+msgid "Propose event for %(calendar_title)s"
+msgstr "Schlage eine Veranstaltung für %(calendar_title)s vor"
+
+#: templates/eventary/actions/calendars_editorial.html:11
+#: templates/eventary/actions/calendars_management.html:11
+#, python-format
+msgid "Show %(calendar_title)s's proposed events"
+msgstr "Veranstaltungsvorschläge für %(calendar_title)s auflisten"
+
+#. Translators: Title
+#: templates/eventary/actions/calendars_management.html:17
+#: templates/eventary/management/update_calendar.html:19
 #, python-format
 msgid "Update %(calendar_title)s"
 msgstr "%(calendar_title)s aktualisieren"
 
-#: templates/eventary/actions/calendars_management.html:13
+#. Translators: Title
+#: templates/eventary/actions/calendars_management.html:23
+#: templates/eventary/management/delete_calendar.html:14
 #, python-format
 msgid "Delete %(calendar_title)s"
 msgstr "%(calendar_title)s löschen"
 
-#: templates/eventary/actions/events_anonymous.html:6
-#: templates/eventary/actions/events_editorial.html:6
-#: templates/eventary/actions/events_management.html:6
+#: templates/eventary/actions/events_anonymous.html:5
+#: templates/eventary/actions/events_editorial.html:5
+#: templates/eventary/actions/events_management.html:5
 #, python-format
 msgid "Download %(event_title)s"
 msgstr "%(event_title)s herunterladen"
 
-#: templates/eventary/actions/events_editorial.html:13
-#: templates/eventary/actions/events_management.html:13
-#: templates/eventary/actions/proposals_editorial.html:6
-#: templates/eventary/actions/proposals_management.html:6
-#: templates/eventary/editorial/update_event.html:13
+#. Translators: Title (first header)
+#: templates/eventary/actions/events_editorial.html:11
+#: templates/eventary/actions/events_management.html:11
+#: templates/eventary/actions/proposals_editorial.html:5
+#: templates/eventary/actions/proposals_management.html:5
+#: templates/eventary/editorial/update_event.html:24
 #, python-format
 msgid "Update %(event_title)s"
 msgstr "%(event_title)s aktualisieren"
 
-#: templates/eventary/actions/events_editorial.html:20
-#: templates/eventary/actions/events_management.html:20
-#, fuzzy, python-format
-#| msgid "View %(event_title)s"
+#: templates/eventary/actions/events_editorial.html:17
+#: templates/eventary/actions/events_management.html:17
+#, python-format
 msgid "Hide %(event_title)s"
 msgstr "%(event_title)s ansehen"
 
-#: templates/eventary/actions/events_management.html:27
-#: templates/eventary/actions/proposals_editorial.html:20
-#: templates/eventary/actions/proposals_management.html:20
+#. Translators: Title (first header)
+#: templates/eventary/actions/events_management.html:23
+#: templates/eventary/actions/proposals_editorial.html:17
+#: templates/eventary/actions/proposals_management.html:17
+#: templates/eventary/editorial/delete_event.html:14
 #, python-format
 msgid "Delete %(event_title)s"
 msgstr "%(event_title)s löschen"
 
-#: templates/eventary/actions/proposals_editorial.html:13
-#: templates/eventary/actions/proposals_management.html:13
+#: templates/eventary/actions/proposals_editorial.html:11
+#: templates/eventary/actions/proposals_management.html:11
 #, python-format
 msgid "Publish %(event_title)s"
 msgstr "%(event_title)s publizieren"
 
-#: templates/eventary/anonymous/calendar_details.html:19
-#: templates/eventary/anonymous/landing.html:42
-#: templates/eventary/editorial/landing.html:59
-#: templates/eventary/management/landing.html:70
-msgid "Upcoming events"
+#. Translators: Calendar detail page
+#. Translators: Headers
+#: templates/eventary/anonymous/calendar_details.html:16
+#: templates/eventary/anonymous/landing.html:18
+#: templates/eventary/editorial/landing.html:19
+#: templates/eventary/editorial/list_proposals.html:15
+#: templates/eventary/management/landing.html:19
+msgid "upcoming events"
 msgstr "bevorstehende Veranstaltungen"
 
-#: templates/eventary/anonymous/calendar_details.html:41
-#: templates/eventary/anonymous/landing.html:64
-#: templates/eventary/editorial/landing.html:65
-#: templates/eventary/editorial/list_proposals.html:35
-#: templates/eventary/management/landing.html:75
-msgid "Event"
-msgstr "Veranstaltung"
+#. Translators: Search button title
+#: templates/eventary/anonymous/calendar_details.html:18
+#: templates/eventary/anonymous/landing.html:29
+#: templates/eventary/editorial/landing.html:32
+#: templates/eventary/editorial/list_proposals.html:17
+#: templates/eventary/management/landing.html:32
+msgid "search events matching the filter parameters"
+msgstr "nach Veranstaltungen mit den gegeben Parametern suchen"
 
-#: templates/eventary/anonymous/calendar_details.html:42
-#: templates/eventary/anonymous/landing.html:65
-#: templates/eventary/editorial/landing.html:66
-#: templates/eventary/editorial/landing.html:119
-#: templates/eventary/editorial/list_proposals.html:36
-#: templates/eventary/management/landing.html:22
-#: templates/eventary/management/landing.html:76
-#: templates/eventary/management/landing.html:129
-#: templates/eventary/management/list_calendars.html:15
-msgid "Actions"
-msgstr "Optionen"
+#: templates/eventary/anonymous/calendar_details.html:19
+#: templates/eventary/anonymous/landing.html:30
+#: templates/eventary/editorial/landing.html:33
+#: templates/eventary/editorial/list_proposals.html:18
+#: templates/eventary/management/landing.html:33
+msgid "search"
+msgstr "suchen"
 
-#: templates/eventary/anonymous/calendar_details.html:43
-#: templates/eventary/anonymous/landing.html:66
-#: templates/eventary/editorial/landing.html:67
-#: templates/eventary/editorial/landing.html:120
-#: templates/eventary/management/landing.html:77
-#: templates/eventary/management/landing.html:130
-msgid "Calendar"
-msgstr "Kalender"
+#: templates/eventary/anonymous/calendar_details.html:22
+#: templates/eventary/anonymous/landing.html:21
+#: templates/eventary/anonymous/list_calendars.html:13
+#: templates/eventary/editorial/landing.html:23
+#: templates/eventary/editorial/list_calendars.html:13
+#: templates/eventary/editorial/list_proposals.html:21
+#: templates/eventary/management/landing.html:23
+#: templates/eventary/management/list_calendars.html:13
+msgid "actions"
+msgstr "optionen"
 
-#: templates/eventary/anonymous/calendar_details.html:44
-#: templates/eventary/anonymous/landing.html:67
-#: templates/eventary/components/event_details_as_table.html:6
-#: templates/eventary/editorial/landing.html:68
-#: templates/eventary/editorial/landing.html:121
-#: templates/eventary/management/landing.html:78
-#: templates/eventary/management/landing.html:131
-msgid "Date & time"
+#: templates/eventary/anonymous/calendar_details.html:23
+#: templates/eventary/anonymous/landing.html:26
+#: templates/eventary/components/event_details_as_table.html:5
+#: templates/eventary/editorial/landing.html:29
+#: templates/eventary/editorial/list_proposals.html:22
+#: templates/eventary/management/landing.html:29
+msgid "date & time"
 msgstr "Datum & Uhrzeit"
 
-#: templates/eventary/anonymous/calendar_details.html:45
-#: templates/eventary/anonymous/landing.html:68
-#: templates/eventary/components/event_details_as_table.html:10
-#: templates/eventary/editorial/landing.html:69
-#: templates/eventary/editorial/landing.html:122
-#: templates/eventary/management/landing.html:79
-#: templates/eventary/management/landing.html:132
-msgid "Location"
-msgstr "Veranstaltungsort"
+#. Translators: Replacement text when no event was found
+#: templates/eventary/anonymous/calendar_details.html:26
+#: templates/eventary/anonymous/landing.html:40
+#: templates/eventary/editorial/landing.html:43
+#: templates/eventary/editorial/list_proposals.html:25
+#: templates/eventary/management/landing.html:43
+msgid "No upcoming events!"
+msgstr "Keine bevorstehende Veranstaltungen!"
 
-#: templates/eventary/anonymous/calendar_details.html:54
-#: templates/eventary/anonymous/landing.html:77
-#: templates/eventary/editorial/landing.html:78
-#: templates/eventary/editorial/landing.html:131
-#: templates/eventary/management/landing.html:88
-#: templates/eventary/management/landing.html:141
+#. Translators: Text to incite the user to propose an event
+#: templates/eventary/anonymous/calendar_details.html:28
+#: templates/eventary/anonymous/landing.html:42
+#: templates/eventary/editorial/landing.html:45
+#: templates/eventary/editorial/list_proposals.html:27
+#: templates/eventary/management/landing.html:51
+msgid "You cannot find the event you're looking for?"
+msgstr "Kannst du die Veranstaltung, die du suchst, nicht finden?"
+
+#. Translators: The title of the ropose event button
+#. Translators: The title of the propose event button
+#: templates/eventary/anonymous/calendar_details.html:30
+#: templates/eventary/anonymous/landing.html:44
+#: templates/eventary/editorial/landing.html:47
+#: templates/eventary/editorial/list_proposals.html:29
+#: templates/eventary/management/landing.html:53
+msgid "Propose an event now!"
+msgstr "Schlage eine Veranstaltung jetzt vor!"
+
+#. Translators: The text of the ropose event button
+#. Translators: The text of the propose event button
+#: templates/eventary/anonymous/calendar_details.html:32
+#: templates/eventary/anonymous/landing.html:46
+#: templates/eventary/editorial/landing.html:49
+#: templates/eventary/editorial/list_proposals.html:31
+#: templates/eventary/management/landing.html:55
+msgid "Propose your event now!"
+msgstr "Schlage deine Veranstaltung jetzt vor!"
+
+#. Translators: The title of the link to the event details view
+#. Translators: The title of the link to the proposal details view
+#: templates/eventary/anonymous/calendar_details.html:74
+#: templates/eventary/editorial/landing.html:186
+#: templates/eventary/management/landing.html:200
 #, python-format
 msgid "View %(event_title)s"
 msgstr "%(event_title)s ansehen"
 
-#: templates/eventary/anonymous/calendar_details.html:72
-#: templates/eventary/anonymous/landing.html:95
-#: templates/eventary/editorial/landing.html:96
-#: templates/eventary/management/landing.html:106
-#: templates/eventary/management/landing.html:159
-msgid "previous page"
-msgstr "vorige Seite"
-
-#: templates/eventary/anonymous/calendar_details.html:72
-#: templates/eventary/anonymous/landing.html:95
-#: templates/eventary/editorial/landing.html:96
-#: templates/eventary/editorial/landing.html:149
-#: templates/eventary/editorial/list_proposals.html:76
-#: templates/eventary/management/landing.html:106
-#: templates/eventary/management/landing.html:159
-msgid "previous"
-msgstr "vorige"
-
-#: templates/eventary/anonymous/calendar_details.html:74
-#: templates/eventary/anonymous/landing.html:97
-#: templates/eventary/editorial/landing.html:98
-#: templates/eventary/editorial/landing.html:151
-#: templates/eventary/management/landing.html:108
-#: templates/eventary/management/landing.html:161
+#. Translators: The title of the link to a given page number in the paginator
+#: templates/eventary/anonymous/calendar_details.html:101
+#: templates/eventary/anonymous/landing.html:142
+#: templates/eventary/editorial/landing.html:148
+#: templates/eventary/editorial/landing.html:213
+#: templates/eventary/editorial/list_proposals.html:98
+#: templates/eventary/management/landing.html:162
+#: templates/eventary/management/landing.html:227
 #, python-format
-msgid ""
-"\n"
-"            Page %(page_num)s of %(num_pages)s\n"
-"        "
-msgstr ""
-"\n"
-"            Seite %(page_num)s von %(num_pages)s\n"
-"        "
+msgid "Go to %(page_number)s."
+msgstr "Zur seite %(page_number)s gehen."
 
-#: templates/eventary/anonymous/calendar_details.html:80
-#: templates/eventary/anonymous/landing.html:103
-#: templates/eventary/editorial/landing.html:104
-#: templates/eventary/editorial/landing.html:157
-#: templates/eventary/management/landing.html:114
-#: templates/eventary/management/landing.html:167
-msgid "next page"
-msgstr "nächste Seite"
-
-#: templates/eventary/anonymous/calendar_details.html:80
-#: templates/eventary/anonymous/landing.html:103
-#: templates/eventary/editorial/landing.html:104
-#: templates/eventary/editorial/landing.html:157
-#: templates/eventary/editorial/list_proposals.html:82
-#: templates/eventary/management/landing.html:114
-#: templates/eventary/management/landing.html:167
-msgid "next"
-msgstr "nächste"
-
-#: templates/eventary/anonymous/calendar_details.html:86
-#: templates/eventary/anonymous/landing.html:108
-#: templates/eventary/editorial/landing.html:109
-#: templates/eventary/management/landing.html:119
-msgid "No upcoming events!"
-msgstr "Keine bevorstehende Veranstaltungen!"
-
-#: templates/eventary/anonymous/calendar_details.html:89
-msgid "Cannot find the event you're looking for?"
-msgstr "Kannst du die Veranstaltung, die du suchst, nicht finden?"
-
-#: templates/eventary/anonymous/calendar_details.html:92
-msgid "Propose an event now!"
-msgstr "Veranstaltung jetzt vorschlagen!"
-
-#: templates/eventary/anonymous/calendar_details.html:92
-msgid "Propose your event now!"
-msgstr "Schlage deine Veranstaltung jetzt vor!"
-
-#: templates/eventary/anonymous/create_event.html:21
-#, fuzzy
-#| msgid "Information"
-msgid "host information"
-msgstr "Information"
-
+#. Translators: Page for event creation
+#. Translators: Headers
 #: templates/eventary/anonymous/create_event.html:22
-#, fuzzy
-#| msgid "Information"
-msgid "event information"
-msgstr "Information"
+msgid "host information"
+msgstr "Informationen zum Veranstalter"
 
+#. Translators: Update page for events
+#. Translators: Headers
 #: templates/eventary/anonymous/create_event.html:23
-#, fuzzy
-#| msgid "Information"
-msgid "grouping information"
-msgstr "Information"
+#: templates/eventary/editorial/update_event.html:16
+msgid "event information"
+msgstr "Informationen zur Veranstaltung"
 
-#: templates/eventary/anonymous/create_event.html:25
-#, python-format
-msgid ""
-"\n"
-"    Propose an event for \"%(calendar_title)s\"\n"
-msgstr ""
-"\n"
-"    Schlage eine Veranstaltung für \"%(calendar_title)s\" vor\n"
+#: templates/eventary/anonymous/create_event.html:24
+#: templates/eventary/editorial/update_event.html:17
+msgid "date & time information"
+msgstr "Informationen zum Veranstaltungsdatum und -Uhrzeit"
 
-#: templates/eventary/anonymous/create_event.html:39
+#. Translators: Submit button title
+#: templates/eventary/anonymous/create_event.html:26
+msgid "propose the event"
+msgstr "Veranstaltung vorschlagen"
+
+#. Translators: Submit button text
+#: templates/eventary/anonymous/create_event.html:28
 msgid "propose"
 msgstr "vorschlagen"
 
-#: templates/eventary/anonymous/landing.html:13
-#: templates/eventary/editorial/landing.html:13
-#: templates/eventary/management/landing.html:13
-msgid "Eventary - an inventary for events"
-msgstr "Veranstaltungskalender"
+#: templates/eventary/anonymous/create_event.html:30
+#, python-format
+msgid "Propose an event for \"%(calendar_title)s\""
+msgstr "Schlage eine Veranstaltung für \"%(calendar_title)s\" vor."
 
+#. Translators: Landing page for anonymous users
+#. Translators: Title (first header)
+#. Translators: Landing page for editorial users
+#. Translators: Title (first header)
+#. Translators: Landing page for management users
+#. Translators: Title (first header)
 #: templates/eventary/anonymous/landing.html:15
 #: templates/eventary/editorial/landing.html:15
 #: templates/eventary/management/landing.html:15
-#: templates/eventary/management/list_calendars.html:8
-#: templates/eventary/navigation/editorial.html:16
-#: templates/eventary/navigation/management.html:16
-msgid "Calendars"
+msgid "Eventary - an inventary for events"
+msgstr "Veranstaltungskalender"
+
+#. Translators: Headers
+#. Translators: Calendar list page
+#. Translators: Title
+#. Translators: Headers
+#. Translators: Calendar list page
+#. Translators: Title
+#. Translators: Headers
+#. Translators: Calendar list page
+#. Translators: Title
+#: templates/eventary/anonymous/landing.html:17
+#: templates/eventary/anonymous/list_calendars.html:10
+#: templates/eventary/editorial/landing.html:17
+#: templates/eventary/editorial/list_calendars.html:10
+#: templates/eventary/management/landing.html:17
+#: templates/eventary/management/list_calendars.html:10
+#: templates/eventary/navigation/editorial.html:6
+#: templates/eventary/navigation/management.html:6
+msgid "calendars"
 msgstr "Kalender"
 
-#: templates/eventary/anonymous/landing.html:21
-#: templates/eventary/anonymous/list_calendars.html:14
-#: templates/eventary/editorial/import_calendar.html:41
-#: templates/eventary/editorial/landing.html:21
-#: templates/eventary/editorial/list_calendars.html:14
-#: templates/eventary/management/landing.html:21
-#: templates/eventary/management/list_calendars.html:14
-msgid "Title"
-msgstr "Titel"
-
 #: templates/eventary/anonymous/landing.html:22
-#: templates/eventary/editorial/landing.html:22
-#: templates/eventary/editorial/list_calendars.html:16
+#: templates/eventary/anonymous/list_calendars.html:14
+#: templates/eventary/editorial/landing.html:24
+#: templates/eventary/editorial/list_calendars.html:14
 #: templates/eventary/management/landing.html:24
-#: templates/eventary/management/list_calendars.html:17
-msgid "# Events"
+#: templates/eventary/management/list_calendars.html:14
+msgid "# events"
 msgstr "Anzahl Veranstaltungen"
 
 #: templates/eventary/anonymous/landing.html:23
-#: templates/eventary/editorial/landing.html:23
-#: templates/eventary/editorial/list_calendars.html:17
+#: templates/eventary/anonymous/list_calendars.html:15
+#: templates/eventary/editorial/landing.html:25
+#: templates/eventary/editorial/list_calendars.html:15
 #: templates/eventary/management/landing.html:25
-#: templates/eventary/management/list_calendars.html:18
-msgid "# Proposals"
+#: templates/eventary/management/list_calendars.html:15
+msgid "# proposals"
 msgstr "Anzahl Veranstaltungsvorschläge"
 
-#: templates/eventary/anonymous/landing.html:31
-#: templates/eventary/anonymous/list_calendars.html:24
-#: templates/eventary/editorial/landing.html:31
-#: templates/eventary/editorial/list_calendars.html:26
-#: templates/eventary/management/landing.html:34
-#: templates/eventary/management/list_calendars.html:27
+#. Translators: Event pagination
+#. Translators: Title of the previous page link
+#: templates/eventary/anonymous/landing.html:33
+#: templates/eventary/editorial/landing.html:36
+#: templates/eventary/management/landing.html:36
+msgid "previous page"
+msgstr "vorige Seite"
+
+#. Translators: Text of the previous page link
+#: templates/eventary/anonymous/landing.html:35
+#: templates/eventary/editorial/landing.html:38
+#: templates/eventary/management/landing.html:38
+msgid "previous"
+msgstr "zurück"
+
+#. Translators: Title of the next page link
+#: templates/eventary/anonymous/landing.html:37
+#: templates/eventary/editorial/landing.html:40
+#: templates/eventary/management/landing.html:40
+msgid "next page"
+msgstr "nächste Seite"
+
+#: templates/eventary/anonymous/landing.html:38
+#: templates/eventary/editorial/landing.html:41
+#: templates/eventary/management/landing.html:41
+msgid "next"
+msgstr "weiter"
+
+#. Translators: The title of the link to the calendar details view
+#: templates/eventary/anonymous/landing.html:66
+#: templates/eventary/editorial/landing.html:71
+#: templates/eventary/management/landing.html:77
+#, python-format
+msgid "View %(calendar_title)s."
+msgstr "%(calendar_title)s ansehen."
+
+#. Translators: The title of the link to the event details view
+#: templates/eventary/anonymous/landing.html:115
+#: templates/eventary/editorial/landing.html:121
+#: templates/eventary/management/landing.html:135
+#, python-format
+msgid "View %(event_title)s."
+msgstr "%(event_title)s ansehen."
+
+#. Translators: The title of the link to the calendar details view
+#: templates/eventary/anonymous/list_calendars.html:34
+#: templates/eventary/editorial/list_calendars.html:34
+#: templates/eventary/management/list_calendars.html:40
 #, python-format
 msgid "View %(calendar_title)s"
 msgstr "%(calendar_title)s ansehen"
 
-#: templates/eventary/anonymous/list_calendars.html:8
-msgid "calendars"
-msgstr "Kalender"
-
-#: templates/eventary/anonymous/list_calendars.html:15
-msgid "Events"
-msgstr "Veranstaltungen"
-
-#: templates/eventary/anonymous/list_calendars.html:16
-msgid "Proposals"
-msgstr "Veranstaltungsvorschläge"
-
-#: templates/eventary/anonymous/proposed_event.html:8
-msgid "Proposal:"
-msgstr "Veranastaltungsvorschlag:"
-
-#: templates/eventary/anonymous/proposed_event.html:14
-#, python-format
-msgid ""
-"\n"
-"    Today's number of anonymous views: %(calls)s.\n"
-msgstr ""
-"\n"
-"    Anzahl anonymer Zugriffe: %(calls)s.\n"
-
-#: templates/eventary/anonymous/proposed_event.html:16
-#, python-format
-msgid ""
-"\n"
-"    Last anonymous call %(last_call)s.\n"
-msgstr ""
-"\n"
-"    Letzter anonymer Zugriff am %(last_call)s.\n"
-
-#: templates/eventary/anonymous/proposed_event.html:20
-msgid "Details"
+#. Translators: Proposal detail page
+#. Translators: Headers
+#. Translators: Event detail page
+#. Translators: Headers
+#: templates/eventary/anonymous/proposed_event.html:11
+#: templates/eventary/anonymous/published_event.html:11
+msgid "details"
 msgstr "nähere Angaben"
 
-#: templates/eventary/anonymous/proposed_event.html:29
-msgid "Description"
-msgstr "Beschreibung"
-
-#: templates/eventary/anonymous/proposed_event.html:34
-#: templates/eventary/anonymous/published_event.html:26
-msgid "Downloads"
+#: templates/eventary/anonymous/proposed_event.html:13
+#: templates/eventary/anonymous/published_event.html:13
+msgid "downloads"
 msgstr "Downloads"
 
-#: templates/eventary/anonymous/proposed_event.html:37
-msgid "Download info sheet"
-msgstr "Informationsbroschüre herunteladen"
-
-#: templates/eventary/anonymous/proposed_event.html:42
-#, python-format
-msgid "Back to %(calendar_title)s "
-msgstr "Zurück zu %(calendar_title)s "
-
-#: templates/eventary/anonymous/proposed_event.html:43
-#: templates/eventary/anonymous/published_event.html:34
-#: templates/eventary/anonymous/published_event.html:35
-#, python-format
-msgid "Back to %(calendar_title)s"
-msgstr "Zurück zu %(calendar_title)s"
-
-#: templates/eventary/anonymous/published_event.html:29
+#. Translators: Download link title
+#. Translators: Download link text
+#. Translators: Download link title
+#. Translators: Download link text
+#: templates/eventary/anonymous/proposed_event.html:15
+#: templates/eventary/anonymous/proposed_event.html:17
+#: templates/eventary/anonymous/published_event.html:15
+#: templates/eventary/anonymous/published_event.html:17
 msgid "download info sheet"
 msgstr "Informationsbroschüre herunterladen"
 
-#: templates/eventary/anonymous/too_many_views.html:12
-msgid "Too many views"
-msgstr "Zu viele ansichten"
+#. Translators: Title (first header)
+#: templates/eventary/anonymous/proposed_event.html:20
+#, python-format
+msgid "Proposal: %(event_title)s"
+msgstr "Veranstaltungsvorschlag: %(event_title)s"
 
-#: templates/eventary/anonymous/too_many_views.html:14
+#. Translators: Message about page accesses
+#: templates/eventary/anonymous/proposed_event.html:26
+#, python-format
+msgid "Today's number of anonymous views: %(calls)s."
+msgstr "Anzahl anonymer Zugriffe: %(calls)s."
+
+#. Translators: Message about last access
+#: templates/eventary/anonymous/proposed_event.html:29
+#, python-format
+msgid "Last anonymous call %(last_call)s."
+msgstr "Letzter anonymer Zugriff am %(last_call)s."
+
+#. Translators: Title of link back to calendar details page
+#: templates/eventary/anonymous/proposed_event.html:56
+#: templates/eventary/anonymous/published_event.html:46
+#, python-format
+msgid "back to %(calendar_title)s"
+msgstr "zu %(calendar_title)s zurück gehen"
+
+#. Translators: Text of link back to calendar details page
+#: templates/eventary/anonymous/proposed_event.html:58
+#: templates/eventary/anonymous/published_event.html:48
+#, python-format
+msgid "Back to %(calendar_title)s"
+msgstr "Zu %(calendar_title)s zurück gehen."
+
+#. Translators: Access limit reached page
+#. Translators: Limit access reached title
+#: templates/eventary/anonymous/too_many_views.html:15
+msgid "too many views"
+msgstr "zu viele zugriffe"
+
+#. Translators: Limit access reached message
+#: templates/eventary/anonymous/too_many_views.html:17
 msgid ""
 "You are seeing this page, because the requested page has a daily view "
 "limitation."
@@ -532,181 +586,150 @@ msgstr ""
 msgid "eventary"
 msgstr "Veranstaltungskalender"
 
-#: templates/eventary/components/event_details_as_table.html:20
-msgid "Entry fee"
-msgstr "Eintrittskosten"
+#: templates/eventary/components/event_details_as_table.html:7
+msgid "entry fee"
+msgstr "Eintrittspreis"
 
-#: templates/eventary/components/event_details_as_table.html:25
-msgid "Host"
-msgstr "Veranstalter"
-
-#: templates/eventary/editorial/delete_event.html:6
-msgid "Delete"
-msgstr "Löschen"
-
+#. Translators: Delete confirmation page for events
+#. Translators: Submit button title
 #: templates/eventary/editorial/delete_event.html:9
+msgid "delete the event"
+msgstr "Veranstaltung löschen"
+
+#. Translators: Submit button text
+#: templates/eventary/editorial/delete_event.html:11
+#: templates/eventary/management/delete_calendar.html:11
+msgid "delete"
+msgstr "löschen"
+
+#: templates/eventary/editorial/delete_event.html:17
 #, python-format
-msgid ""
-"\n"
-"    Are you sure you want to delete \"%(event_title)s\"?\n"
-"    "
-msgstr ""
-"\n"
-"    Bist du sicher, dass du \"%(event_title)s\" löschen möchtest?\n"
-"    "
+msgid "Are you sure you want to delete \"%(event_title)s\"?"
+msgstr "Bist du sicher, dass du \"%(event_title)s\" löschen möchtest?"
 
-#: templates/eventary/editorial/delete_event.html:13
-msgid "confirm"
-msgstr "bestätigen"
+#. Translators: Calendar detail page
+#. Translators: Headers
+#: templates/eventary/editorial/import_calendar.html:15
+msgid "calendar import"
+msgstr "Kalender importieren"
 
-#: templates/eventary/editorial/import_calendar.html:13
-msgid "Calendar import"
-msgstr "Kalender import"
+#. Translators: Search button title
+#: templates/eventary/editorial/import_calendar.html:17
+msgid "import the entries of the calendar with the given parameters"
+msgstr "Kalendereinträge importieren"
 
-#: templates/eventary/editorial/import_calendar.html:40
-msgid "Import"
-msgstr "Import"
+#. Translators: Table headers
+#: templates/eventary/editorial/import_calendar.html:18
+#: templates/eventary/editorial/import_calendar.html:20
+msgid "import"
+msgstr "importieren"
 
-#: templates/eventary/editorial/import_calendar.html:42
-msgid "Information"
-msgstr "Information"
+#: templates/eventary/editorial/import_calendar.html:22
+msgid "information"
+msgstr "Informationen"
 
-#: templates/eventary/editorial/landing.html:42
-#: templates/eventary/management/landing.html:53
-msgid "Events & proposals"
-msgstr "Veranstaltungen & Veranstaltungsvorschläge"
+#: templates/eventary/editorial/landing.html:18
+#: templates/eventary/management/landing.html:18
+msgid "filter events"
+msgstr "Veranstaltungen filtern"
 
-#: templates/eventary/editorial/landing.html:112
-#: templates/eventary/editorial/list_proposals.html:14
-#: templates/eventary/management/landing.html:122
-msgid "Upcoming proposals"
+#: templates/eventary/editorial/landing.html:20
+#: templates/eventary/management/landing.html:20
+msgid "upcoming proposals"
 msgstr "bevorstehende Veranstaltungsvorschläge"
 
-#: templates/eventary/editorial/landing.html:118
-#: templates/eventary/management/landing.html:128
-msgid "Proposed event"
-msgstr "Veranstaltungsvorschlag"
+#: templates/eventary/editorial/landing.html:27
+#: templates/eventary/management/landing.html:27
+msgid "proposal"
+msgstr "Veranstaltungsvorschläge"
 
-#: templates/eventary/editorial/landing.html:162
-#: templates/eventary/management/landing.html:172
-msgid "No upcoming proposed events!"
-msgstr "Keine bevorstehende Veranstaltungsvorschläge"
+#. Translators: Replacement text when no proposal was found
+#: templates/eventary/editorial/landing.html:51
+#: templates/eventary/management/landing.html:57
+msgid "No proposed events!"
+msgstr "Keine Veranstaltungsvorschläge!"
 
-#: templates/eventary/editorial/list_calendars.html:15
-#: templates/eventary/management/landing.html:23
-#: templates/eventary/management/list_calendars.html:16
-msgid "Groupings"
-msgstr "Gruppierungen"
-
-#: templates/eventary/editorial/list_proposals.html:37
-msgid "Date & Time"
-msgstr "Datum & Zeit"
-
-#: templates/eventary/editorial/list_proposals.html:49
+#. Translators: The title of the link to the proposal details view
+#: templates/eventary/editorial/list_proposals.html:71
 #, python-format
 msgid "View %(proposal_title)s"
 msgstr "%(proposal_title)s ansehen"
 
-#: templates/eventary/editorial/list_proposals.html:56
-#, python-format
-msgid "Update %(proposal_title)s"
-msgstr "%(proposal_title)s aktualisieren"
+#. Translators: Submit button title
+#: templates/eventary/editorial/update_event.html:19
+msgid "update the event"
+msgstr "Veranstaltung aktualisieren"
 
-#: templates/eventary/editorial/list_proposals.html:63
-#, python-format
-msgid "Delet %(proposal_title)s"
-msgstr "%(proposal_title)s löschen"
-
-#: templates/eventary/editorial/list_proposals.html:78
-#, python-format
-msgid ""
-"\n"
-"            Page %(page_num)s of %(num_pages)s.\n"
-"        "
-msgstr ""
-"\n"
-"            Seite %(page_num)s von %(num_pages)s.\n"
-"        "
-
-#: templates/eventary/editorial/list_proposals.html:88
-msgid "Cannot find the proposal you're looking for?"
-msgstr "Kannst du den Veranstaltungsvorschlag, den du suchst, nicht finden?"
-
-#: templates/eventary/editorial/list_proposals.html:90
-msgid "Make a new proposal now!"
-msgstr "Mache jetzt einen neuen Veranstaltungsvorschlag!"
-
-#: templates/eventary/editorial/update_event.html:25
+#. Translators: Submit button text
+#: templates/eventary/editorial/update_event.html:21
 #: templates/eventary/management/update_calendar.html:16
 msgid "update"
 msgstr "aktualisieren"
 
-#: templates/eventary/management/create_calendar.html:7
-msgid "Add a new calendar"
-msgstr "Einen neuen Kalender hinzufügen"
+#. Translators: Calendar creation page
+#. Translators: Title
+#: templates/eventary/management/create_calendar.html:10
+msgid "add a new calendar"
+msgstr "neuer Kalender hinzufügen"
+
+#: templates/eventary/management/create_calendar.html:11
+#: templates/eventary/navigation/management.html:8
+msgid "add calendar"
+msgstr "Kalender hinzufügen"
 
 #: templates/eventary/management/create_calendar.html:12
 msgid "add"
 msgstr "hinzufügen"
 
-#: templates/eventary/management/delete_calendar.html:6
+#. Translators: Calendar delete view
+#. Translators: Submit button title
+#: templates/eventary/management/delete_calendar.html:9
+msgid "delete the calendar"
+msgstr "Kalender löschen"
+
+#: templates/eventary/management/delete_calendar.html:17
 #, python-format
-msgid ""
-"\n"
-"    Delete %(calendar_title)s\n"
+msgid "Are you sure you want to delete \"%(calendar_title)s\"?"
+msgstr "Bist du sicher, dass du \"%(calendar_title)s\" löschen möchtest?"
+
+#. Translators: Text to incite the user to propose a calendar
+#: templates/eventary/management/landing.html:45
+#: templates/eventary/management/list_calendars.html:17
+msgid "You cannot find the calendar you're looking for?"
 msgstr ""
-"\n"
-"    %(calendar_title)s löschen\n"
 
-#: templates/eventary/management/delete_calendar.html:11
-#, python-format
-msgid ""
-"\n"
-"        Are you sure you want to delete \"%(calendar_title)s\"?\n"
-"    "
-msgstr ""
-"\n"
-"        Bist du sicher, dass du \"%(calendar_title)s\" löschen möchtest?\n"
-"    "
+#. Translators: The title of the ropose event button
+#: templates/eventary/management/landing.html:47
+#: templates/eventary/management/list_calendars.html:19
+msgid "Add a calendar now!"
+msgstr "Kalender jetzt hinzufügen!"
 
-#: templates/eventary/management/delete_calendar.html:15
-msgid "Confirm"
-msgstr "Bestätigen"
+#. Translators: The text of the ropose event button
+#: templates/eventary/management/landing.html:49
+#: templates/eventary/management/list_calendars.html:21
+msgid "Add your calendar now!"
+msgstr "Füge deinen Kalender jetzt hinzu!"
 
-#: templates/eventary/management/landing.html:48
-#: templates/eventary/management/list_calendars.html:41
-#, fuzzy
-#| msgid "Cannot find the event you're looking for?"
-msgid "Cannot find the calendar you're looking for?"
-msgstr "Kannst du die Veranstaltung, die du suchst, nicht finden?"
+#. Translators: Calendar delete view
+#. Translators: Submit button title
+#: templates/eventary/management/update_calendar.html:14
+msgid "update the calendar"
+msgstr "Kalender aktualisieren"
 
-#: templates/eventary/management/landing.html:51
-#: templates/eventary/management/list_calendars.html:43
-#, fuzzy
-#| msgid "Add a new calendar"
-msgid "Add a new calendar now!"
-msgstr "Einen neuen Kalender hinzufügen"
-
-#: templates/eventary/navigation/anonymous.html:3
-#: templates/eventary/navigation/editorial.html:4
-#: templates/eventary/navigation/management.html:4
-msgid "Home"
+#. Translators: anonymous navigation
+#. Translators: editorial navigation
+#: templates/eventary/navigation/anonymous.html:4
+#: templates/eventary/navigation/editorial.html:5
+#: templates/eventary/navigation/management.html:5
+msgid "home"
 msgstr "Übersicht"
 
-#: templates/eventary/navigation/editorial.html:20
-#: templates/eventary/navigation/management.html:21
-#, fuzzy
-#| msgid "Calendars"
-msgid "List Calendars"
-msgstr "Kalender"
+#: templates/eventary/navigation/editorial.html:7
+#: templates/eventary/navigation/management.html:7
+msgid "list calendars"
+msgstr "Kalender auflisten"
 
-#: templates/eventary/navigation/editorial.html:26
-#: templates/eventary/navigation/management.html:31
+#: templates/eventary/navigation/editorial.html:8
+#: templates/eventary/navigation/management.html:9
 msgid "signed in as:"
 msgstr "angemeldet als:"
-
-#: templates/eventary/navigation/management.html:24
-#, fuzzy
-#| msgid "Calendar"
-msgid "Add Calendar"
-msgstr "Kalender"

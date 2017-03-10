@@ -1,22 +1,19 @@
 {% load i18n %}
-<a
- class="btn btn-default btn-xs"
- href="{% url 'eventary:editorial-update_event' event.calendar.pk event.pk %}"
- role="button"
- title="{% blocktrans with event_title=event.title %}Update {{ event_title }}{% endblocktrans %}">
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:editorial-update_event' event.calendar.pk event.pk %}"
+   role="button"
+   title="{% blocktrans with event_title=event.title %}Update {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-pencil"></i>
 </a>
-<a
- class="btn btn-default btn-xs"
- href="{% url 'eventary:editorial-publish_event' event.calendar.pk event.pk %}"
- role="button"
- title="{% blocktrans with event_title=event.title %}Publish {{ event_title }}{% endblocktrans %}">
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:editorial-publish_event' event.calendar.pk event.pk %}"
+   role="button"
+   title="{% blocktrans with event_title=event.title %}Publish {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-ok"></i>
 </a>
-<a
- class="btn btn-default btn-xs"
- href="{% url 'eventary:editorial-delete_event' event.calendar.pk event.pk %}"
- role="button"
- title="{% blocktrans with event_title=event.title %}Delete {{ event_title }}{% endblocktrans %}">
+<a class="btn btn-default btn-xs"
+   href="{% url 'eventary:editorial-delete_event' event.calendar.pk event.pk %}"
+   role="button"
+   title="{% blocktrans with event_title=event.title %}Delete {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-trash"></i>
 </a>
