@@ -696,7 +696,7 @@ msgstr "Bist du sicher, dass du \"%(calendar_title)s\" löschen möchtest?"
 #: templates/eventary/management/landing.html:45
 #: templates/eventary/management/list_calendars.html:17
 msgid "You cannot find the calendar you're looking for?"
-msgstr ""
+msgstr "Kannst du den Kalender, den du suchst, nicht finden?"
 
 #. Translators: The title of the ropose event button
 #: templates/eventary/management/landing.html:47
