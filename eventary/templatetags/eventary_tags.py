@@ -27,6 +27,8 @@ def __get_user_group(user):
     return group
 
 
+#  Filters
+
 @register.filter(name='actions')
 def actions(value, user=None):
 
@@ -127,6 +129,32 @@ def navigation(user):
     return render_to_string(
         'eventary/navigation/{group_name}.html'.format(group_name=_group),
         context={'user': user},
+    )
+
+
+@register.filter(name='pick')
+def pick(page, nr_picks=10):
+    num_pages = page.paginator.num_pages
+    nr_picks = min(num_pages, nr_picks)
+    page_number = page.number
+    coefficient = num_pages < nr_picks and 1 or num_pages // nr_picks
+    return sorted(set([
+        (i + 1) * coefficient
+        for i in range(nr_picks)
+    ] + [page_number]))
+
+
+#  Tags
+
+@register.simple_tag
+def page_navigation(page, request, key='page'):
+    """Renders a paginator (page navigation)"""
+    return render_to_string(
+        'eventary/pagination.html',
+        context={'key': key,
+                 'page': page,
+                 'paginator': page.paginator,
+                 'request': request}
     )
 
 

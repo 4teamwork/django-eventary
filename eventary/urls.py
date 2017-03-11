@@ -52,7 +52,7 @@ urlpatterns = [
         name='editorial-list_calendars'
     ),
     url(  # lists all proposals
-        r'^cal_(?P<pk>[-1-9]+)/proposals/$',
+        r'^cal_(?P<pk>[0-9]+)/proposals/$',
         editorial.ProposalListView.as_view(),
         name='editorial-list_proposals'
     ),
