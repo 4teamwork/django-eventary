@@ -90,7 +90,7 @@ urlpatterns = [
     ),
     url(  # creates a new proposal
         r'cal_(?P<pk>[0-9]+)/new/$',
-        anonymous.EventCreateView.as_view(),
+        anonymous.EventCreateWizardView.as_view(),
         name='anonymous-create_event'
     ),
     url(  # detailed event view

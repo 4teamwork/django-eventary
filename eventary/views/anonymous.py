@@ -1,9 +1,14 @@
 from datetime import datetime
+from os.path import join
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.shortcuts import get_object_or_404, redirect
+
+from formtools.wizard.views import SessionWizardView
 
 from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
 from ..forms import RecurrenceForm
@@ -52,6 +57,100 @@ class CalendarDetailView(EventFilterFormMixin,
                 'data': self.request.GET
             })
         return kwargs
+
+
+class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
+
+    file_storage = FileSystemStorage(location=join(settings.MEDIA_ROOT,
+                                                   'uploads'))
+    form_list = [HostForm, EventForm, TimeDateForm]
+    model = Calendar
+    template_name = 'eventary/anonymous/create_event_wizard.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(EventCreateWizardView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(EventCreateWizardView, self).post(request,
+                                                       *args,
+                                                       **kwargs)
+
+    def get_context_data(self, form, **kwargs):
+        context = super(EventCreateWizardView, self).get_context_data(
+            form=form,
+            **kwargs
+        )
+        if (self.steps.current == '1' and
+            self.object.grouping_set.count()):
+            context.update({'extraform': EventGroupingForm(
+                calendar=self.object,
+                prefix='grouping'
+            )})
+        if (self.steps.current == '2' and
+            self.get_cleaned_data_for_step('1').get('recurring')):
+            context.update({'extraform': RecurrenceForm(prefix='recurrence')})
+        return context
+
+    def done(self, form_list, form_dict, **kwargs):
+
+        # store the host
+        host = form_dict['0'].save()
+
+        # prepare the event and store it
+        event = form_dict['1'].save(commit=False)
+        event.calendar = self.object
+        event.host = host
+        event.published = False
+        event.save()
+
+        # store the grouping information
+        if self.object.grouping_set.count():
+
+            # prepare the data
+            data = self.storage.get_step_data('1')
+            groupingdata = {
+                grouping.split('grouping-')[-1]: data.getlist(grouping)
+                for grouping in data
+                if 'grouping-' in grouping
+            }
+
+            # do some grouping
+            for grouping in groupingdata:
+                for group_pk in groupingdata[grouping]:
+                    group = get_object_or_404(
+                        Group,
+                        pk=int(group_pk),
+                        grouping__title=grouping
+                    )
+                    group.events.add(event)
+                    group.save()
+
+        # store the timedate information
+        timedate, _ = EventTimeDate.objects.get_or_create(
+            event=event,
+            **form_dict['2'].clean()
+        )
+
+        # store the recurrence information
+        if event.recurring:
+            recurrence = RecurrenceForm(
+                self.storage.get_step_data('2'),
+                prefix='recurrence',
+            ).save(commit=False)
+            recurrence.event = event
+            recurrence.save()
+
+        # create the secret for the proposal
+        secret, _ = Secret.objects.get_or_create(event=event)
+
+        return redirect(
+            'eventary:anonymous-proposal_details',
+            calendar_pk=self.object.pk,
+            pk=event.pk,
+            secret=str(secret.secret)
+        )
 
 
 class EventCreateView(SingleObjectMixin, TemplateView):
