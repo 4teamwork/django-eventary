@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load eventary_tags %}
+
+{% comment %}Translators: Pagination{% endcomment %}
+{% comment %}Translators: Title of the previous page link{% endcomment %}
+{% trans 'previous page' as pag_prev_title %}
+{% comment %}Translators: Text of the previous page link{% endcomment %}
+{% trans 'previous' as pag_prev_text %}
+{% comment %}Translators: Title of the next page link{% endcomment %}
+{% trans 'next page' as pag_next_title %}
+{% trans 'next' as pag_next_text %}
+
+{% if paginator.num_pages > 1 %}
+<ul class="pagination">
+{% if page.has_previous %}
+<li class="page-item">
+    <a href="?{% url_replace request key page.previous_page_number %}"
+       title="{{ pag_prev_title|capfirst }}">
+	{{ pag_prev_text|capfirst }}
+    </a>
+</li>
+{% endif %}
+{% with page_range=page|pick:10 %}
+    {% for page_number in page_range %}
+    <li class="page-item{% if page.number == page_number %} active{% endif %}">
+        <a href="?{% url_replace request key page_number %}"
+           {% comment %}Translators: The title of the link to a given page number in the paginator{% endcomment %}
+           title="{% blocktrans %}Go to {{ page_number }}.{% endblocktrans %}">
+            {{ page_number|capfirst }}
+        </a>
+    </li>
+    {% endfor %}
+{% endwith %}
+{% if page.has_next %}
+<li class="page-item">
+    <a href="?{% url_replace request key page.next_page_number %}"
+       title="{{ pag_next_title|capfirst }}">
+	{{ pag_next_text|capfirst }}
+    </a>
+</li>
+{% endif %}
+</ul>
+{% endif %}

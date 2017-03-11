@@ -32,7 +32,8 @@ class CalendarDetailView(EventFilterFormMixin,
 
         self.event_list = self.event_list.filter(calendar=self.object)
 
-        page, paginator = self.paginate_qs(self.event_list)
+        page, paginator = self.paginate_qs(self.event_list,
+                                           prefix='event')
 
         # update the context
         context.update({
@@ -244,20 +245,22 @@ class LandingView(EventFilterFormMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LandingView, self).get_context_data(**kwargs)
 
-        # general context data
-        context.update({
-            'calendar_list':  self.get_queryset(),
-            'event_count':    Event.objects.filter(published=True).count(),
-            'timedate_count': EventTimeDate.objects.count()
-        })
+        # get the list of calendars
+        self.calendar_list = self.get_queryset()
 
         # create some paginators
-        event_page, event_paginator = self.paginate_qs(
-            self.event_list,
-            prefix='event'
+        calendar_page, calendar_paginator = self.paginate_qs(
+            self.calendar_list,
+            prefix='calendar'
         )
+        event_page, event_paginator = self.paginate_qs(self.event_list,
+                                                       prefix='event')
 
-        context.update({'event_page': event_page,
+        # general context data
+        context.update({'calendar_list': self.calendar_list,
+                        'calendar_page': calendar_page,
+                        'calendar_paginator': calendar_paginator,
+                        'event_page': event_page,
                         'event_list': self.event_list,
                         'event_paginator': event_paginator})
 

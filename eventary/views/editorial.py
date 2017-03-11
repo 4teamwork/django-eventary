@@ -15,6 +15,7 @@ from .mixins import EditorialOrManagementRequiredMixin
 class CalendarListView(EditorialOrManagementRequiredMixin, ListView):
 
     model = Calendar
+    paginate_by = 10
     template_name = 'eventary/editorial/list_calendars.html'
 
     def get_queryset(self):
@@ -180,3 +181,14 @@ class ProposalListView(EditorialOrManagementRequiredMixin, CalendarDetailView):
         self.object = self.get_object(queryset=Calendar.objects.all())
         self.event_list.filter(calendar=self.object)
         return super(ProposalListView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProposalListView, self).get_context_data(**kwargs)
+
+        page, paginator = self.paginate_qs(self.event_list,
+                                           prefix='proposal')
+        # update the context
+        context.update({'paginator': paginator,
+                        'page': page})
+
+        return context

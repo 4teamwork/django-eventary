@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView, TemplateView
 
 from ..forms import CalendarForm
-from ..models import Calendar, Event, EventTimeDate
+from ..models import Calendar
 
 from .mixins import ManagementRequiredMixin, FilterFormMixin
 
@@ -37,6 +37,7 @@ class CalendarDeleteView(ManagementRequiredMixin, DeleteView):
 class CalendarListView(ManagementRequiredMixin, ListView):
 
     model = Calendar
+    paginate_by = 10
     template_name = 'eventary/management/list_calendars.html'
 
     def get_queryset(self):
@@ -71,15 +72,14 @@ class LandingView(ManagementRequiredMixin, FilterFormMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LandingView, self).get_context_data(**kwargs)
 
-        # general context data
-        context.update({
-            'calendar_list':  self.get_queryset(),
-            'event_count':    Event.objects.filter(published=True).count(),
-            'proposal_count': Event.objects.filter(published=False).count(),
-            'timedate_count': EventTimeDate.objects.count()
-        })
+        # get the list of calendars
+        self.calendar_list = self.get_queryset()
 
         # create some paginators
+        calendar_page, calendar_paginator = self.paginate_qs(
+            self.calendar_list,
+            prefix='calendar'
+        )
         event_page, event_paginator = self.paginate_qs(
             self.event_list,
             prefix='event'
@@ -89,10 +89,13 @@ class LandingView(ManagementRequiredMixin, FilterFormMixin, TemplateView):
             prefix='proposal'
         )
 
-        context.update({'event_page': event_page,
+        context.update({'calendar_page': calendar_page,
+                        'calendar_list': self.calendar_list,
+                        'event_page': event_page,
                         'event_list': self.event_list,
                         'proposal_page': proposal_page,
                         'proposal_list': self.proposal_list,
+                        'calendar_paginator': calendar_paginator,
                         'event_paginator': event_paginator,
                         'proposal_paginator': proposal_paginator})
 

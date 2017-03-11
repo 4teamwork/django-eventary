@@ -52,7 +52,7 @@
     </div>
 </form>
 
-{% if object_list|length %}
+{% if page %}
 <table class="table table-striped table-hover">
     <thead>
         <tr>
@@ -63,7 +63,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for proposal in object_list %}
+    {% for proposal in page %}
         <tr>
             <td>
                 <a href="{% url 'eventary:anonymous-proposal_details' proposal.calendar.pk proposal.pk proposal.secret.secret %}"
@@ -73,7 +73,6 @@
                 </a>
             </td>
             <td>{{ proposal|actions:request.user }}</td>
-            <td>{{ proposal.calendar.title }}</td>
             <td>{{ proposal|to_full_date }}</td>
             <td>{{ proposal.location }}</td>
         </tr>
@@ -81,47 +80,16 @@
     </tbody>
 </table>
 
-    {% if paginator.num_pages > 1 %}
-    <ul class="pagination">
-        {% if page.has_previous %}
-        <li class="page-item">
-            <a href="?{% url_replace request 'event_page' page.previous_page_number %}"
-               title="{{ pag_prev_title|capfirst }}">
-                {{ pag_prev_text|capfirst }}
-            </a>
-        </li>
-        {% endif %}
-        {% for page_number in paginator.page_range %}
-        <li class="page-item">
-            <a href="?{% url_replace request 'event_page' page_number %}"
-               {% comment %}Translators: The title of the link to a given page number in the paginator{% endcomment %}
-               title="{% blocktrans %}Go to {{ page_number }}.{% endblocktrans %}">
-                {{ page_number }}
-            </a>
-        </li>
-        {% endfor %}
-        {% if page.has_next %}
-        <li class="page-item">
-            <a href="?{% url_replace request 'event_page' page.next_page_number %}"
-               title="{{ pag_next_title|capfirst }}">
-                {{ pag_next_text|capfirst }}
-            </a>
-        </li>
-        {% endif %}
-    </ul>
-    {% endif %}
+{% page_navigation page request 'proposal_page'  %}
 
 {% else %}
-<em>{{ no_events }}</em>
+<p>{{ cannot_find_event }}</p>
+<a class="btn btn-primary"
+   href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
+   title="{{ btn_propose_title|capfirst }}">
+    {{ btn_propose_text|capfirst }}
+</a>
 {% endif %}
 
-<p>
-    {{ cannot_find_event }}
-    <a class="btn btn-primary"
-       href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
-       title="{{ btn_propose_title|capfirst }}">
-        {{ btn_propose_text|capfirst }}
-    </a>
-</p>
 
 {% endblock %}

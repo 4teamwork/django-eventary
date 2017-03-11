@@ -28,14 +28,6 @@
 {% comment %}Translators: Search button title{% endcomment %}
 {% trans 'search events matching the filter parameters' as btn_search_title %}
 {% trans 'search' as btn_search_text %}
-{% comment %}Translators: Event pagination{% endcomment %}
-{% comment %}Translators: Title of the previous page link{% endcomment %}
-{% trans 'previous page' as pag_prev_title %}
-{% comment %}Translators: Text of the previous page link{% endcomment %}
-{% trans 'previous' as pag_prev_text %}
-{% comment %}Translators: Title of the next page link{% endcomment %}
-{% trans 'next page' as pag_next_title %}
-{% trans 'next' as pag_next_text %}
 {% comment %}Translators: Replacement text when no event was found{% endcomment %}
 {% trans 'No upcoming events!' as no_events %}
 {% comment %}Translators: Text to incite the user to propose an event{% endcomment %}
@@ -58,7 +50,7 @@
             <th>{{ th_nr_proposals|capfirst }}</th>
         </tr>
     </thead>
-    {% for calendar in calendar_list %}
+    {% for calendar in calendar_page %}
     <tr>
         <td>
             <a href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
@@ -74,6 +66,8 @@
     {% endfor %}
 </table>
 {% endif %}
+
+{% page_navigation calendar_page request 'calendar_page'  %}
 
 <h2>{{ h_upcoming|capfirst }}</h2>
 <form class="form-inline" method="get">
@@ -125,35 +119,7 @@
     </tbody>
 </table>
 
-    {% if event_page.paginator.num_pages > 1 %}
-    <ul class="pagination">
-        {% if event_page.has_previous %}
-        <li class="page-item">
-            <a href="?{% url_replace request 'event_page' event_page.previous_page_number %}"
-               title="{{ pag_prev_title|capfirst }}">
-                {{ pag_prev_text|capfirst }}
-            </a>
-        </li>
-        {% endif %}
-        {% for page_number in event_page.paginator.page_range %}
-        <li class="page-item">
-            <a href="?{% url_replace request 'event_page' page_number %}"
-               {% comment %}Translators: The title of the link to a given page number in the paginator{% endcomment %}
-               title="{% blocktrans %}Go to {{ page_number }}.{% endblocktrans %}">
-                {{ page_number }}
-            </a>
-        </li>
-        {% endfor %}
-        {% if event_page.has_next %}
-        <li class="page-item">
-            <a href="?{% url_replace request 'event_page' event_page.next_page_number %}"
-               title="{{ pag_next_title|capfirst }}">
-                {{ pag_next_text|capfirst }}
-            </a>
-        </li>
-        {% endif %}
-    </ul>
-    {% endif %}
+{% page_navigation event_page request 'event_page'  %}
 
 {% else %}
 <em>{{ no_events}}</em>
