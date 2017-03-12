@@ -11,11 +11,6 @@
 {% if extraform %}
     {{ extraform.media }}
 {% endif %}
-<script src="{% static 'js/recurrences_wizard.js' %}"></script>
-<link rel="stylesheet"
-      href="{% static 'css/recurrences.css' %}"
-      type="text/css"
-      media="all">
 {% endblock %}
 
 {% block 'content' %}
@@ -48,7 +43,10 @@
         {{ wizard.form|as_bootstrap }}
     {% endif %}
     {% if extraform %}
-    <div id="extraform">{{ extraform|as_bootstrap }}</div>
+    <div id="extraform"{% if extraform.prefix %}
+	 class="{{ extraform.prefix }}"{% endif %}>
+	    {{ extraform|as_bootstrap }}
+    </div>
     {% endif %}
 
     {% wizard_pagination wizard %}
