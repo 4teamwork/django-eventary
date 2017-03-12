@@ -1,0 +1,75 @@
+{% extends 'eventary/base.html' %}
+
+{% load bootstrap_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block 'extra_head' %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+{{ wizard.form.media }}
+{% if extraform %}
+    {{ extraform.media }}
+{% endif %}
+<script src="{% static 'js/recurrences_wizard.js' %}"></script>
+<link rel="stylesheet"
+      href="{% static 'css/recurrences.css' %}"
+      type="text/css"
+      media="all">
+{% endblock %}
+
+{% block 'content' %}
+
+{% comment %}Translators: Page for event creation{% endcomment %}
+{% comment %}Translators: Headers{% endcomment %}
+{% trans 'host information' as h_host %}
+{% trans 'event information' as h_event %}
+{% trans 'date & time information' as h_timedate %}
+{% comment %}Translators: Submit button title{% endcomment %}
+{% trans 'propose the event' as btn_submit_title %}
+{% comment %}Translators: Submit button text{% endcomment %}
+{% trans 'propose' as btn_submit_text %}
+
+{% trans 'first step' as btn_wizard_first %}
+{% trans 'previous step' as btn_wizard_previous %}
+{% trans 'submit' as btn_wizard_submit %}
+
+<h1>{% blocktrans with calendar_title=calendar.title %}Propose an event for "{{ calendar_title }}"{% endblocktrans %}</h1>
+
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+	<div class="container">{{ form|as_bootstrap }}</div>
+        {% endfor %}
+    {% else %}
+        {{ wizard.form|as_bootstrap }}
+    {% endif %}
+    {% if extraform %}
+    <div id="extraform">{{ extraform|as_bootstrap }}</div>
+    {% endif %}
+    {% if wizard.steps.prev %}
+    <button class="btn btn-primary"
+	    name="wizard_goto_step"
+	    title="{{ btn_wizard_first|capfirst }}"
+            type="submit"
+	    value="{{ wizard.steps.first }}">
+        {{ btn_wizard_first|capfirst }}
+    </button>
+    <button class="btn btn-primary"
+	    name="wizard_goto_step"
+	    title="{{ btn_wizard_first|capfirst }}"
+            type="submit"
+	    value="{{ wizard.steps.prev }}">
+        {{ btn_wizard_previous|capfirst }}
+    </button>
+    {% endif %}
+    <button class="btn btn-primary"
+	    title="{{ btn_wizard_submit|capfirst }}"
+            type="submit">
+        {{ btn_wizard_submit|capfirst }}
+    </button>
+</form>
+
+{% endblock %}
