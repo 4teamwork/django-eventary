@@ -164,3 +164,10 @@ def url_replace(request, field, value):
     _dict = request.GET.copy()
     _dict[field] = value
     return _dict.urlencode()
+
+
+@register.simple_tag
+def wizard_pagination(wizard):
+    """Renders a paginator (page navigation)"""
+    return render_to_string('eventary/wizard_pagination.html',
+                            context={'wizard': wizard})

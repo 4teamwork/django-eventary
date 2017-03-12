@@ -1,0 +1,25 @@
+{% load i18n %}
+{% load eventary_tags %}
+
+{% comment %}Translators: Pagination{% endcomment %}
+{% comment %}Translators: Title of the previous page link{% endcomment %}
+{% trans 'previous form' as pag_prev_title %}
+{% comment %}Translators: Text of the previous page link{% endcomment %}
+{% trans 'previous' as pag_prev_text %}
+{% comment %}Translators: Title of the next page link{% endcomment %}
+{% trans 'next form' as pag_next_title %}
+{% trans 'next' as pag_next_text %}
+
+{% if wizard.steps.all|length > 1 %}
+    {% for step in wizard.steps.all %}
+        {% if step < wizard.steps.current %}
+        <button class="btn btn-primary"
+	        name="wizard_goto_step"
+	        title="{{ btn_wizard_previous|capfirst }}"
+                type="submit"
+                value="{{ steps }}">
+	    {% blocktrans %}Go to step {{ step }}{% endblocktrans %}
+        </button>
+	{% endif %}
+    {% endfor %}
+{% endif %}
