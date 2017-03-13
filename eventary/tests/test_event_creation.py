@@ -1,5 +1,8 @@
+import os
+
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.shortcuts import reverse
 from django.test import Client, TestCase
 
@@ -17,74 +20,58 @@ class EventCreation(TestCase):
         self.url = reverse('eventary:anonymous-create_event',
                            kwargs={'pk': self.calendar.pk})
 
-    # tests with invalid timedate form
-    def _timedateform_invalid_assertions(self, response):
-        self.assertNotEquals(
-            response.status_code,
-            302,
-            'unexpected redirection (ergo, the event was created)'
-        )
+    def test_event_creation(self):
+        response = self.client.post(self.url, {
+            'event_create_wizard_view-current_step': '0',
+            '0-name': 'TestVerunstalter',
+            '0-info': '',
+            '0-phone': '0797792750',
+            '0-email': '',
+            '0-homepage': ''
+        })
+
         self.assertEquals(
-            response.status_code,
             200,
-            'expected a status 200 (ergo displaying the form view again)'
-        )
-        self.assertTrue(response.context['eventform'].is_valid(),
-                        'expected valid event data form')
-        self.assertFalse(response.context['timedateform'].is_valid(),
-                         'expected invalid time date form')
-        self.assertTrue(response.context['groupingform'].is_valid(),
-                        'expected valid event grouping form')
-
-    def test_end_time_but_no_start_time_given(self):
-        response = self.client.post(self.url, {
-            'title': 'TestEvent',
-            'host': 'TestHost',
-            'start_date': datetime.today().strftime('%Y-%m-%d'),
-            'end_time': '12:00'
-        })
-        self._timedateform_invalid_assertions(response)
-
-    def test_no_start_date_given(self):
-        response = self.client.post(self.url, {
-            'title': 'TestEvent',
-            'host': 'TestHost',
-        })
-        self._timedateform_invalid_assertions(response)
-
-    def test_start_date_after_end_date(self):
-        response = self.client.post(self.url, {
-            'title': 'TestEvent',
-            'host': 'TestHost',
-            'start_date': (datetime.today() + timedelta(days=1)).strftime(
-                '%Y-%m-%d'
-            ),
-            'end_date': datetime.today().strftime('%Y-%m-%d'),
-        })
-        self._timedateform_invalid_assertions(response)
-
-    # tests with invalid event data form
-    def _eventform_invalid_assertions(self, response):
-        self.assertNotEquals(
             response.status_code,
-            302,
-            'unexpected redirection (ergo, the event was created)'
+            'wrong status code when posting host'
         )
+
+        TEST_DIR = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(TEST_DIR, 'logo-superman.png')) as image:
+            response = self.client.post(self.url, {
+                'event_create_wizard_view-current_step': '1',
+                '1-title': 'TestVerunstaltung',
+                '1-location': 'TestVerunstaltungsort',
+                '1-image': '',
+                '1-document': '',
+                '1-homepage': '',
+                '1-description': '',
+                '1-comment': '',
+                '1-prize': '',
+                '1-recurring': False,
+                # TODO: add 'grouping-grouping.title': (group1.pk, group2.pk)
+            })
+
+            self.assertEquals(
+                200,
+                response.status_code,
+                'wrong status code when posting event data'
+            )
+
+        response = self.client.post(self.url, {
+            'event_create_wizard_view-current_step': '2',
+            '2-start_date': '01.01.2017',
+            '2-start_time': '19:30',
+            '2-end_date': '31.12.2017',
+            '2-end_time': '22:30',
+            'recurrence-recurrences': "\n".join([
+                'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,SA',
+                'EXRULE:FREQ=MONTHLY;BYDAY=-1SA'
+            ])
+        })
+
         self.assertEquals(
+            302,
             response.status_code,
-            200,
-            'expected a status 200 (ergo displaying the form view again)'
+            'wrong status code when posting date data'
         )
-        self.assertFalse(response.context['eventform'].is_valid(),
-                         'expected valid event data form')
-        self.assertTrue(response.context['timedateform'].is_valid(),
-                        'expected invalid time date form')
-        self.assertTrue(response.context['groupingform'].is_valid(),
-                        'expected valid event grouping form')
-
-    def test_no_event_title(self):
-        response = self.client.post(self.url, {
-            'host': 'TestHost',
-            'start_date': datetime.today().strftime('%Y-%m-%d'),
-        })
-        self._eventform_invalid_assertions(response)

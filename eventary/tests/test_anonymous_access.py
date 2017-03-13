@@ -21,8 +21,8 @@ class AnonymousUserAccess(AccessTestMixin, TestCase):
             'editorial-list_proposals': {'pk': self.calendar.pk},
             'editorial-publish_event': {'pk': self.proposal.pk,
                                         'calendar_pk': self.calendar.pk},
-            'editorial-update_event': {'pk': self.calendar.pk,
-                                       'event_pk': self.event.pk},
+            'editorial-update_event': {'calendar_pk': self.calendar.pk,
+                                       'pk': self.event.pk},
             'management-delete_calendar': {'pk': self.calendar.pk},
             'management-update_calendar': {'pk': self.calendar.pk},
         }

@@ -55,8 +55,8 @@ class ManagementUserAccess(AccessTestMixin, TestCase):
                 'status': 302,  # the user is redirected after publishing
             },
             'editorial-update_event': {
-                'pk': self.calendar.pk,
-                'event_pk': self.event.pk,
+                'calendar_pk': self.calendar.pk,
+                'pk': self.event.pk,
             }
         }
 

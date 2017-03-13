@@ -16,4 +16,5 @@ def save_event(sender, instance, **kwargs):
     #    ['pablo.verges@gmail.com'],
     #    fail_silently=False
     #)
-    print("this should send an email?")
+    #print("this should send an email?")
+    pass
