@@ -92,8 +92,11 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
                     prefix='recurrence'
                 )})
             else:
+                eventrecurrence, _ = EventRecurrence.objects.get_or_create(
+                    event=self.object
+                )
                 context.update({'extraform': RecurrenceForm(
-                    instance=self.object.eventrecurrence,
+                    instance=eventrecurrence,
                     prefix='recurrence'
                 )})
 
