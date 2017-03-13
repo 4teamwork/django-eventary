@@ -148,7 +148,7 @@ class EventFilterFormMixin(FormMixin):
             event_pk = [
                 recurrence.event.pk
                 for recurrence in recurrences
-                if len(recurrence.recurrences.after(fdatetime))
+                if recurrence.recurrences.after(fdatetime) is not None
             ]
 
             return (Q(recurring=False,

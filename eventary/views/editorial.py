@@ -103,12 +103,14 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
         return context
 
     def get_form_initial(self, step):
-        if step == '0':
-            return self.object.host.__dict__
-        if step == '1':
-            return self.object.__dict__
         if step == '2':
             return self.object.eventtimedate.__dict__
+
+    def get_form_instance(self, step):
+        if step == '0':
+            return self.object.host
+        if step == '1':
+            return self.object
 
     def done(self, form_list, form_dict, **kwargs):
 
@@ -118,9 +120,16 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
 
         # update the event
         data = form_dict['1'].clean()
+        image = data.pop('image', None)
+        document = data.pop('document', None)
         data['published'] = False
         Event.objects.filter(pk=self.object.pk).update(**data)
         self.object = Event.objects.get(pk=self.object.pk)
+
+        if image is not None:
+            self.object.image.save(image.name, image, save=True)
+        if document is not None:
+            self.object.document.save(document.name, document, save=True)
 
         # update the time and date
         data = form_dict['2'].clean()

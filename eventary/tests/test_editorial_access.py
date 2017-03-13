@@ -47,8 +47,8 @@ class EditorialUserAccess(AccessTestMixin, TestCase):
                                         'pk': self.proposal.pk,
                                         # redirection after publishing
                                         'status': 302},
-            'editorial-update_event': {'pk': self.calendar.pk,
-                                       'event_pk': self.event.pk}
+            'editorial-update_event': {'calendar_pk': self.calendar.pk,
+                                       'pk': self.event.pk}
         }
 
     def test_login(self):
