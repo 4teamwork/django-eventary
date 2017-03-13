@@ -5,11 +5,13 @@ from django.views.generic import ListView, View
 from django.shortcuts import get_object_or_404, redirect
 
 from .anonymous import CalendarDetailView, EventCreateView
+from .anonymous import EventCreateWizardView
 from .management import LandingView as ManagementLandingView
-
-from ..models import Calendar, Event, EventTimeDate, Secret
-
 from .mixins import EditorialOrManagementRequiredMixin
+
+from ..forms import EventGroupingForm, RecurrenceForm
+from ..models import Calendar, Event, EventTimeDate, Grouping, Secret
+from ..models import EventHost, Group, EventRecurrence
 
 
 class CalendarListView(EditorialOrManagementRequiredMixin, ListView):
@@ -40,6 +42,131 @@ class EventDeleteView(EditorialOrManagementRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('eventary:redirector')
+
+
+class EventEditWizardView(EditorialOrManagementRequiredMixin,
+                          EventCreateWizardView):
+
+    model = Event
+
+    def get_context_data(self, form, **kwargs):
+        context = super(EventCreateWizardView, self).get_context_data(
+            form=form,
+            **kwargs
+        )
+
+        context.update({'calendar': self.object.calendar})
+
+        if (self.steps.current == '1' and
+            self.object.calendar.grouping_set.count()):
+            # get the initial values for the EventGroupingForm
+            if self.storage.get_step_data('1') is not None:
+                context.update({'extraform': EventGroupingForm(
+                    self.storage.get_step_data('1'),
+                    calendar=self.object.calendar,
+                    prefix='grouping'
+                )})
+            else:
+                groups = self.object.group_set.all()
+                context.update({'extraform': EventGroupingForm(
+                    calendar=self.object.calendar,
+                    prefix='grouping',
+                    initial={
+                        grouping.title: [
+                            group.pk
+                            for group in groups
+                            if group.grouping == grouping
+                        ]
+                        for grouping in Grouping.objects.filter(
+                            group__in=groups
+                        )
+                    }
+                )})
+
+        if (self.steps.current == '2' and
+            self.get_cleaned_data_for_step('1').get('recurring')):
+            # get the initial values for the EventGroupingForm
+            if self.storage.get_step_data('2') is not None:
+                context.update({'extraform': RecurrenceForm(
+                    self.storage.get_step_data('2'),
+                    prefix='recurrence'
+                )})
+            else:
+                context.update({'extraform': RecurrenceForm(
+                    instance=self.object.eventrecurrence,
+                    prefix='recurrence'
+                )})
+
+        return context
+
+    def get_form_initial(self, step):
+        if step == '0':
+            return self.object.host.__dict__
+        if step == '1':
+            return self.object.__dict__
+        if step == '2':
+            return self.object.eventtimedate.__dict__
+
+    def done(self, form_list, form_dict, **kwargs):
+
+        # update the host
+        data = form_dict['0'].clean()
+        EventHost.objects.filter(event__pk=self.object.pk).update(**data)
+
+        # update the event
+        data = form_dict['1'].clean()
+        data['published'] = False
+        Event.objects.filter(pk=self.object.pk).update(**data)
+        self.object = Event.objects.get(pk=self.object.pk)
+
+        # update the time and date
+        data = form_dict['2'].clean()
+        EventTimeDate.objects.filter(event__pk=self.object.pk).update(**data)
+
+        # store the grouping information
+        if self.object.calendar.grouping_set.count():
+
+            # remove the event from all the groups
+            self.object.group_set.clear()
+
+            # prepare the data
+            data = self.storage.get_step_data('1')
+            groupingdata = {
+                grouping.split('grouping-')[-1]: data.getlist(grouping)
+                for grouping in data
+                if 'grouping-' in grouping
+            }
+
+            # do some grouping
+            for grouping in groupingdata:
+                for group_pk in groupingdata[grouping]:
+                    group = get_object_or_404(
+                        Group,
+                        pk=int(group_pk),
+                        grouping__title=grouping
+                    )
+                    group.events.add(self.object)
+                    group.save()
+
+        # store the recurrence information
+        if self.object.recurring:
+            recurrence = RecurrenceForm(
+                self.storage.get_step_data('2'),
+                prefix='recurrence',
+            ).save(commit=False)
+            self.object.eventrecurrence.delete()
+            recurrence.event = self.object
+            recurrence.save()
+
+        # create the secret for the proposal
+        secret, _ = Secret.objects.get_or_create(event=self.object)
+
+        return redirect(
+            'eventary:anonymous-proposal_details',
+            calendar_pk=self.object.calendar.pk,
+            pk=self.object.pk,
+            secret=str(secret.secret)
+        )
 
 
 class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):

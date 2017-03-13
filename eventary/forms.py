@@ -309,6 +309,10 @@ class EventGroupingForm(forms.Form):
                 ) for grouping in self._groupings
             })
 
+    class Media:
+        css = {'all': ('css/groupingform.css',)}
+        js = ('js/groupingform.js',)
+
 
 class HostForm(forms.ModelForm):
 
@@ -322,6 +326,10 @@ class RecurrenceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RecurrenceForm, self).__init__(*args, **kwargs)
         self.fields['recurrences'].required = False
+
+    class Media:
+        css = {'all': ('css/recurrences.css',)}
+        js = ('js/recurrences_wizard.js',)
 
     class Meta:
         model = EventRecurrence

@@ -1,6 +1,7 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load eventary_tags %}
 {% load i18n %}
 {% load static %}
 
@@ -10,11 +11,6 @@
 {% if extraform %}
     {{ extraform.media }}
 {% endif %}
-<script src="{% static 'js/recurrences_wizard.js' %}"></script>
-<link rel="stylesheet"
-      href="{% static 'css/recurrences.css' %}"
-      type="text/css"
-      media="all">
 {% endblock %}
 
 {% block 'content' %}
@@ -47,24 +43,14 @@
         {{ wizard.form|as_bootstrap }}
     {% endif %}
     {% if extraform %}
-    <div id="extraform">{{ extraform|as_bootstrap }}</div>
+    <div id="extraform"{% if extraform.prefix %}
+	 class="{{ extraform.prefix }}"{% endif %}>
+	    {{ extraform|as_bootstrap }}
+    </div>
     {% endif %}
-    {% if wizard.steps.prev %}
-    <button class="btn btn-primary"
-	    name="wizard_goto_step"
-	    title="{{ btn_wizard_first|capfirst }}"
-            type="submit"
-	    value="{{ wizard.steps.first }}">
-        {{ btn_wizard_first|capfirst }}
-    </button>
-    <button class="btn btn-primary"
-	    name="wizard_goto_step"
-	    title="{{ btn_wizard_first|capfirst }}"
-            type="submit"
-	    value="{{ wizard.steps.prev }}">
-        {{ btn_wizard_previous|capfirst }}
-    </button>
-    {% endif %}
+
+    {% wizard_pagination wizard %}
+
     <button class="btn btn-primary"
 	    title="{{ btn_wizard_submit|capfirst }}"
             type="submit">
