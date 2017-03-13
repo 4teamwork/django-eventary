@@ -62,8 +62,8 @@ urlpatterns = [
         name='editorial-delete_event'
     ),
     url(  # edits an event
-        r'^cal_(?P<pk>[0-9]+)/evt_(?P<event_pk>[0-9]+)/update/$',
-        editorial.EventEditView.as_view(),
+        r'^cal_(?P<calendar_pk>[0-9]+)/evt_(?P<pk>[0-9]+)/update/$',
+        editorial.EventEditWizardView.as_view(),
         name='editorial-update_event'
     ),
     url(  # hides an event

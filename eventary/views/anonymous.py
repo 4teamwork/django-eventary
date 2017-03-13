@@ -82,15 +82,34 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
             form=form,
             **kwargs
         )
+
         if (self.steps.current == '1' and
             self.object.grouping_set.count()):
-            context.update({'extraform': EventGroupingForm(
-                calendar=self.object,
-                prefix='grouping'
-            )})
+            # get the initial values for the EventGroupingForm
+            if self.storage.get_step_data('1') is not None:
+                context.update({'extraform': EventGroupingForm(
+                    self.storage.get_step_data('1'),
+                    calendar=self.object,
+                    prefix='grouping'
+                )})
+            else:
+                context.update({'extraform': EventGroupingForm(
+                    calendar=self.object,
+                    prefix='grouping'
+                )})
+
         if (self.steps.current == '2' and
             self.get_cleaned_data_for_step('1').get('recurring')):
-            context.update({'extraform': RecurrenceForm(prefix='recurrence')})
+            # get the initial values for the EventGroupingForm
+            if self.storage.get_step_data('2') is not None:
+                context.update({'extraform': RecurrenceForm(
+                    self.storage.get_step_data('2'),
+                    prefix='recurrence'
+                )})
+            else:
+                context.update({'extraform': RecurrenceForm(
+                    prefix='recurrence'
+                )})
         return context
 
     def done(self, form_list, form_dict, **kwargs):
