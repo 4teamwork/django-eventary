@@ -78,6 +78,10 @@ class GenericFilterForm(forms.Form):
                     groups.extend([int(pk) for pk in data[grouping]])
         return groups
 
+    class Media:
+        css = {'all': ('css/filterform.css',)}
+        js = ('js/filterform.js',)
+
 
 class FilterForm(forms.Form):
 
@@ -152,6 +156,10 @@ class FilterForm(forms.Form):
                 ):
                     groups.extend([int(pk) for pk in data[grouping]])
         return groups
+
+    class Media:
+        css = {'all': ('css/filterform.css',)}
+        js = ('js/filterform.js',)
 
 
 class CalendarForm(forms.ModelForm):

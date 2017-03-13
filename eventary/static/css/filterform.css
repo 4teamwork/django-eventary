@@ -1,0 +1,5 @@
+.filterform .form-group { margin-right: 20px; }
+.filterform { margin-bottom: 15px; }
+.filterform .select2-container--default .select2-selection--multiple .select2-selection__rendered { padding: 5px 15px; }
+.filterform .row { position: relative; }
+.filterform .col-md-2 { position: absolute; bottom: 3px; right: 0; }
