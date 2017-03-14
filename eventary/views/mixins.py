@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -161,7 +161,13 @@ class EventFilterFormMixin(FormMixin):
         if len(self.request.GET):
             self.form = GenericFilterForm(self.request.GET, prefix='filter')
         else:
-            self.form = GenericFilterForm(prefix='filter')
+            initial = {
+                'from_date': datetime.today().strftime('%Y-%m-%d'),
+                'to_date': (
+                    datetime.today() + timedelta(weeks=1)
+                ).strftime('%Y-%m-%d')
+            }
+            self.form = GenericFilterForm(prefix='filter', initial=initial)
         return self.form
 
     def paginate_qs(self, qs, prefix='paginator'):
