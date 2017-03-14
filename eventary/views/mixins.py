@@ -31,12 +31,20 @@ class EventFilterFormMixin(FormMixin):
     def __init__(self, **kwargs):
         super(EventFilterFormMixin, self).__init__(**kwargs)
 
+        # initial filter
+        self.initial = {
+            'from_date': datetime.today(),
+            'to_date': (datetime.today() + timedelta(weeks=1))
+        }
+
         # events
         self.event_list = Event.objects.filter(published=True).distinct()
 
     def apply_filter(self, form):
 
-        self.event_list = self.event_list.filter(self.get_date_filter(form))
+        self.event_list = self.event_list.filter(self.get_date_filter(
+            form.clean()
+        ))
 
         # filter the queryset by the selected groups
         groups = form.groups()
@@ -46,17 +54,20 @@ class EventFilterFormMixin(FormMixin):
     def get(self, request, *args, **kwargs):
 
         form = self.get_form()
+
         if len(self.request.GET) and form.is_valid():
             self.apply_filter(form)
+        else:
+            self.event_list = self.event_list.filter(
+                self.get_date_filter(self.initial)
+            )
 
         self.event_list = self.event_list.order_by('recurring')
         context = self.get_context_data()
 
         return self.render_to_response(context)
 
-    def get_date_filter(self, form):
-        data = form.clean()
-
+    def get_date_filter(self, data):
         fdate = data.get('from_date', None)
         tdate = data.get('to_date', None)
 
@@ -161,13 +172,8 @@ class EventFilterFormMixin(FormMixin):
         if len(self.request.GET):
             self.form = GenericFilterForm(self.request.GET, prefix='filter')
         else:
-            initial = {
-                'from_date': datetime.today().strftime('%Y-%m-%d'),
-                'to_date': (
-                    datetime.today() + timedelta(weeks=1)
-                ).strftime('%Y-%m-%d')
-            }
-            self.form = GenericFilterForm(prefix='filter', initial=initial)
+            self.form = GenericFilterForm(prefix='filter',
+                                          initial=self.initial)
         return self.form
 
     def paginate_qs(self, qs, prefix='paginator'):
@@ -196,7 +202,7 @@ class FilterFormMixin(EventFilterFormMixin):
         super(FilterFormMixin, self).apply_filter(form)
 
         self.proposal_list = self.proposal_list.filter(self.get_date_filter(
-            form
+            form.clean()
         ))
 
         # filter the queryset by the selected groups
@@ -206,6 +212,11 @@ class FilterFormMixin(EventFilterFormMixin):
 
     def get(self, request, *args, **kwargs):
         super(FilterFormMixin, self).get(request, *args, **kwargs)
+
+        if not len(self.request.GET):
+            self.proposal_list = self.proposal_list.filter(
+                self.get_date_filter(self.initial)
+            )
 
         self.proposal_list = self.proposal_list.order_by('recurring')
         context = self.get_context_data()
