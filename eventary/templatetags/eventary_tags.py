@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.paginator import Page
 from django.template.loader import render_to_string
@@ -185,6 +186,12 @@ def pick(page, nr_picks=10):
 
 
 #  Tags
+
+@register.simple_tag
+def google_maps_api_key():
+    """Returns the api key for google maps"""
+    return getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
+
 
 @register.simple_tag
 def page_navigation(page, request, key='page'):

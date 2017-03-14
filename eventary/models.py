@@ -44,10 +44,12 @@ class Event(models.Model):
                              null=True,
                              verbose_name=_('host'))
     image = models.ImageField(blank=True,
+                              max_length=255,
                               null=True,
                               upload_to=_get_upload_path,
                               verbose_name=_('image'))
     document = models.FileField(blank=True,
+                                max_length=255,
                                 null=True,
                                 upload_to=_get_upload_path,
                                 verbose_name=_('document'))
