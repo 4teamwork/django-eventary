@@ -17,20 +17,24 @@
         <th>{{ th_date|capfirst }}</th>
         <td>{{ event|to_full_date }}</td>
     </tr>
+    {% if event.location %}
     <tr>
         <th>{{ th_location|capfirst }}</th>
         <td>{{ event.location }}</td>
     </tr>
+    {% endif %}
     {% for grouping, groups in groupings.items %}
     <tr>
         <th>{{ grouping }}</th>
         <td>{{ groups|join:", " }}</td>
     </tr>
     {% endfor %}
+    {% if event.prize %}
     <tr>
         <th>{{ th_fee|capfirst }}</th>
         <td>{{ event.prize }}</td>
     </tr>
+    {% endif %}
     {% if event.host %}
     <tr>
         <th>{{ th_host|capfirst }}</th>
