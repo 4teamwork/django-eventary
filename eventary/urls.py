@@ -76,6 +76,11 @@ urlpatterns = [
         editorial.EventPublishView.as_view(),
         name='editorial-publish_event'
     ),
+    url(  # approves several events
+        r'cal_(?P<pk>[0-9]+)/editorial/$',
+        editorial.EventListUpdateView.as_view(),
+        name='editorial-update_event_list'
+    ),
 
     # anonymous views
     url(  # landing page

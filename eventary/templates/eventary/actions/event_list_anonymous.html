@@ -1,0 +1,8 @@
+{% load i18n %}
+{% trans 'download selected events' as btn_title %}
+<button class="btn btn-default btn-xs"
+   type="submit"
+   name="download"
+   title="{{ btn_title|capfirst }}">
+    <i class="glyphicon glyphicon-download"></i>
+</button>

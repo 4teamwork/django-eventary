@@ -213,7 +213,7 @@ class FilterFormMixin(EventFilterFormMixin):
     def get(self, request, *args, **kwargs):
         super(FilterFormMixin, self).get(request, *args, **kwargs)
 
-        if not len(self.request.GET):
+        if not len(request.GET):
             self.proposal_list = self.proposal_list.filter(
                 self.get_date_filter(self.initial)
             )

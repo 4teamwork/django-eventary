@@ -1,5 +1,6 @@
 from django import template
 from django.contrib.auth.models import User
+from django.core.paginator import Page
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
@@ -56,6 +57,20 @@ def actions(value, user=None):
                     group_name=_group
                 ),
                 context={'event': value}
+            )
+
+    if isinstance(value, Page) and value.object_list.model is Event:
+        if value.object_list.first().published:
+            return render_to_string(
+                'eventary/actions/event_list_{group_name}.html'.format(
+                    group_name=_group
+                ),
+            )
+        else:
+            return render_to_string(
+                'eventary/actions/proposal_list_{group_name}.html'.format(
+                    group_name=_group
+                ),
             )
 
 
