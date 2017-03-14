@@ -1,0 +1,77 @@
+{% load eventary_tags %}
+{% load i18n %}
+
+{% comment %}Translators: Table headers{% endcomment %}
+{% trans 'event' as th_event %}
+{% trans 'proposal' as th_proposal %}
+{% trans 'actions' as th_actions %}
+{% trans 'calendar' as th_calendar %}
+{% trans 'date & time' as th_date_time %}
+{% trans 'location' as th_location %}
+{% comment %}Translators: Replacement text when no event was found{% endcomment %}
+{% trans 'No upcoming events!' as no_events %}
+{% comment %}Translators: Text to incite the user to propose an event{% endcomment %}
+{% trans "You cannot find the event you're looking for?" as cannot_find_event %}
+{% comment %}Translators: The title of the ropose event button {% endcomment %}
+{% trans 'Propose an event now!' as btn_propose_title %}
+{% comment %}Translators: The text of the ropose event button {% endcomment %}
+{% trans 'Propose your event now!' as btn_propose_text %}
+
+{% if page %}
+<table class="table table-striped table-hover">
+<thead>
+<tr>
+    {% if page.first.published %}
+    <th>{{ th_event|capfirst }}</th>
+    {% else %}
+    <th>{{ th_proposal|capfirst }}</th>
+    {% endif %}
+    <th>{{ th_actions|capfirst }}</th>
+    {% if not calendar %}
+    <th>{{ th_calendar|capfirst }}</th>
+    {% endif %}
+    <th>{{ th_date_time|capfirst }}</th>
+    <th>{{ th_location|capfirst }}</th>
+</tr>
+</thead>
+<tbody>
+{% for event in page %}
+<tr>
+    <td>
+    {% if event.published %}
+	<a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
+	   {% comment %}Translators: The title of the link to the event details view{% endcomment %}
+	   title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
+	    {{ event.title }}
+	</a>
+    {% else %}
+    <a href="{% url 'eventary:anonymous-proposal_details' event.calendar.pk event.pk event.secret.secret %}"
+       {% comment %}Translators: The title of the link to the proposal details view{% endcomment %}
+       title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
+        {{ event.title }}
+    </a>
+    {% endif %}
+    </td>
+    <td>{{ event|actions:request.user }}</td>
+    {% if not calendar %}
+    <td>{{ event.calendar.title }}</td>
+    {% endif %}
+    <td>{{ event|to_full_date }}</td>
+    <td>{{ event.location }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% page_navigation page request prefix  %}
+
+{% else %}
+    {% if calendar %}
+        <p>{{ cannot_find_event }}</p>
+        <a class="btn btn-primary"
+           href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
+           title="{{ btn_propose_title|capfirst }}">
+            {{ btn_propose_text|capfirst }}
+        </a>
+    {% endif %}
+{% endif %}

@@ -22,40 +22,6 @@
 
 <h1>{{ h_calendars|capfirst }}</h1>
 
-{% if page_obj %}
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>{{ th_title|capfirst }}</th>
-            <th>{{ th_actions|capfirst }}</th>
-            <th>{{ th_nr_events|capfirst }}</th>
-            <th>{{ th_nr_proposals|capfirst }}</th>
-        </tr>
-    </thead>
-    {% for calendar in object_list %}
-    <tr>
-        <td>
-            <a href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
-               {% comment %}Translators: The title of the link to the calendar details view{% endcomment %}
-               title="{% blocktrans with calendar_title=calendar.title %}View {{ calendar_title }}{% endblocktrans %}">
-                {{ calendar.title }}
-            </a>
-        </td>
-        <td>{{ calendar|actions:request.user }}</td>
-        <td>{{ calendar.num_events }}</td>
-        <td>{{ calendar.num_proposals }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>{{ cannot_find_calendar }}</p>
-<a class="btn btn-primary"
-   href="{% url 'eventary:management-create_calendar' %}"
-   title="{{ btn_calendar_title|capfirst }}">
-    {{ btn_calendar_text|capfirst }}
-</a>
-{% endif %}
-
-{% page_navigation page_obj request %}
+{% include 'eventary/lists/calendars.html' with request=request page=page_obj prefix='page' %}
 
 {% endblock %}
