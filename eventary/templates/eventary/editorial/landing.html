@@ -34,8 +34,6 @@
 {% include 'eventary/lists/calendars.html' with request=request page=calendar_page prefix='calendar_page' %}
 {% endif %}
 
-{% page_navigation calendar_page request 'calendar_page'  %}
-
 <h2>{{ h_event_filter|capfirst }}</h2>
 <form class="form-inline filterform" method="get">
     <div class="container">
@@ -59,7 +57,8 @@
 <h2>{{ h_upcoming_events|capfirst }}</h2>
 
 {% if calendar_list.count == 1 %}
-    {% include 'eventary/lists/events.html' with request=request calendar=calendar_list.first page=event_page prefix='event_page' %}
+    {% url 'eventary:editorial-update_event_list' pk=calendar_list.first.pk as form_action %}
+    {% include 'eventary/lists/events.html' with form_action=form_action request=request calendar=calendar_list.first page=event_page prefix='event_page' %}
 {% else %}
     {% include 'eventary/lists/events.html' with request=request page=event_page prefix='event_page' %}
 {% endif %}

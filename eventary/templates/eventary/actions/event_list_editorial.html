@@ -1,0 +1,8 @@
+{% load i18n %}
+{% trans 'hide selected events' as btn_title %}
+<button class="btn btn-default btn-xs"
+   type="submit"
+   name="hide"
+   title="{{ btn_title|capfirst }}">
+    <i class="glyphicon glyphicon-eye-close"></i>
+</button>

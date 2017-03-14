@@ -1,0 +1,15 @@
+{% load i18n %}
+{% trans 'publish selected proposals' as btn_publish %}
+{% trans 'delete selected proposals' as btn_delete %}
+<button class="btn btn-default btn-xs"
+   type="submit"
+   name="publish"
+   title="{{ btn_publish|capfirst }}">
+    <i class="glyphicon glyphicon-ok"></i>
+</button>
+<button class="btn btn-default btn-xs"
+   type="submit"
+   name="delete"
+   title="{{ btn_delete|capfirst }}">
+    <i class="glyphicon glyphicon-trash"></i>
+</button>

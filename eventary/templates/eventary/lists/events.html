@@ -8,6 +8,8 @@
 {% trans 'calendar' as th_calendar %}
 {% trans 'date & time' as th_date_time %}
 {% trans 'location' as th_location %}
+{% comment %}Translators: Select all checkbox caption{% endcomment %}
+{% trans 'toggle selection' as toggle_selection %}
 {% comment %}Translators: Replacement text when no event was found{% endcomment %}
 {% trans 'No upcoming events!' as no_events %}
 {% comment %}Translators: Text to incite the user to propose an event{% endcomment %}
@@ -18,10 +20,12 @@
 {% trans 'Propose your event now!' as btn_propose_text %}
 
 {% if page %}
+{% if form_action %}<form action="{{ form_action }}" method="post">{% csrf_token %}{% endif %}
 <table class="table table-striped table-hover">
 <thead>
 <tr>
-    {% if page.first.published %}
+    {% if form_action %}<th>{{ page|actions:request.user }}</th>{% endif %}
+    {% if page.object_list.first.published %}
     <th>{{ th_event|capfirst }}</th>
     {% else %}
     <th>{{ th_proposal|capfirst }}</th>
@@ -37,6 +41,7 @@
 <tbody>
 {% for event in page %}
 <tr>
+    {% if form_action %}<td><input type="checkbox" name="pk" value="{{ event.pk }}"></td>{% endif %}
     <td>
     {% if event.published %}
 	<a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
@@ -62,6 +67,10 @@
 {% endfor %}
 </tbody>
 </table>
+{% if form_action %}<div class="toggle_selection checkbox container"><label class="row">
+    <input type="checkbox"> {{ toggle_selection|capfirst }}
+</label></div>{% endif %}
+{% if form_action %}</form>{% endif %}
 
 {% page_navigation page request prefix  %}
 

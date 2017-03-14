@@ -1,13 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import DeleteView, SingleObjectMixin
-from django.views.generic import ListView, View
+from django.views.generic.list import MultipleObjectMixin
+from django.views.generic import ListView, View, TemplateView
 from django.shortcuts import get_object_or_404, redirect
 
 from .anonymous import CalendarDetailView, EventCreateView
 from .anonymous import EventCreateWizardView
 from .management import LandingView as ManagementLandingView
-from .mixins import EditorialOrManagementRequiredMixin
+from .mixins import EditorialOrManagementRequiredMixin, FilterFormMixin
 
 from ..forms import EventGroupingForm, RecurrenceForm
 from ..models import Calendar, Event, EventTimeDate, Grouping, Secret
@@ -301,6 +302,85 @@ class EventPublishView(EditorialOrManagementRequiredMixin,
         Secret.objects.filter(event=self.object).delete()
         self.object.save()
         return redirect('eventary:redirector')
+
+
+class EventListUpdateView(EditorialOrManagementRequiredMixin,
+                          MultipleObjectMixin,
+                          SingleObjectMixin,
+                          FilterFormMixin,
+                          TemplateView):
+
+    model = Calendar
+    paginate_by = 10
+    template_name = 'eventary/editorial/publish_event_list.html'
+
+    def get_objects(self):
+        self.object = self.get_object()
+        self.object_list = None
+        self.event_list = self.object.event_set.filter(
+            published=True
+        ).distinct()
+        self.proposal_list = self.object.event_set.filter(
+            published=False
+        ).distinct()
+
+    def dispatch(self, request, *args, **kwargs):
+        self.get_objects()
+        return super(EventListUpdateView, self).dispatch(request,
+                                                         *args,
+                                                         **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        for action in set(request.POST.keys() - {'csrfmiddlewaretoken', 'pk'}):
+            if action in ['publish', 'hide', 'delete']:
+                _action_method = getattr(self, action)
+                _action_method(request)
+        self.get_objects()
+        return super(EventListUpdateView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(MultipleObjectMixin, self).get_context_data(
+            **kwargs
+        )
+        context.update({'calendar': self.object})
+
+        event_context = super(EventListUpdateView, self).get_context_data(
+            object_list=self.event_list
+        )
+        proposal_context = super(EventListUpdateView, self).get_context_data(
+            object_list=self.proposal_list
+        )
+        context.update({
+            'event_paginator': event_context.get('paginator'),
+            'event_page': event_context.get('page_obj'),
+            'event_list': event_context.get('object_list'),
+            'proposal_paginator': proposal_context.get('paginator'),
+            'proposal_page': proposal_context.get('page_obj'),
+            'proposal_list': proposal_context.get('object_list'),
+        })
+
+        return context
+
+    def publish(self, request):
+        proposals = self.proposal_list.filter(
+            pk__in=request.POST.getlist('pk')
+        )
+        Secret.objects.filter(event__in=proposals).delete()
+        proposals.update(published=True)
+
+    def hide(self, request):
+        # hide the events
+        events = self.event_list.filter(pk__in=request.POST.getlist('pk'))
+        [Secret.objects.get_or_create(event=event) for event in events]
+        events.update(published=False)
+        # recreate their secrets
+
+    def delete(self, request):
+        proposals = self.proposal_list.filter(
+            pk__in=request.POST.getlist('pk')
+        )
+        Secret.objects.filter(event__in=proposals).delete()
+        proposals.delete()
 
 
 class LandingView(EditorialOrManagementRequiredMixin, ManagementLandingView):
