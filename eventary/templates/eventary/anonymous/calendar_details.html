@@ -55,43 +55,6 @@
     </div>
 </form>
 
-{% if page %}
-<table class="table table-striped table-hover">
-<thead>
-<tr>
-    <th>{{ th_event|capfirst }}</th>
-    <th>{{ th_actions|capfirst }}</th>
-    <th>{{ th_date_time|capfirst }}</th>
-    <th>{{ th_location|capfirst }}</th>
-</tr>
-</thead>
-<tbody>
-{% for event in page %}
-<tr>
-    <td>
-	<a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
-	   {% comment %}Translators: The title of the link to the event details view{% endcomment %}
-	   title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
-	    {{ event.title }}
-	</a>
-    </td>
-    <td>{{ event|actions:request.user }}</td>
-    <td>{{ event|to_full_date }}</td>
-    <td>{{ event.location }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-{% page_navigation page request 'event_page'  %}
-
-{% else %}
-<p>{{ cannot_find_event }}</p>
-<a class="btn btn-primary"
-   href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
-   title="{{ btn_propose_title|capfirst }}">
-    {{ btn_propose_text|capfirst }}
-</a>
-{% endif %}
+{% include 'eventary/lists/events.html' with request=request page=page prefix='event_page' calendar=calendar %}
 
 {% endblock %}

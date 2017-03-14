@@ -41,33 +41,8 @@
 
 {% if calendar_list.count > 1 %}
 <h2>{{ h_calendars|capfirst }}</h2>
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>{{ th_title|capfirst }}</th>
-            <th>{{ th_actions|capfirst }}</th>
-            <th>{{ th_nr_events|capfirst }}</th>
-            <th>{{ th_nr_proposals|capfirst }}</th>
-        </tr>
-    </thead>
-    {% for calendar in calendar_page %}
-    <tr>
-        <td>
-            <a href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
-               {% comment %}Translators: The title of the link to the calendar details view{% endcomment %}
-               title="{% blocktrans with calendar_title=calendar.title %}View {{ calendar_title }}.{% endblocktrans %}">
-                {{ calendar.title }}
-            </a>
-        </td>
-        <td>{{ calendar|actions:request.user }}</td>
-        <td>{{ calendar.num_events }}</td>
-        <td>{{ calendar.num_proposals }}</td>
-    </tr>
-    {% endfor %}
-</table>
+{% include 'eventary/lists/calendars.html' with request=request page=calendar_page prefix='calendar_page' %}
 {% endif %}
-
-{% page_navigation calendar_page request 'calendar_page'  %}
 
 <h2>{{ h_upcoming|capfirst }}</h2>
 <form class="form-inline filterform" method="get">
@@ -89,51 +64,10 @@
     </div>
 </form>
 
-{% if event_page %}
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>{{ th_event|capfirst }}</th>
-            <th>{{ th_actions|capfirst }}</th>
-            <th>{{ th_calendar|capfirst }}</th>
-            <th>{{ th_date_time|capfirst }}</th>
-            <th>{{ th_location|capfirst }}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in event_page %}
-        <tr>
-            <td>
-                <a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
-                   {% comment %}Translators: The title of the link to the event details view{% endcomment %}
-                   title="{% blocktrans with event_title=event.title %}View {{ event_title }}.{% endblocktrans %}">
-                    {{ event.title }}
-                </a>
-            </td>
-            <td>{{ event|actions:request.user }}</td>
-            <td>{{ event.calendar.title }}</td>
-            <td>{{ event|to_full_date }}</td>
-            <td>{{ event.location }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-{% page_navigation event_page request 'event_page'  %}
-
-{% else %}
-<em>{{ no_events}}</em>
-{% endif %}
-
 {% if calendar_list.count == 1 %}
-<p>
-    {{ cannot_find_event }}
-    <a class="btn btn-primary"
-       href="{% url 'eventary:anonymous-create_event' calendar_list.first.pk %}"
-       title="{{ btn_propose_title|capfirst }}">
-        {{ btn_propose_text|capfirst }}
-    </a>
-</p>
+    {% include 'eventary/lists/events.html' with request=request calendar=calendar_list.first page=event_page prefix='event_page' %}
+{% else %}
+    {% include 'eventary/lists/events.html' with request=request page=event_page prefix='event_page' %}
 {% endif %}
 
 {% endblock %}

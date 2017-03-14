@@ -1,0 +1,50 @@
+{% load eventary_tags %}
+{% load i18n %}
+
+{% comment %}Translators: Table headers{% endcomment %}
+{% trans 'title' as th_title %}
+{% trans 'actions' as th_actions %}
+{% trans '# events' as th_nr_events %}
+{% trans '# proposals' as th_nr_proposals %}
+{% comment %}Translators: Text to incite the user to propose a calendar{% endcomment %}
+{% trans "You cannot find the calendar you're looking for?" as cannot_find_calendar %}
+{% comment %}Translators: The title of the ropose event button {% endcomment %}
+{% trans 'Add a calendar now!' as btn_calendar_title %}
+{% comment %}Translators: The text of the ropose event button {% endcomment %}
+{% trans 'Add your calendar now!' as btn_calendar_text %}
+
+{% if page %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>{{ th_title|capfirst }}</th>
+            <th>{{ th_actions|capfirst }}</th>
+            <th>{{ th_nr_events|capfirst }}</th>
+            <th>{{ th_nr_proposals|capfirst }}</th>
+        </tr>
+    </thead>
+    {% for calendar in page %}
+    <tr>
+        <td>
+            <a href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+               {% comment %}Translators: The title of the link to the calendar details view{% endcomment %}
+               title="{% blocktrans with calendar_title=calendar.title %}View {{ calendar_title }}.{% endblocktrans %}">
+                {{ calendar.title }}
+            </a>
+        </td>
+        <td>{{ calendar|actions:request.user }}</td>
+        <td>{{ calendar.num_events }}</td>
+        <td>{{ calendar.num_proposals }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>{{ cannot_find_calendar }}</p>
+<a class="btn btn-primary"
+   href="{% url 'eventary:management-create_calendar' %}"
+   title="{{ btn_calendar_title|capfirst }}">
+    {{ btn_calendar_text|capfirst }}
+</a>
+{% endif %}
+
+{% page_navigation page request prefix  %}
