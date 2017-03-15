@@ -2,6 +2,7 @@
 
 {% load eventary_tags %}
 {% load i18n %}
+{% load imagekit %}
 {% load static %}
 
 {% block 'content' %}
@@ -9,29 +10,26 @@
 {% comment %}Translators: Event detail page{% endcomment %}
 {% comment %}Translators: Headers {% endcomment %}
 {% trans 'details' as h_details %}
-{% trans 'downloads' as h_downloads %}
 
 {% if event.image %}
 {% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
-<div style="float: right; padding: 15px 0; padding-left: 15px; display: inline-block;">
+<div class="pull-right" style="padding: 15px 0; padding-left: 15px; display: inline-block;">
     <img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
 </div>
 {% endif %}
 
-<h1>{{ event.title }}</h1>
+<a class="btn btn-xs btn-default"
+   style="vertical-align: 6px"
+   href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}"
+   {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
+   title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+</a>
 
-<div>{{ event|actions:request.user }}</div>
+<h1 style="display: inline-block; padding: 15px;">{{ event.title }}</h1>
+
+<div style="display: inline-block; vertical-align: 6px">{{ event|actions:request.user }}</div>
 
 {% include 'eventary/components/event_details_as_table.html' with event=event %}
-
-<p>
-    <a class="btn btn-primary"
-       href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}"
-       {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
-       title="{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
-        {% comment %}Translators: Text of link back to calendar details page{% endcomment %}
-        {% blocktrans with calendar_title=event.calendar.title %}Back to {{ calendar_title }}{% endblocktrans %}
-    </a>
-</p>
 
 {% endblock %}

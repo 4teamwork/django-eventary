@@ -13,15 +13,23 @@
 
 {% if event.image %}
 {% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
-<div style="float: right; padding: 15px 0; padding-left: 15px; display: inline-block;">
+<div class="pull-right" style="padding: 15px 0; padding-left: 15px; display: inline-block;">
     <img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
 </div>
 {% endif %}
 
-{% comment %}Translators: Title (first header){% endcomment %}
-<h1>{% blocktrans with event_title=event.title %}Proposal: {{ event_title }}{% endblocktrans %}</h1>
+<a class="btn btn-xs btn-default"
+   style="vertical-align: 6px"
+   href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}"
+   {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
+   title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+</a>
 
-<div>{{ event|actions:request.user }}</div>
+{% comment %}Translators: Title (first header){% endcomment %}
+<h1 style="display: inline-block; padding: 15px;">{% blocktrans with event_title=event.title %}Proposal: {{ event_title }}{% endblocktrans %}</h1>
+
+<div style="display: inline-block; vertical-align: 6px">{{ event|actions:request.user }}</div>
 
 <p>
 {% comment %}Translators: Message about page accesses{% endcomment %}
@@ -33,15 +41,5 @@
 </p>
 
 {% include 'eventary/components/event_details_as_table.html' with event=event %}
-
-<p>
-    <a class="btn btn-primary"
-       href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
-       {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
-       title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
-        {% comment %}Translators: Text of link back to calendar details page{% endcomment %}
-        {% blocktrans with calendar_title=calendar.title %}Back to {{ calendar_title }}{% endblocktrans %}
-    </a>
-</p>
 
 {% endblock %}
