@@ -1,3 +1,5 @@
+import os
+
 from django.core.urlresolvers import reverse
 from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import DeleteView, SingleObjectMixin
@@ -127,10 +129,16 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
         Event.objects.filter(pk=self.object.pk).update(**data)
         self.object = Event.objects.get(pk=self.object.pk)
 
+        def _file_name(_f):
+            """returns a truncated version of the file's name"""
+            return os.path.split(_f)[1][-15:]
+
         if image is not None:
-            self.object.image.save(image.name, image, save=True)
+            self.object.image.save(_file_name(image.name), image, save=True)
         if document is not None:
-            self.object.document.save(document.name, document, save=True)
+            self.object.document.save(_file_name(document.name),
+                                      document,
+                                      save=True)
 
         # update the time and date
         data = form_dict['2'].clean()
