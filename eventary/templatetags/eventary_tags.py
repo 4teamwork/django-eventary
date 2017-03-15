@@ -185,6 +185,12 @@ def pick(page, nr_picks=10):
     ] + [page_number]))
 
 
+@register.filter(name='to_rrule')
+def to_rrule(recurrence):
+    return ';'.join([str(rrule.to_dateutil_rrule()).split('\n')[-1]
+                     for rrule in recurrence.recurrences.rrules])
+
+
 #  Tags
 
 @register.simple_tag
