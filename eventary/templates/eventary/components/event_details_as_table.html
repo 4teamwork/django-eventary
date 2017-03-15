@@ -39,15 +39,11 @@
     {% if event.host %}
     <tr>
         <th>{{ th_host|capfirst }}</th>
-        <td>{{ event.host.name }}<br />
-            {{ event.host.info }}<br />
-            {% if event.host.email %}
-            <a href="mailto:{{ event.host.email }}">{{ event.host.email }}</a><br />
-            {% endif %}
-            {{ event.host.phone }}<br />
-            {% if event.host.homepage %}
-            <a href="{{ event.host.homepage }}">{{ event.host.homepage }}</a><br />
-            {% endif %}
+        <td>{{ event.host.name }}<br>
+            {% if event.host.info %}{{ event.host.info }}<br>{% endif %}
+            {% if event.host.email %}<a href="mailto:{{ event.host.email }}">{{ event.host.email }}</a><br>{% endif %}
+            {{ event.host.phone }}
+            {% if event.host.homepage %}<br><a href="{{ event.host.homepage }}">{{ event.host.homepage }}</a><br>{% endif %}
         </td>
     </tr>
     {% endif %}
