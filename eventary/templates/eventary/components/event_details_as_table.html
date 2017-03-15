@@ -1,16 +1,14 @@
 {% load eventary_tags %}
 {% load i18n %}
-{% load imagekit %}
 
 {% trans 'date & time' as th_date %}
 {% trans 'location' as th_location %}
 {% trans 'entry fee' as th_fee %}
 {% trans 'host' as th_host %}
-
-{% if event.image %}
-{% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
-<img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
-{% endif %}
+{% trans 'description' as th_description %}
+{% trans 'downloads' as th_downloads %}
+{% trans 'download info sheet' as btn_download_title %}
+{% trans 'download info sheet' as btn_download_text %}
 
 <table class="table table-striped table-hover">
     <tr>
@@ -50,6 +48,24 @@
             {% if event.host.homepage %}
             <a href="{{ event.host.homepage }}">{{ event.host.homepage }}</a><br />
             {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+    {% if event.description %}
+    <tr>
+        <th>{{ th_description|capfirst }}</th>
+        <td>{{ event.description }}</td>
+    </tr>
+    {% endif %}
+    {% if event.document %}
+    <tr>
+        <th>{{ th_downloads|capfirst}}</th>
+        <td>
+            <a class="btn btn-primary"
+               href="{{ event.document.url }}"
+               title="{{ btn_download_title|capfirst }}">
+                {{ btn_download_text|capfirst }}
+            </a>
         </td>
     </tr>
     {% endif %}

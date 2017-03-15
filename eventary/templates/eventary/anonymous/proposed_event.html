@@ -2,6 +2,7 @@
 
 {% load eventary_tags %}
 {% load i18n %}
+{% load imagekit %}
 {% load static %}
 
 {% block 'content' %}
@@ -9,12 +10,13 @@
 {% comment %}Translators: Proposal detail page{% endcomment %}
 {% comment %}Translators: Headers {% endcomment %}
 {% trans 'details' as h_details %}
-{% trans 'description' as h_description %}
-{% trans 'downloads' as h_downloads %}
-{% comment %}Translators: Download link title{% endcomment %}
-{% trans 'download info sheet' as btn_download_title %}
-{% comment %}Translators: Download link text{% endcomment %}
-{% trans 'download info sheet' as btn_download_text %}
+
+{% if event.image %}
+{% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
+<div style="float: right; padding: 15px 0; padding-left: 15px; display: inline-block;">
+    <img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
+</div>
+{% endif %}
 
 {% comment %}Translators: Title (first header){% endcomment %}
 <h1>{% blocktrans with event_title=event.title %}Proposal: {{ event_title }}{% endblocktrans %}</h1>
@@ -30,24 +32,7 @@
 {% endif %}
 </p>
 
-<h2>{{ h_details|capfirst }}</h2>
 {% include 'eventary/components/event_details_as_table.html' with event=event %}
-
-{% if event.description %}
-<h3>{{ h_description|capfirst }}</h3>
-<p>{{ event.description }}</p>
-{% endif %}
-
-{% if event.document %}
-<h3>{{ h_downloads|capfirst}}</h3>
-<div>
-    <a class="btn btn-primary"
-       href="{{ event.document.url }}"
-       title="{{ btn_download_title|capfirst }}">
-        {{ btn_download_text|capfirst }}
-    </a>
-</div>
-{% endif %}
 
 <p>
     <a class="btn btn-primary"
