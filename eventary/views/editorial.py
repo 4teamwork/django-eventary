@@ -7,8 +7,7 @@ from django.views.generic.list import MultipleObjectMixin
 from django.views.generic import ListView, View, TemplateView
 from django.shortcuts import get_object_or_404, redirect
 
-from .anonymous import CalendarDetailView, EventCreateView
-from .anonymous import EventCreateWizardView
+from .anonymous import CalendarDetailView, EventCreateWizardView
 from .management import LandingView as ManagementLandingView
 from .mixins import EditorialOrManagementRequiredMixin, FilterFormMixin
 
@@ -53,12 +52,25 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
     model = Event
 
     def get_context_data(self, form, **kwargs):
+        # yes! we're using getting the context from the EventCreateWizardView
+        # super class. This is because the model (for the single object mixing
+        # changes from Calendar to Event).
         context = super(EventCreateWizardView, self).get_context_data(
             form=form,
             **kwargs
         )
 
-        context.update({'calendar': self.object.calendar})
+        context.update({
+            'calendar': self.object.calendar,
+            'wizard_steps_named': [
+                (str(i), self.form_names[i])
+                for i in range(len(self.form_names))
+            ],
+            'valid_steps': [
+                str(i)
+                for i in range(len(self.form_list))
+            ],
+        })
 
         if (self.steps.current == '1' and
             self.object.calendar.grouping_set.count()):
@@ -188,99 +200,6 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
             pk=self.object.pk,
             secret=str(secret.secret)
         )
-
-
-class EventEditView(EditorialOrManagementRequiredMixin, EventCreateView):
-
-    template_name = 'eventary/editorial/update_event.html'
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.event = get_object_or_404(
-            Event,
-            pk=kwargs.get('event_pk'),
-            calendar=self.object
-        )
-        return super(EventEditView, self).get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(EventEditView, self).get_context_data(**kwargs)
-        context.update({'event': self.event})
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.event = get_object_or_404(
-            Event,
-            pk=kwargs.get('event_pk'),
-            calendar=self.object
-        )
-
-        # get the forms
-        form_event = self.get_form_event()
-        form_timedate = self.get_form_timedate()
-        form_grouping = self.get_form_grouping()
-
-        if (form_event.is_valid() and
-            form_timedate.is_valid() and
-            form_grouping.is_valid()):
-
-            # update the event using the form
-            data = form_event.clean()
-            data['published'] = False
-            Event.objects.filter(pk=kwargs.get('event_pk')).update(**data)
-            Secret.objects.get_or_create(
-                event=Event.objects.get(pk=kwargs.get('event_pk'))
-            )
-
-            # update the times using the form
-            data = form_timedate.clean()
-            EventTimeDate.objects.filter(
-                event=kwargs.get('event_pk')
-            ).update(**data)
-
-            # update the groupings using the form
-            data = form_grouping.clean()
-            self.event.group_set.clear()
-            groups = []
-            for grouping in data:
-                groups += data[grouping]
-            self.event.group_set.set(groups)
-
-            return redirect(
-                'eventary:anonymous-proposal_details',
-                self.object.pk,
-                self.event.pk,
-                str(Secret.objects.get(event__pk=self.event.pk).secret)
-            )
-
-        return super(EventEditView, self).get(request, *args, **kwargs)
-
-    def get_form_event_initial(self):
-        return {
-            key: getattr(self.event, key)
-            for key in [
-                'title', 'host', 'location', 'image', 'document',
-                'homepage', 'description', 'comment', 'prize',
-                'recurring'
-            ]
-        }
-
-    def get_form_grouping_initial(self):
-        to_return = {}
-        for group in self.event.group_set.all():
-            if group.grouping.title not in to_return:
-                to_return[group.grouping.title] = []
-            to_return[group.grouping.title].append(group.pk)
-        return to_return
-
-    def get_form_timedate_initial(self):
-        return {
-            key: getattr(self.event.eventtimedate, key)
-            for key in [
-                'start_date', 'end_date', 'start_time', 'end_time'
-            ]
-        }
 
 
 class EventHideView(EditorialOrManagementRequiredMixin,

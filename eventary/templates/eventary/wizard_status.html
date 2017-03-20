@@ -1,0 +1,29 @@
+{% load i18n %}
+
+{% if wizard.steps.all|length > 1 %}
+<div class="wizard-status btn-group">
+    {% for step, name in named_steps %}
+    <button
+        {% if step == wizard.steps.current %}
+            class="btn btn-success disabled"
+        {% else %}
+            {% if step in valid_steps %}
+            class="btn btn-success"
+            {% else %}
+                {% if step > wizard.steps.current %}
+                class="btn btn-primary disabled"
+                {% else %}
+                class="btn btn-primary"
+                {% endif %}
+            {% endif %}
+            title="{% blocktrans with step_name=name %}Go to {{ step_name }}.{% endblocktrans %}"
+            name="wizard_submit_and_goto_step"
+            type="submit"
+        {% endif %}
+            value="{{ step }}">
+        {{ name|capfirst }}
+    </button>
+    {% endfor %}
+</div>
+{% endif %}
+

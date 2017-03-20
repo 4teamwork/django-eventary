@@ -220,7 +220,16 @@ def url_replace(request, field, value):
 
 
 @register.simple_tag
-def wizard_pagination(wizard):
+def wizard_status(wizard, named_steps, valid_steps=[]):
     """Renders a paginator (page navigation)"""
-    return render_to_string('eventary/wizard_pagination.html',
+    return render_to_string('eventary/wizard_status.html',
+                            context={'wizard': wizard,
+                                     'named_steps': named_steps,
+                                     'valid_steps': valid_steps})
+
+
+@register.simple_tag
+def wizard_buttons(wizard):
+    """Renders a paginator (page navigation)"""
+    return render_to_string('eventary/wizard_buttons.html',
                             context={'wizard': wizard})
