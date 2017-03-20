@@ -1,12 +1,14 @@
+from collections import OrderedDict
 from datetime import datetime
 from os.path import join
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Case, IntegerField, Sum, When
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from django.shortcuts import get_object_or_404, redirect
 
 from formtools.wizard.views import SessionWizardView
 
@@ -64,18 +66,15 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
     file_storage = FileSystemStorage(location=join(settings.MEDIA_ROOT,
                                                    'uploads'))
     form_list = [HostForm, EventForm, TimeDateForm]
+    form_names = [_('host information'),
+                  _('event information'),
+                  _('date and time information')]
     model = Calendar
     template_name = 'eventary/anonymous/create_event_wizard.html'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super(EventCreateWizardView, self).get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super(EventCreateWizardView, self).post(request,
-                                                       *args,
-                                                       **kwargs)
 
     def get_context_data(self, form, **kwargs):
         context = super(EventCreateWizardView, self).get_context_data(
@@ -110,6 +109,19 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
                 context.update({'extraform': RecurrenceForm(
                     prefix='recurrence'
                 )})
+
+        context.update({
+            'wizard_steps_named': [
+                (str(i), self.form_names[i])
+                for i in range(len(self.form_names))
+            ],
+            'valid_steps': [
+                str(i)
+                for i in range(len(self.form_list))
+                if self.get_cleaned_data_for_step(str(i)) is not None
+            ],
+        })
+
         return context
 
     def done(self, form_list, form_dict, **kwargs):
@@ -171,160 +183,46 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
             secret=str(secret.secret)
         )
 
-
-class EventCreateView(SingleObjectMixin, TemplateView):
-
-    model = Calendar
-    template_name = 'eventary/anonymous/create_event.html'
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super(EventCreateView, self).get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(EventCreateView, self).get_context_data(**kwargs)
-
-        context.update({
-            'calendar': self.object,
-            'eventform': self.get_form_event(),
-            'timedateform': self.get_form_timedate(),
-            'recurrenceform': self.get_form_recurrence(),
-            'hostform': self.get_form_host(),
-            'groupingform': self.get_form_grouping()
-        })
-
-        return context
-
-    def get_form_event(self):
-        get_initial = getattr(self, 'get_form_event_initial', lambda: {})
-        if self.request.method == 'POST':
-            self.event_form = EventForm(
-                self.request.POST,
-                self.request.FILES,
-                initial=get_initial()
-            )
-        else:
-            self.event_form = EventForm(initial=get_initial())
-        return self.event_form
-
-    def get_form_grouping(self):
-        get_initial = getattr(self, 'get_form_grouping_initial', lambda: {})
-        if self.request.method == 'POST':
-            self.grouping_form = EventGroupingForm(
-                self.request.POST,
-                calendar=self.object,
-                initial=get_initial()
-            )
-        else:
-            self.grouping_form = EventGroupingForm(
-                calendar=self.object,
-                initial=get_initial()
-            )
-        return self.grouping_form
-
-    def get_form_host(self):
-        get_initial = getattr(self, 'get_form_host_initial', lambda: {})
-        if self.request.method == 'POST':
-            self.host_form = HostForm(self.request.POST,
-                                      initial=get_initial())
-        else:
-            self.host_form = HostForm(initial=get_initial())
-        return self.host_form
-
-    def get_form_recurrence(self):
-        get_initial = getattr(self, 'get_form_recurrence_initial', lambda: {})
-        if (self.request.method == 'POST' and
-            'recurrences' in self.request.POST):
-            self.recurrence_form = RecurrenceForm(self.request.POST,
-                                                  initial=get_initial())
-        else:
-            self.recurrence_form = RecurrenceForm(initial=get_initial())
-        return self.recurrence_form
-
-    def get_form_timedate(self):
-        get_initial = getattr(self, 'get_form_timedate_initial', lambda: {})
-        if self.request.method == 'POST':
-            self.timedate_form = TimeDateForm(
-                self.request.POST,
-                initial=get_initial()
-            )
-        else:
-            self.timedate_form = TimeDateForm(initial=get_initial())
-        return self.timedate_form
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        # get the forms
-        form_event = self.get_form_event()
-        form_timedate = self.get_form_timedate()
-        form_recurrence = self.get_form_recurrence()
-        form_host = self.get_form_host()
-        form_grouping = self.get_form_grouping()
+        super_response = super(EventCreateWizardView, self).post(request,
+                                                                 *args,
+                                                                 **kwargs)
 
-        if (form_event.is_valid() and
-            form_timedate.is_valid() and
-            form_host.is_valid() and
-            form_grouping.is_valid()):
+        wizard_goto_step = self.request.POST.get('wizard_submit_and_goto_step',
+                                                 None)
+        if wizard_goto_step and wizard_goto_step in self.get_form_list():
+            return self.render_goto_step(wizard_goto_step)
+        else:
+            return super_response
 
-            # create the host
-            host = form_host.save()
+    def render_done(self, form, **kwargs):
 
-            # prepare the event and store it
-            event = form_event.save(commit=False)
-            event.calendar = self.object
-            event.host = host
-            event.published = False
-            event.save()
+        final_forms = OrderedDict()
 
-            # if the event is recurring, create the recurrence instance
-            if event.recurring and form_recurrence.is_valid():
-                recurrence = form_recurrence.save(commit=False)
-                recurrence.event = event
-                recurrence.save()
-
-            # create the time date objects for the event
-            timedatedata = form_timedate.clean()
-            timedate = EventTimeDate()
-            timedate.event = event
-            timedate.start_date = timedatedata['start_date']
-
-            if timedatedata['start_time'] is not None:
-                timedate.start_time = timedatedata['start_time']
-
-            if timedatedata['end_date'] is not None:
-                timedate.end_date = timedatedata['end_date']
-
-            if timedatedata['end_time'] is not None:
-                timedate.end_time = timedatedata['end_time']
-
-            timedate.save()
-
-            # associate the event to the groups given by the groupingform
-            groupingdata = form_grouping.clean()
-            for grouping in groupingdata:
-                for group_pk in groupingdata[grouping]:
-                    group = get_object_or_404(
-                        Group,
-                        pk=int(group_pk),
-                        grouping__title=grouping
-                    )
-
-                    group.events.add(event)
-                    group.save()
-
-            # create a secret to let annonymous users access the proprosal
-            secret = Secret.objects.create(event=event)
-
-            # redirect the user to the calendar's details
-            return redirect(
-                'eventary:anonymous-proposal_details',
-                calendar_pk=self.object.pk,
-                pk=event.pk,
-                secret=str(secret.secret)
+        for form_key in self.get_form_list():
+            form_obj = self.get_form(
+                step=form_key,
+                data=self.storage.get_step_data(form_key),
+                files=self.storage.get_step_files(form_key),
             )
+            if not form_obj.is_valid():
+                return self.render_revalidation_failure(form_key,
+                                                        form_obj,
+                                                        **kwargs)
+            final_forms[form_key] = form_obj
 
-        return super(EventCreateView, self).get(request, *args, **kwargs)
+        wizard_goto_step = self.request.POST.get('wizard_submit_and_goto_step',
+                                                 None)
+        if wizard_goto_step and wizard_goto_step in self.get_form_list():
+            return self.render_goto_step(wizard_goto_step)
+        else:
+            done_response = self.done(final_forms.values(),
+                                      form_dict=final_forms,
+                                      **kwargs)
+            self.storage.reset()
+            return done_response
 
 
 class EventDetailView(DetailView):

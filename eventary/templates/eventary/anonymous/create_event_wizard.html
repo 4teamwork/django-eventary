@@ -33,6 +33,7 @@
 
 <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
+    {% wizard_status wizard wizard_steps_named valid_steps %}
     {{ wizard.management_form }}
     {% if wizard.form.forms %}
         {{ wizard.form.management_form }}
@@ -48,8 +49,6 @@
 	    {{ extraform|as_bootstrap }}
     </div>
     {% endif %}
-
-    {% wizard_pagination wizard %}
 
     <button class="btn btn-primary"
 	    title="{{ btn_wizard_submit|capfirst }}"
