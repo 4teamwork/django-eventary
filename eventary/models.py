@@ -54,9 +54,18 @@ class Event(models.Model):
                                 upload_to=_get_upload_path,
                                 verbose_name=_('document'))
     title = models.CharField(max_length=255, verbose_name=_('title'))
-    location = models.CharField(max_length=255,
+    location = models.CharField(help_text=_("ex. Wendy's"),
+                                max_length=255,
                                 verbose_name=_('location'))
+    address = models.CharField(help_text=_('address & nr.'),
+                               max_length=255,
+                               verbose_name=_('address'))
+    city = models.CharField(max_length=255,
+                            verbose_name=_('city'))
+    zip_code = models.CharField(max_length=255,
+                                verbose_name=_('city'))
     homepage = models.URLField(blank=True,
+                               help_text=_('http://...'),
                                null=True,
                                verbose_name=_('homepage'))
     published = models.BooleanField(help_text=_('publication status'),
