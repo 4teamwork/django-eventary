@@ -38,7 +38,7 @@ class Event(models.Model):
     # to an event. Since date and time information requires
     # some flexibility its split up into a custom model and
     # linked to the event through a one to many relation.
-    calendar = models.ForeignKey(Calendar, verbose_name=_('calendar'))
+    calendar = models.ForeignKey('Calendar', verbose_name=_('calendar'))
     host = models.ForeignKey('EventHost',
                              blank=True,
                              null=True,
@@ -94,7 +94,7 @@ class Event(models.Model):
 
 
 class EventTimeDate(models.Model):
-    event = models.OneToOneField(Event, verbose_name=_('event'))
+    event = models.OneToOneField('Event', verbose_name=_('event'))
     start_date = models.DateField(help_text=_('start date'),
                                   verbose_name=_('start date'))
     start_time = models.TimeField(blank=True,
@@ -146,7 +146,7 @@ class EventTimeDate(models.Model):
 
 
 class EventRecurrence(models.Model):
-    event = models.OneToOneField(Event, verbose_name=_('event'))
+    event = models.OneToOneField('Event', verbose_name=_('event'))
     recurrences = RecurrenceField()
 
 
@@ -159,10 +159,10 @@ class GroupingType(models.Model):
 
 class Grouping(models.Model):
     title = models.CharField(max_length=255, verbose_name=_('title'))
-    calendars = models.ManyToManyField(Calendar,
+    calendars = models.ManyToManyField('Calendar',
                                        blank=True,
                                        verbose_name=_('calendar'))
-    grouping_type = models.ForeignKey(GroupingType,
+    grouping_type = models.ForeignKey('GroupingType',
                                       verbose_name=_('grouping type'))
 
     def __str__(self):
@@ -171,8 +171,8 @@ class Grouping(models.Model):
 
 class Group(models.Model):
     title = models.CharField(max_length=255, verbose_name=_('title'))
-    grouping = models.ForeignKey(Grouping, verbose_name=_('grouping'))
-    events = models.ManyToManyField(Event,
+    grouping = models.ForeignKey('Grouping', verbose_name=_('grouping'))
+    events = models.ManyToManyField('Event',
                                     blank=True,
                                     verbose_name=_('events'))
 
@@ -198,8 +198,7 @@ class EventHost(models.Model):
 
 
 class Secret(models.Model):
-
-    event = models.OneToOneField(Event, verbose_name=_('event'))
+    event = models.OneToOneField('Event', verbose_name=_('event'))
     secret = models.UUIDField(default=uuid.uuid4,
                               editable=False,
                               verbose_name=_('secret'))
