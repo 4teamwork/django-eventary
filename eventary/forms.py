@@ -236,8 +236,10 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'location', 'image', 'document', 'homepage',
-                  'description', 'comment', 'prize', 'recurring']
+        fields = [
+            'title', 'location', 'address', 'city', 'zip_code', 'image',
+            'document', 'homepage', 'description', 'entry_fee', 'comment'
+        ]
 
 
 class EventEditorialForm(forms.ModelForm):
