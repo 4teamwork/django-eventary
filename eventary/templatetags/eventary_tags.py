@@ -166,6 +166,8 @@ def join(value, arg):
 
 @register.filter(name='media')
 def media(form, media_type):
+    if form is None:
+        return []
     if media_type=='js':
         return form.media.render_js()
     if media_type=='css':
