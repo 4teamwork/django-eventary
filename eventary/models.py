@@ -93,6 +93,31 @@ class Event(models.Model):
     slug = property(**slug())
 
 
+class EventHost(models.Model):
+    # The host contains all the information about the host.
+    # The attributes of the DjangoUser are:
+    #   username, password, email, first_name, last_name
+    # For our purpose we need further fields
+    name = models.CharField(max_length=50, verbose_name=_('host name'))
+    info = models.CharField(
+        blank=True,
+        help_text=_('todo: this info field requires a helptext'),
+        max_length=50,
+        null=True,
+        verbose_name=_('info'),
+    )
+    phone = models.CharField(max_length=20, verbose_name=_('phone'))
+    email = models.EmailField(blank=True, null=True, verbose_name=_('email'))
+    homepage = models.URLField(blank=True,
+                               null=True,
+                               verbose_name=_('homepage'))
+
+
+class EventRecurrence(models.Model):
+    event = models.OneToOneField('Event', verbose_name=_('event'))
+    recurrences = RecurrenceField()
+
+
 class EventTimeDate(models.Model):
     event = models.OneToOneField('Event', verbose_name=_('event'))
     start_date = models.DateField(help_text=_('start date'),
@@ -145,16 +170,15 @@ class EventTimeDate(models.Model):
         return line
 
 
-class EventRecurrence(models.Model):
-    event = models.OneToOneField('Event', verbose_name=_('event'))
-    recurrences = RecurrenceField()
-
-
-class GroupingType(models.Model):
-    label = models.CharField(max_length=255, verbose_name=_('label'))
+class Group(models.Model):
+    title = models.CharField(max_length=255, verbose_name=_('title'))
+    grouping = models.ForeignKey('Grouping', verbose_name=_('grouping'))
+    events = models.ManyToManyField('Event',
+                                    blank=True,
+                                    verbose_name=_('events'))
 
     def __str__(self):
-        return self.label
+        return self.title
 
 
 class Grouping(models.Model):
@@ -169,32 +193,11 @@ class Grouping(models.Model):
         return self.title
 
 
-class Group(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_('title'))
-    grouping = models.ForeignKey('Grouping', verbose_name=_('grouping'))
-    events = models.ManyToManyField('Event',
-                                    blank=True,
-                                    verbose_name=_('events'))
+class GroupingType(models.Model):
+    label = models.CharField(max_length=255, verbose_name=_('label'))
 
     def __str__(self):
-        return self.title
-
-
-class EventHost(models.Model):
-    # The host contains all the information about the host.
-    # The attributes of the DjangoUser are:
-    #   username, password, email, first_name, last_name
-    # For our purpose we need further fields
-    name = models.CharField(max_length=50, verbose_name=_('host name'))
-    info = models.CharField(blank=True,
-                            max_length=50,
-                            null=True,
-                            verbose_name=_('info'))
-    phone = models.CharField(max_length=20, verbose_name=_('phone'))
-    email = models.EmailField(blank=True, null=True, verbose_name=_('email'))
-    homepage = models.URLField(blank=True,
-                               null=True,
-                               verbose_name=_('homepage'))
+        return self.label
 
 
 class Secret(models.Model):
