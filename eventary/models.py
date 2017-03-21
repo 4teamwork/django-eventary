@@ -80,12 +80,9 @@ class Event(models.Model):
                                max_length=255,
                                null=True,
                                verbose_name=_('comment'))
-    prize = models.DecimalField(blank=True,
-                                decimal_places=2,
-                                help_text=_('prize'),
-                                max_digits=6,
-                                null=True,
-                                verbose_name=_('prize'))
+    entry_fee = models.TextField(blank=True,
+                                 null=True,
+                                 verbose_name=_('entry_fee'))
     recurring = models.BooleanField(
         default=False,
         help_text=_('is your event a recurring event?'),
