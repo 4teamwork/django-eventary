@@ -1,11 +1,21 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load compress %}
 {% load eventary_tags %}
 {% load i18n %}
 
 {% block 'extra_head' %}
-{{ calendarimportform.media }}
+{% compress js %}
+{% for media in calendarimportform|media:'js' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
+{% compress css %}
+{% for media in calendarimportform|media:'css' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
 {% endblock 'extra_head' %}
 
 {% block 'content' %}

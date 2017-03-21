@@ -40,6 +40,7 @@ setup(
         'django-autoslug',
         'django-bootstrap-themes',
         'django-bootstrap3-datetimepicker',
+        'django_compressor',
         'django-forms-bootstrap',
         'django-formtools',
         'django-imagekit',

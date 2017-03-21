@@ -1,16 +1,32 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load compress %}
 {% load eventary_tags %}
 {% load i18n %}
 {% load static %}
 
 {% block 'extra_head' %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
-{{ wizard.form.media }}
+{% compress js %}
+{% for media in wizard.form|media:'js' %}
+    {{ media }}
+{% endfor %}
 {% if extraform %}
-    {{ extraform.media }}
+    {% for media in extraform|media:'js' %}
+        {{ media }}
+    {% endfor %}
 {% endif %}
+{% endcompress %}
+{% compress css %}
+{% for media in wizard.form|media:'css' %}
+    {{ media }}
+{% endfor %}
+{% if extraform %}
+    {% for media in extraform|media:'css' %}
+        {{ media }}
+    {% endfor %}
+{% endif %}
+{% endcompress %}
 {% endblock %}
 
 {% block 'content' %}

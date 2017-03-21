@@ -1,11 +1,21 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load compress %}
 {% load eventary_tags %}
 {% load i18n %}
 
 {% block 'extra_head' %}
-{{ form.media }}
+{% compress js %}
+{% for media in form|media:'js' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
+{% compress css %}
+{% for media in form|media:'css' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
 {% endblock %}
 
 {% block 'content' %}
