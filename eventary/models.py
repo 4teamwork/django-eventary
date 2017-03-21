@@ -44,11 +44,13 @@ class Event(models.Model):
                              null=True,
                              verbose_name=_('host'))
     image = models.ImageField(blank=True,
+                              help_text=_('accepted formats: jpg, png'),
                               max_length=255,
                               null=True,
                               upload_to=_get_upload_path,
                               verbose_name=_('image'))
     document = models.FileField(blank=True,
+                                help_text=_('accepted formats: pdf, jpg, png'),
                                 max_length=255,
                                 null=True,
                                 upload_to=_get_upload_path,
@@ -63,15 +65,13 @@ class Event(models.Model):
     city = models.CharField(max_length=255,
                             verbose_name=_('city'))
     zip_code = models.CharField(max_length=255,
-                                verbose_name=_('city'))
+                                verbose_name=_('ZIP code'))
     homepage = models.URLField(blank=True,
                                help_text=_('http://...'),
                                null=True,
                                verbose_name=_('homepage'))
-    published = models.BooleanField(help_text=_('publication status'),
-                                    verbose_name=_('published'))
+    published = models.BooleanField(verbose_name=_('published'))
     description = models.TextField(blank=True,
-                                   help_text=_('description'),
                                    null=True,
                                    verbose_name=_('description'))
     proposed = models.DateField(auto_now_add=True)
@@ -86,9 +86,11 @@ class Event(models.Model):
                                 max_digits=6,
                                 null=True,
                                 verbose_name=_('prize'))
-    recurring = models.BooleanField(default=False,
-                                    help_text=_('recurring event'),
-                                    verbose_name=_('recurring event'))
+    recurring = models.BooleanField(
+        default=False,
+        help_text=_('is your event a recurring event?'),
+        verbose_name=_('recurring')
+    )
 
     def __str__(self):
         return "{0} @ {1} by {2}".format(self.title, self.location, self.host)
@@ -113,7 +115,11 @@ class EventHost(models.Model):
         null=True,
         verbose_name=_('info'),
     )
-    phone = models.CharField(max_length=20, verbose_name=_('phone'))
+    phone = models.CharField(
+        max_length=20,
+        help_text=_("this field is displayed in the events' details"),
+        verbose_name=_('phone')
+    )
     email = models.EmailField(verbose_name=_('email'))
     homepage = models.URLField(blank=True,
                                null=True,
