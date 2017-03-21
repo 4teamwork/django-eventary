@@ -121,6 +121,12 @@ class EventHost(models.Model):
     homepage = models.URLField(blank=True,
                                null=True,
                                verbose_name=_('homepage'))
+    notify = models.BooleanField(
+        default=True,
+        help_text=_('do you want to receive an email when your event has been '
+                    'published, hidden or updated?'),
+        verbose_name=_('activate email notifications')
+    )
 
 
 class EventRecurrence(models.Model):
