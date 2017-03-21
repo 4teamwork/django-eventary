@@ -1,14 +1,24 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
+{% load compress %}
 {% load eventary_tags %}
 {% load i18n %}
 {% load static %}
 
 {% block 'extra_head' %}
-{{ form.media }}
+{% compress js %}
 <script src="{% static 'js/listupdate.js' %}"></script>
+{% for media in form|media:'js' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
+{% compress css %}
 <link rel="stylesheet" href="{% static 'css/listupdate.css' %}" type="text/css">
+{% for media in form|media:'css' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
 {% endblock %}
 
 {% block 'content' %}

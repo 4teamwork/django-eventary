@@ -6,7 +6,16 @@
 
 {% block 'extra_head' %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
-{{ timedateform.media }}
+{% compress js %}
+{% for media in timedateform|media:'js' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
+{% compress css %}
+{% for media in timedateform|media:'css' %}
+    {{ media }}
+{% endfor %}
+{% endcompress %}
 {% endblock %}
 
 {% block 'content' %}
