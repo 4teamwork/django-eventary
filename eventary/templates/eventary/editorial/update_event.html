@@ -5,7 +5,6 @@
 {% load static %}
 
 {% block 'extra_head' %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
 {% compress js %}
 {% for media in timedateform|media:'js' %}
     {{ media }}
