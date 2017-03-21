@@ -3,7 +3,7 @@
 {% if wizard.steps.all|length > 1 %}
 <div class="wizard-status btn-group">
     {% for step, name in named_steps %}
-    <button
+    <a
         {% if step == wizard.steps.current %}
             class="btn btn-success disabled"
         {% else %}
@@ -18,11 +18,11 @@
             {% endif %}
             title="{% blocktrans with step_name=name %}Go to {{ step_name }}.{% endblocktrans %}"
             name="wizard_submit_and_goto_step"
-            type="submit"
+            onclick="this.form.submit();"
         {% endif %}
             value="{{ step }}">
         {{ name|capfirst }}
-    </button>
+    </a>
     {% endfor %}
 </div>
 {% endif %}
