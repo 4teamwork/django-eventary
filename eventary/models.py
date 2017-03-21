@@ -54,9 +54,7 @@ class Event(models.Model):
                                 upload_to=_get_upload_path,
                                 verbose_name=_('document'))
     title = models.CharField(max_length=255, verbose_name=_('title'))
-    location = models.CharField(blank=True,
-                                max_length=255,
-                                null=True,
+    location = models.CharField(max_length=255,
                                 verbose_name=_('location'))
     homepage = models.URLField(blank=True,
                                null=True,
@@ -107,7 +105,7 @@ class EventHost(models.Model):
         verbose_name=_('info'),
     )
     phone = models.CharField(max_length=20, verbose_name=_('phone'))
-    email = models.EmailField(blank=True, null=True, verbose_name=_('email'))
+    email = models.EmailField(verbose_name=_('email'))
     homepage = models.URLField(blank=True,
                                null=True,
                                verbose_name=_('homepage'))
