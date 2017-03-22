@@ -47,9 +47,9 @@
 
 <h1>{% blocktrans with calendar_title=calendar.title %}Propose an event for "{{ calendar_title }}"{% endblocktrans %}</h1>
 
-<form enctype="multipart/form-data" method="post">
+<form id="wizardform" enctype="multipart/form-data" method="post">
     {% csrf_token %}
-    {% wizard_status wizard wizard_steps_named valid_steps %}
+    {% wizard_status wizard wizard_steps_named valid_steps form_id="wizardform" %}
     {{ wizard.management_form }}
     {% if wizard.form.forms %}
         {{ wizard.form.management_form }}

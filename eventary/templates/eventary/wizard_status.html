@@ -18,12 +18,13 @@
             {% endif %}
             title="{% blocktrans with step_name=name %}Go to {{ step_name }}.{% endblocktrans %}"
             name="wizard_submit_and_goto_step"
-            onclick="this.form.submit();"
+            onclick="document.getElementById('{{ form_id }}_clicked_link').setAttribute('value', this.getAttribute('data-step-number')); document.getElementById('{{ form_id }}').submit();"
         {% endif %}
-            value="{{ step }}">
+            data-step-number="{{ step }}">
         {{ name|capfirst }}
     </a>
     {% endfor %}
+    <input id="{{ form_id }}_clicked_link" type="hidden" name="wizard_submit_and_goto_step">
 </div>
 {% endif %}
 
