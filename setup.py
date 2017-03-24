@@ -44,7 +44,6 @@ setup(
         'django-forms-bootstrap',
         'django-formtools',
         'django-imagekit',
-        'django-jquery',
         'django-recurrence',
         'django-searchable-select',
         'Django-Select2',
