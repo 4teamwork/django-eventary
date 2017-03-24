@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
 from django_select2.forms import Select2MultipleWidget
+from trix.widgets import TrixEditor
 
 from .models import Calendar, Grouping, Group
 from .models import Event, EventHost, EventRecurrence
@@ -108,8 +109,8 @@ class GenericFilterForm(forms.Form):
         return groups
 
     class Media:
-        css = {'all': ('css/filterform.css',)}
-        js = ('js/filterform.js',)
+        css = {'all': ('eventary/css/filterform.css',)}
+        js = ('eventary/js/filterform.js',)
 
 
 class FilterForm(forms.Form):
@@ -187,8 +188,8 @@ class FilterForm(forms.Form):
         return groups
 
     class Media:
-        css = {'all': ('css/filterform.css',)}
-        js = ('js/filterform.js',)
+        css = {'all': ('eventary/css/filterform.css',)}
+        js = ('eventary/js/filterform.js',)
 
 
 class CalendarForm(forms.ModelForm):
@@ -234,12 +235,24 @@ class CalendarForm(forms.ModelForm):
 
 class EventForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget = TrixEditor(
+            toolbar_template='eventary/trix/toolbar.html',
+        )
+        self.fields['entry_fee'].widget = TrixEditor(
+            toolbar_template='eventary/trix/toolbar.html',
+        )
+
     class Meta:
         model = Event
         fields = [
             'title', 'location', 'address', 'city', 'zip_code', 'image',
             'document', 'homepage', 'description', 'entry_fee', 'comment'
         ]
+
+    class Media:
+        js = ('eventary/js/trix_loader.js',)
 
 
 class EventEditorialForm(forms.ModelForm):
@@ -349,8 +362,8 @@ class EventGroupingForm(forms.Form):
             })
 
     class Media:
-        css = {'all': ('css/groupingform.css',)}
-        js = ('js/groupingform.js',)
+        css = {'all': ('eventary/css/groupingform.css',)}
+        js = ('eventary/js/groupingform.js',)
 
 
 class HostForm(forms.ModelForm):
@@ -367,8 +380,8 @@ class RecurrenceForm(forms.ModelForm):
         self.fields['recurrences'].required = False
 
     class Media:
-        css = {'all': ('css/recurrences.css',)}
-        js = ('js/recurrences_wizard.js',)
+        css = {'all': ('eventary/css/recurrences.css',)}
+        js = ('eventary/js/recurrences_wizard.js',)
 
     class Meta:
         model = EventRecurrence

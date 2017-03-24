@@ -1,9 +1,4 @@
-{% load eventary_tags %}
-{% load bootstrap_tags %}
-{% load bootstrap_themes %}
-{% load compress %}
 {% load i18n %}
-{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,27 +6,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="charset" content="utf-8">
         {% block 'head' %}
-
-        {% compress css %}
-        {% bootstrap_styles theme='flatly' type='min.css' %}
-        {% endcompress %}
-
-        {% compress js %}
-        <script src="{% static 'js/jquery.min.js' %}"></script>
-        {% bootstrap_script use_min=True %}
-        {% endcompress %}
-
-            {% block 'extra_head' %}
-            {% endblock %}
+        {% include 'eventary/head.html' %}
+        {% endblock %}
+        {% block 'js' %}
+        {% endblock %}
+        {% block 'css' %}
         {% endblock %}
     </head>
     <body style="padding-top: 60px;">
         {% block 'body' %}
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
-		        {{ request.user|navigation }}
-            </div>
-        </nav>
+            {% block navigation %}
+            {% include 'eventary/navigation.html' with request=request %} 
+            {% endblock navigation %}
         <div class="container">
             {% block 'content' %}
             {% endblock %}

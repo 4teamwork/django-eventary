@@ -2,6 +2,7 @@
 <a class="btn btn-default btn-xs"
    href="{% url 'eventary:anonymous-export_event_to_ics' event.calendar.pk event.pk %}"
    role="button"
+   target="_blank"
    title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
     <i class="glyphicon glyphicon-download"></i>
 </a>

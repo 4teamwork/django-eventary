@@ -82,7 +82,7 @@ class Event(models.Model):
                                verbose_name=_('comment'))
     entry_fee = models.TextField(blank=True,
                                  null=True,
-                                 verbose_name=_('entry_fee'))
+                                 verbose_name=_('entry fee'))
     recurring = models.BooleanField(
         default=False,
         help_text=_('is your event a recurring event?'),

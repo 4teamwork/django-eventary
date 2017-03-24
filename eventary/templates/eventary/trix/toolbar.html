@@ -1,0 +1,47 @@
+{% load i18n %}
+<trix-toolbar id="{{ toolbar_id }}" class="clearfix" style="display: block;">
+    <div class="btn-group text_tools btn-group-sm"
+         role="group"
+         style="float: left;">
+        <button class="btn btn-default"
+                data-trix-attribute="bold"
+                data-trix-key="b"
+                title="{% trans 'bold' %}"
+                type="button">
+            <i class="glyphicon glyphicon-bold"></i>
+        </button>
+        <button class="btn btn-default"
+                data-trix-attribute="italic"
+                data-trix-key="i"
+                title="{% trans 'italic' %}"
+                type="button">
+            <i class="glyphicon glyphicon-italic"></i>
+        </button>
+    </div>
+    <div class="btn-group btn-group-sm"
+         role="group"
+         style="float: right;">
+        <button class="btn btn-default"
+                data-trix-action="undo"
+                title="{% trans 'undo' %}"
+                type="button">
+            <i class="glyphicon glyphicon-hand-left"></i>
+        </button>
+        <button class="btn btn-default"
+                data-trix-action="redo"
+                title="{% trans 'redo' %}"
+                type="button">
+            <i class="glyphicon glyphicon-hand-right"></i>
+        </button>
+    </div>
+    <div class="btn-group btn-group-sm"
+         role="group"
+         style="margin-left: 50%;">
+        <button class="btn btn-default"
+                data-trix-attribute="bullet"
+                title="{% trans 'list' %}"
+                type="button">
+            <i class="glyphicon glyphicon-list"></i>
+        </button>
+    </div>
+</trix-toolbar>

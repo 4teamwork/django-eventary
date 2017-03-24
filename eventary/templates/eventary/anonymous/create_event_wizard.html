@@ -1,13 +1,11 @@
 {% extends 'eventary/base.html' %}
 
 {% load bootstrap_tags %}
-{% load compress %}
 {% load eventary_tags %}
 {% load i18n %}
 {% load static %}
 
-{% block 'extra_head' %}
-{% compress js %}
+{% block 'js' %}
 {% for media in wizard.form|media:'js' %}
     {{ media }}
 {% endfor %}
@@ -16,8 +14,9 @@
         {{ media }}
     {% endfor %}
 {% endif %}
-{% endcompress %}
-{% compress css %}
+{% endblock %}
+
+{% block 'css' %}
 {% for media in wizard.form|media:'css' %}
     {{ media }}
 {% endfor %}
@@ -26,7 +25,6 @@
         {{ media }}
     {% endfor %}
 {% endif %}
-{% endcompress %}
 {% endblock %}
 
 {% block 'content' %}
