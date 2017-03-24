@@ -15,15 +15,17 @@
         <th>{{ th_date|capfirst }}</th>
         <td>{{ event|to_full_date }}</td>
     </tr>
-    {% if event.location %}
     <tr>
         <th>{{ th_location|capfirst }}</th>
         <td>
+            {% if event.location %}
             <p>{{ event.location }}</p>
-            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ event.location|urlencode }}&zoom=15&size=600x300&maptype=roadmap&markers=color:red|{{ event.location|urlencode }}&key={% google_maps_api_key %}" width="600" height="300">
+            {% endif %}
+            <p>{{ event.address }}<br>
+            {{ event.address }}, {{ event.zip_code }}</p>
+            {% include 'eventary/gis.html' with event=event %}
         </td>
     </tr>
-    {% endif %}
     {% for grouping, groups in groupings.items %}
     <tr>
         <th>{{ grouping }}</th>
