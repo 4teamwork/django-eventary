@@ -48,6 +48,7 @@ setup(
         'django-recurrence',
         'django-searchable-select',
         'Django-Select2',
+        'django-trix',
         'olefile',
         'Pillow',
         'psycopg2',

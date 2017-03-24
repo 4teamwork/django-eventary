@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 from bootstrap3_datetime.widgets import DateTimePicker
 from django_select2.forms import Select2MultipleWidget
+from trix.widgets import TrixEditor
 
 from .models import Calendar, Grouping, Group
 from .models import Event, EventHost, EventRecurrence
@@ -234,12 +235,24 @@ class CalendarForm(forms.ModelForm):
 
 class EventForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget = TrixEditor(
+            toolbar_template='eventary/trix/toolbar.html',
+        )
+        self.fields['entry_fee'].widget = TrixEditor(
+            toolbar_template='eventary/trix/toolbar.html',
+        )
+
     class Meta:
         model = Event
         fields = [
             'title', 'location', 'address', 'city', 'zip_code', 'image',
             'document', 'homepage', 'description', 'entry_fee', 'comment'
         ]
+
+    class Media:
+        js = ('eventary/js/trix_loader.js',)
 
 
 class EventEditorialForm(forms.ModelForm):
