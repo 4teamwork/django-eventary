@@ -38,9 +38,9 @@
 {% comment %}Translators: The text of the ropose event button {% endcomment %}
 {% trans 'Propose your event now!' as btn_propose_text %}
 
-<h1>{{ calendar.title }}</h1>
+<h1 style="display: inline-block; padding-right: 15px;">{{ calendar.title }}</h1>
 
-<div>{{ calendar|actions:request.user }}</div>
+<div style="display: inline-block; vertical-align: 6px;">{{ calendar|actions:request.user }}</div>
 
 <h2>{{ h_upcoming|capfirst }}</h2>
 <form class="form-inline filterform" method="get">
