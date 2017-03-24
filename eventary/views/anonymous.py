@@ -52,14 +52,6 @@ class CalendarDetailView(EventFilterFormMixin,
 
         return context
 
-    def get_form_kwargs(self):
-        kwargs = {'initial': self.get_initial()}
-        if len(self.request.GET):
-            kwargs.update({
-                'data': self.request.GET
-            })
-        return kwargs
-
 
 class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 
