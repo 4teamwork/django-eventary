@@ -8,13 +8,13 @@
 
 {% block 'extra_head' %}
 {% compress js %}
-<script src="{% static 'js/listupdate.js' %}"></script>
+<script src="{% static 'eventary/js/listupdate.js' %}"></script>
 {% for media in form|media:'js' %}
     {{ media }}
 {% endfor %}
 {% endcompress %}
 {% compress css %}
-<link rel="stylesheet" href="{% static 'css/listupdate.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'eventary/css/listupdate.css' %}" type="text/css">
 {% for media in form|media:'css' %}
     {{ media }}
 {% endfor %}

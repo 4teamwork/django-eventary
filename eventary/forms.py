@@ -108,8 +108,8 @@ class GenericFilterForm(forms.Form):
         return groups
 
     class Media:
-        css = {'all': ('css/filterform.css',)}
-        js = ('js/filterform.js',)
+        css = {'all': ('eventary/css/filterform.css',)}
+        js = ('eventary/js/filterform.js',)
 
 
 class FilterForm(forms.Form):
@@ -187,8 +187,8 @@ class FilterForm(forms.Form):
         return groups
 
     class Media:
-        css = {'all': ('css/filterform.css',)}
-        js = ('js/filterform.js',)
+        css = {'all': ('eventary/css/filterform.css',)}
+        js = ('eventary/js/filterform.js',)
 
 
 class CalendarForm(forms.ModelForm):
@@ -349,8 +349,8 @@ class EventGroupingForm(forms.Form):
             })
 
     class Media:
-        css = {'all': ('css/groupingform.css',)}
-        js = ('js/groupingform.js',)
+        css = {'all': ('eventary/css/groupingform.css',)}
+        js = ('eventary/js/groupingform.js',)
 
 
 class HostForm(forms.ModelForm):
@@ -367,8 +367,8 @@ class RecurrenceForm(forms.ModelForm):
         self.fields['recurrences'].required = False
 
     class Media:
-        css = {'all': ('css/recurrences.css',)}
-        js = ('js/recurrences_wizard.js',)
+        css = {'all': ('eventary/css/recurrences.css',)}
+        js = ('eventary/js/recurrences_wizard.js',)
 
     class Meta:
         model = EventRecurrence
