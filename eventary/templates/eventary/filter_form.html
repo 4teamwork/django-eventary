@@ -1,0 +1,25 @@
+{% load bootstrap_tags %}
+{% load i18n %}
+
+{% comment %}Translators: Search button title{% endcomment %}
+{% trans 'search events matching the filter parameters' as btn_search_title %}
+{% trans 'search' as btn_search_text %}
+
+<form class="form-inline filterform" method="get">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="input-group">
+                    {{ form|as_bootstrap }}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit"
+                        class="btn btn-primary glyphicon glyphicon-search"
+                        title="{{ btn_search_title|capfirst }}">
+                    {{ btn_search_text|capfirst }}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

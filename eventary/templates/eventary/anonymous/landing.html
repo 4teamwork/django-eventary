@@ -33,24 +33,8 @@
 {% endif %}
 
 <h2>{{ h_upcoming|capfirst }}</h2>
-<form class="form-inline filterform" method="get">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <div class="input-group">
-                    {{ form|as_bootstrap }}
-                </div>
-            </div>
-            <div class="col-md-2">
-                <button type="submit"
-                        class="btn btn-primary glyphicon glyphicon-search"
-                        title="{{ btn_search_title|capfirst }}">
-                    {{ btn_search_text|capfirst }}
-                </button>
-            </div>
-        </div>
-    </div>
-</form>
+
+{% include 'eventary/filter_form.html' with form=form %}
 
 {% if calendar_list.count == 1 %}
     {% include 'eventary/lists/events.html' with request=request calendar=calendar_list.first page=event_page prefix='event_page' %}

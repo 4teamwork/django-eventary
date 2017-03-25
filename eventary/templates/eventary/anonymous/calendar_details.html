@@ -21,47 +21,14 @@
 {% comment %}Translators: Calendar detail page{% endcomment %}
 {% comment %}Translators: Headers{% endcomment %}
 {% trans 'upcoming events' as h_upcoming %}
-{% comment %}Translators: Search button title{% endcomment %}
-{% trans 'search events matching the filter parameters' as btn_search_title %}
-{% trans 'search' as btn_search_text %}
-{% comment %}Translators: Table headers{% endcomment %}
-{% trans 'event' as th_event %}
-{% trans 'actions' as th_actions %}
-{% trans 'date & time' as th_date_time %}
-{% trans 'location' as th_location %}
-{% comment %}Translators: Replacement text when no event was found{% endcomment %}
-{% trans 'No upcoming events!' as no_events %}
-{% comment %}Translators: Text to incite the user to propose an event{% endcomment %}
-{% trans "You cannot find the event you're looking for?" as cannot_find_event %}
-{% comment %}Translators: The title of the ropose event button {% endcomment %}
-{% trans 'Propose an event now!' as btn_propose_title %}
-{% comment %}Translators: The text of the ropose event button {% endcomment %}
-{% trans 'Propose your event now!' as btn_propose_text %}
 
 <h1 style="display: inline-block; padding-right: 15px;">{{ calendar.title }}</h1>
 
 <div style="display: inline-block; vertical-align: 6px;">{{ calendar|actions:request.user }}</div>
 
 <h2>{{ h_upcoming|capfirst }}</h2>
-<form class="form-inline filterform" method="get">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <div class="input-group">
-                    {{ form|as_bootstrap }}
-                </div>
-            </div>
-            <div class="col-md-2">
-                <button type="submit"
-                        class="btn btn-primary glyphicon glyphicon-search"
-                        title="{{ btn_search_title|capfirst }}">
-                    {{ btn_search_text|capfirst }}
-                </button>
-            </div>
-        </div>
-    </div>
-</form>
 
+{% include 'eventary/filter_form.html' with form=form %}
 {% include 'eventary/lists/events.html' with request=request page=page prefix='event_page' calendar=calendar %}
 
 {% endblock %}
