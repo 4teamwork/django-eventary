@@ -22,13 +22,9 @@
 {% comment %}Translators: Title (first header){% endcomment %}
 {% trans 'Eventary - an inventary for events' as h_title %}
 {% comment %}Translators: Headers{% endcomment %}
-{% trans 'calendars' as h_calendars %}
 {% trans 'filter events' as h_event_filter %}
 {% trans 'upcoming events' as h_upcoming_events %}
 {% trans 'upcoming proposals' as h_upcoming_proposals %}
-{% comment %}Translators: Search button title{% endcomment %}
-{% trans 'search events matching the filter parameters' as btn_search_title %}
-{% trans 'search' as btn_search_text %}
 
 <h1>{{ h_title|capfirst }}</h1>
 
@@ -38,24 +34,7 @@
 {% endif %}
 
 <h2>{{ h_event_filter|capfirst }}</h2>
-<form class="form-inline filterform" method="get">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <div class="input-group">
-                    {{ form|as_bootstrap }}
-                </div>
-            </div>
-            <div class="col-md-2">
-                <button type="submit"
-                        class="btn btn-primary glyphicon glyphicon-search"
-                        title="{{ btn_search_title|capfirst }}">
-                    {{ btn_search_text|capfirst }}
-                </button>
-            </div>
-        </div>
-    </div>
-</form>
+{% include 'eventary/filter_form.html' with form=form %}
 
 <h2>{{ h_upcoming_events|capfirst }}</h2>
 
