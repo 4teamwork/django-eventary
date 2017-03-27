@@ -89,8 +89,7 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
                     prefix='grouping'
                 )})
 
-        if (self.steps.current == '2' and
-            self.get_cleaned_data_for_step('1').get('recurring')):
+        if (self.steps.current == '2'):
             # get the initial values for the EventGroupingForm
             if self.storage.get_step_data('2') is not None:
                 context.update({'extraform': RecurrenceForm(
@@ -157,13 +156,17 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         )
 
         # store the recurrence information
-        if event.recurring:
-            recurrence = RecurrenceForm(
-                self.storage.get_step_data('2'),
-                prefix='recurrence',
-            ).save(commit=False)
+        recurrenceform = RecurrenceForm(
+            self.storage.get_step_data('2'),
+            prefix='recurrence',
+        )
+        if (recurrenceform.is_valid()
+            and recurrenceform.clean().get('toggler')):
+            recurrence = recurrenceform.save(commit=False)
             recurrence.event = event
             recurrence.save()
+            event.recurring = True
+            event.save()
 
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=event)
