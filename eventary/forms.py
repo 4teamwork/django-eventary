@@ -4,7 +4,7 @@ from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from bootstrap3_datetime.widgets import DateTimePicker
+from datetimepicker.widgets import DateTimePicker
 from django_select2.forms import Select2MultipleWidget
 from trix.widgets import TrixEditor
 
@@ -45,13 +45,13 @@ class GenericFilterForm(forms.Form):
     from_date = forms.DateField(
         label=_('from'),
         required=False,
-        widget=DateTimePicker(options={"format": _datetimepicker_format(),
+        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
                                        "pickTime": False})
     )
     to_date = forms.DateField(
         label=_('to'),
         required=False,
-        widget=DateTimePicker(options={"format": _datetimepicker_format(),
+        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
                                        "pickTime": False})
     )
 
@@ -118,13 +118,13 @@ class FilterForm(forms.Form):
     from_date = forms.DateField(
         label=_('from'),
         required=False,
-        widget=DateTimePicker(options={"format": _datetimepicker_format(),
+        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
                                        "pickTime": False})
     )
     to_date = forms.DateField(
         label=_('from'),
         required=False,
-        widget=DateTimePicker(options={"format": _datetimepicker_format(),
+        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
                                        "pickTime": False})
     )
 
@@ -266,7 +266,7 @@ class TimeDateForm(forms.Form):
     start_date = forms.DateField(
         label=_('start date'),
         required=True,
-        widget=DateTimePicker(options={"format": _datetimepicker_format(),
+        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
                                        "pickTime": False})
     )
     start_time = forms.TimeField(
@@ -278,7 +278,7 @@ class TimeDateForm(forms.Form):
     end_date = forms.DateField(
         label=_('end date'),
         required=False,
-        widget=DateTimePicker(options={"format": _datetimepicker_format(),
+        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
                                        "pickTime": False})
     )
     end_time = forms.TimeField(
