@@ -375,6 +375,8 @@ class HostForm(forms.ModelForm):
 
 class RecurrenceForm(forms.ModelForm):
 
+    toggler = forms.BooleanField(label=_('recurring event'))
+
     def __init__(self, *args, **kwargs):
         super(RecurrenceForm, self).__init__(*args, **kwargs)
         self.fields['recurrences'].required = False
@@ -385,4 +387,4 @@ class RecurrenceForm(forms.ModelForm):
 
     class Meta:
         model = EventRecurrence
-        fields = ['recurrences']
+        fields = ['toggler', 'recurrences']
