@@ -39,7 +39,7 @@ setup(
         'django-appconf',
         'django-autoslug',
         'django-bootstrap-themes',
-        'django-bootstrap3-datetimepicker',
+        'django-datetimepicker',
         'django_compressor',
         'django-forms-bootstrap',
         'django-formtools',
