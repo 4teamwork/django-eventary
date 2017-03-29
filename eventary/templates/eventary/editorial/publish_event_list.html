@@ -37,27 +37,20 @@
 {% trans 'search events matching the filter parameters' as btn_search_title %}
 {% trans 'search' as btn_search_text %}
 
-<h1>{{ calendar.title }}</h1>
+<a class="btn btn-xs btn-default"
+   style="vertical-align: 6px"
+   href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+   {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
+   title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+</a>
+
+<h1 style="display: inline-block; padding: 15px;">{{ calendar.title }}</h1>
+
+<div style="display: inline-block; vertical-align: 6px">{{ calendar|actions:request.user }}</div>
 
 <h2>{{ h_event_filter|capfirst }}</h2>
-<form class="form-inline filterform" method="get">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <div class="input-group">
-                    {{ form|as_bootstrap }}
-                </div>
-            </div>
-            <div class="col-md-2">
-                <button type="submit"
-                        class="btn btn-primary glyphicon glyphicon-search"
-                        title="{{ btn_search_title|capfirst }}">
-                    {{ btn_search_text|capfirst }}
-                </button>
-            </div>
-        </div>
-    </div>
-</form>
+{% include 'eventary/filter_form.html' with form=form %}
 
 <h2>{{ h_upcoming_events|capfirst }}</h2>
 {% url 'eventary:editorial-update_event_list' calendar.pk as form_action %}
