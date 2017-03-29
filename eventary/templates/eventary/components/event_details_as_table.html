@@ -32,10 +32,10 @@
         <td>{{ groups|join:", " }}</td>
     </tr>
     {% endfor %}
-    {% if event.prize %}
+    {% if event.entry_fee %}
     <tr>
         <th>{{ th_fee|capfirst }}</th>
-        <td>{{ event.prize }}</td>
+        <td>{{ event.entry_fee|safe }}</td>
     </tr>
     {% endif %}
     {% if event.host %}
@@ -52,7 +52,7 @@
     {% if event.description %}
     <tr>
         <th>{{ th_description|capfirst }}</th>
-        <td>{{ event.description }}</td>
+        <td>{{ event.description|safe }}</td>
     </tr>
     {% endif %}
     {% if event.document %}
