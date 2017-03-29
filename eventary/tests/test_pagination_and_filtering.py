@@ -17,27 +17,7 @@ class EventFilterTest(EventTestMixin, TestCase):
         #     `from_date` and `to_date`
         #     `from_date` only
         #     `to_date` only
-        return {
-            **{
-                (nr_events - counter): {
-                    'from & to': [
-                        {'filter-from_date': (
-                            self.today + td(days=i)
-                         ).strftime('%Y-%m-%d'),
-                         'filter-to_date': (
-                            self.today + td(days=i + (nr_events - counter) - 1)
-                         ).strftime('%Y-%m-%d')}
-                        for i in range(counter)
-                    ],
-                    'from only': [{'filter-from_date': (
-                        self.today + td(days=counter)
-                    ).strftime('%Y-%m-%d')}],
-                    'to only': [{'filter-to_date': (
-                        self.today + td(days=nr_events - 1 - counter)
-                    ).strftime('%Y-%m-%d')}]
-                }
-                for counter in range(nr_events)
-            },
+        to_return = {
             0: {'from & to': [{
                     'filter-from_date': (self.today - td(days=2)).strftime(
                         '%Y-%m-%d'
@@ -57,6 +37,27 @@ class EventFilterTest(EventTestMixin, TestCase):
                     ),
                 }]}
         }
+        to_return.update({
+            (nr_events - counter): {
+                'from & to': [
+                    {'filter-from_date': (
+                        self.today + td(days=i)
+                     ).strftime('%Y-%m-%d'),
+                     'filter-to_date': (
+                        self.today + td(days=i + (nr_events - counter) - 1)
+                     ).strftime('%Y-%m-%d')}
+                    for i in range(counter)
+                ],
+                'from only': [{'filter-from_date': (
+                    self.today + td(days=counter)
+                ).strftime('%Y-%m-%d')}],
+                'to only': [{'filter-to_date': (
+                    self.today + td(days=nr_events - 1 - counter)
+                ).strftime('%Y-%m-%d')}]
+            }
+            for counter in range(nr_events)
+        })
+        return to_return
 
     def multiple_filter_data(self, event_length=2, nr_events=5):
         """Returns the request data for the expected number of count events"""
