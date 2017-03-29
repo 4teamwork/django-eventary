@@ -28,6 +28,8 @@ class EditorialOrManagementRequiredMixin(PermissionRequiredMixin):
 
 class EventFilterFormMixin(FormMixin):
 
+    form_class = GenericFilterForm
+
     def __init__(self, **kwargs):
         super(EventFilterFormMixin, self).__init__(**kwargs)
 
@@ -169,10 +171,13 @@ class EventFilterFormMixin(FormMixin):
         return Q()
 
     def get_form(self):
+
+        form_class = self.get_form_class()
+
         if len(self.request.GET):
-            self.form = GenericFilterForm(self.request.GET, prefix='filter')
+            self.form = form_class(self.request.GET, prefix='filter')
         else:
-            self.form = GenericFilterForm(prefix='filter',
+            self.form = form_class(prefix='filter',
                                           initial=self.initial)
         return self.form
 
