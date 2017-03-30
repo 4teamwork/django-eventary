@@ -17,7 +17,7 @@ setup(
     license='GPLv2',
     description='A calendar for events',
     long_description=README,
-    url='https://github.com/4teamwork/eventary',
+    url='https://github.com/4teamwork/django-eventary',
     author='Pablo Vergés',
     author_email='pablo.verges@4teamwork.ch',
     classifiers=[
