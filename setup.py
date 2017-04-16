@@ -13,6 +13,7 @@ setup(
     name='django-eventary',
     version='1.1.1',
     packages=find_packages(),
+    package_data={'eventary': ['eventary/locale/de/LC_MESSAGES/django.*']},
     include_package_data=True,
     license='GPLv2',
     description='A calendar for events',
