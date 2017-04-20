@@ -356,7 +356,7 @@ class EventGroupingForm(forms.Form):
                 # TODO: replace with SearchableSelect?
                 grouping.title: forms.MultipleChoiceField(
                     required=False,
-                    widget=forms.CheckboxSelectMultiple,
+                    widget=Select2MultipleWidget,
                     choices=self._choices[grouping]
                 ) for grouping in self._groupings
             })
