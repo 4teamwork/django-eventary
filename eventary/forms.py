@@ -125,7 +125,7 @@ class FilterForm(forms.Form):
                      "pickTime": False}),
     )
     to_date = forms.DateField(
-        label=_('from'),
+        label=_('to'),
         required=False,
         widget=DateTimePicker(
             options={"format": settings.DATE_INPUT_FORMATS[0],
