@@ -23,7 +23,7 @@
             {% endif %}
             <p>{{ event.address }}<br>
             {{ event.address }}, {{ event.zip_code }}</p>
-            {% include 'eventary/gis.html' with event=event %}
+            {% include 'eventary/gis.html' with event=event request=request %}
         </td>
     </tr>
     {% for grouping, groups in groupings.items %}
