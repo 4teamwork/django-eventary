@@ -13,7 +13,7 @@ from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
 
 from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
-from ..forms import RecurrenceForm
+from ..forms import RecurrenceForm, FilterForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
 
 from .mixins import EventFilterFormMixin
@@ -23,6 +23,7 @@ class CalendarDetailView(EventFilterFormMixin,
                          SingleObjectMixin,
                          TemplateView):
 
+    form_class = FilterForm
     model = Calendar
     template_name = 'eventary/anonymous/calendar_details.html'
 
@@ -51,6 +52,20 @@ class CalendarDetailView(EventFilterFormMixin,
         })
 
         return context
+
+    def get_form(self):
+
+        form_class = self.get_form_class()
+
+        if len(self.request.GET):
+            self.form = form_class(self.request.GET,
+                                   calendar=self.object,
+                                   prefix='filter')
+        else:
+            self.form = form_class(calendar=self.object,
+                                   initial=self.initial,
+                                   prefix='filter')
+        return self.form
 
 
 class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
