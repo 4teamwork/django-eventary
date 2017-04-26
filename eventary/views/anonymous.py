@@ -160,8 +160,8 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
             self.storage.get_step_data('2'),
             prefix='recurrence',
         )
-        if (recurrenceform.is_valid()
-            and recurrenceform.clean().get('toggler')):
+        if (recurrenceform.is_valid() and
+            recurrenceform.clean().get('toggler')):
             recurrence = recurrenceform.save(commit=False)
             recurrence.event = event
             recurrence.save()
