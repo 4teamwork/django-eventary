@@ -45,14 +45,18 @@ class GenericFilterForm(forms.Form):
     from_date = forms.DateField(
         label=_('from'),
         required=False,
-        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
-                                       "pickTime": False})
+        widget=DateTimePicker(options={
+            "format": settings.DATE_INPUT_FORMATS[0],
+            "pickTime": False
+        })
     )
     to_date = forms.DateField(
         label=_('to'),
         required=False,
-        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
-                                       "pickTime": False})
+        widget=DateTimePicker(options={
+            "format": settings.DATE_INPUT_FORMATS[0],
+            "pickTime": False
+        })
     )
 
     def __init__(self, *args, **kwargs):
@@ -101,10 +105,8 @@ class GenericFilterForm(forms.Form):
             # get all the primary keys of the groups
             data = self.clean()
             for grouping in data:
-                if (
-                    data[grouping] is not None and
-                    not isinstance(data[grouping], datetime.date)
-                ):
+                if (data[grouping] is not None and
+                    not isinstance(data[grouping], datetime.date)):
                     groups.extend([int(pk) for pk in data[grouping]])
         return groups
 
@@ -118,14 +120,16 @@ class FilterForm(forms.Form):
     from_date = forms.DateField(
         label=_('from'),
         required=False,
-        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
-                                       "pickTime": False})
+        widget=DateTimePicker(
+            options={"format": settings.DATE_INPUT_FORMATS[0],
+                     "pickTime": False}),
     )
     to_date = forms.DateField(
         label=_('from'),
         required=False,
-        widget=DateTimePicker(options={"format": settings.DATE_INPUT_FORMATS[0],
-                                       "pickTime": False})
+        widget=DateTimePicker(
+            options={"format": settings.DATE_INPUT_FORMATS[0],
+                     "pickTime": False}),
     )
 
     def __init__(self, *args, **kwargs):

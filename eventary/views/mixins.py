@@ -178,7 +178,7 @@ class EventFilterFormMixin(FormMixin):
             self.form = form_class(self.request.GET, prefix='filter')
         else:
             self.form = form_class(prefix='filter',
-                                          initial=self.initial)
+                                   initial=self.initial)
         return self.form
 
     def paginate_qs(self, qs, prefix='paginator'):
