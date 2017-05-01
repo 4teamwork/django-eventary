@@ -218,6 +218,12 @@ class GroupingType(models.Model):
         return self.label
 
 
+class ImportedEvent(models.Model):
+
+    event = models.ForeignKey('Event', verbose_name=_('linked event'))
+    importuid = models.CharField(max_length=255, primary_key=True, unique=True)
+
+
 class Secret(models.Model):
     event = models.OneToOneField('Event', verbose_name=_('event'))
     secret = models.UUIDField(default=uuid.uuid4,
