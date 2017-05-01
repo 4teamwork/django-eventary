@@ -24,12 +24,14 @@ class Command(BaseCommand):
         today_in_a_week = today + timedelta(days=7)
         parser.add_argument('google_calendar_id', nargs='+', type=str)
         parser.add_argument('calendar_id', nargs=1, type=int)
-        parser.add_argument('time_min',
+        parser.add_argument('--time_min',
                             default=_datetime_to_gdatetime(today),
+                            dest='time_min',
                             nargs='?',
                             type=str)
-        parser.add_argument('time_max',
+        parser.add_argument('--time_max',
                             default=_datetime_to_gdatetime(today_in_a_week),
+                            dest='time_max',
                             nargs='?',
                             type=str)
 
