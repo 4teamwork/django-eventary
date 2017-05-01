@@ -23,11 +23,13 @@ class Calendar(models.Model):
     # are related enabling event discrimination by calendar
     title = models.CharField(max_length=255, verbose_name=_('title'))
     slug = AutoSlugField(populate_from='title', verbose_name=_('slug'))
-    view_limit = models.IntegerField(help_text=_(
-                                        'limits the number of daily anonymous '
-                                        'views for proposed events'
-                                     ),
-                                     verbose_name=_('view limit'))
+    view_limit = models.IntegerField(
+        help_text=_(
+            'limits the number of daily anonymous '
+            'views for proposed events'
+        ),
+        verbose_name=_('view limit')
+    )
 
     def __str__(self):
         return self.title
