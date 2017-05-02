@@ -42,6 +42,10 @@ def _datetimepicker_format():
 
 class GenericFilterForm(forms.Form):
 
+    search = forms.CharField(
+        label=_('search'),
+        required=False,
+    )
     from_date = forms.DateField(
         label=_('from'),
         required=False,
@@ -117,6 +121,10 @@ class GenericFilterForm(forms.Form):
 
 class FilterForm(forms.Form):
 
+    search = forms.CharField(
+        label=_('search'),
+        required=False,
+    )
     from_date = forms.DateField(
         label=_('from'),
         required=False,
