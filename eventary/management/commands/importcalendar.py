@@ -17,21 +17,40 @@ def _datetime_to_gdatetime(dt):
 
 
 class Command(BaseCommand):
-    help = 'Imports the specified google calendar'
+
+    help = """
+    Imports the events of the specified google calendar.
+    For reference visit:
+    https://developers.google.com/google-apps/calendar/v3/reference/events/list
+    """
 
     def add_arguments(self, parser):
         today = datetime.today()
         today_in_a_week = today + timedelta(days=7)
-        parser.add_argument('google_calendar_id', nargs='+', type=str)
-        parser.add_argument('calendar_id', nargs=1, type=int)
+        parser.add_argument('google_calendar_id',
+                            help='Equivalent to `calendarId`.',
+                            nargs='+',
+                            type=str)
+        parser.add_argument('calendar_id',
+                            help="The calendar's id (in eventary's table).",
+                            nargs=1,
+                            type=int)
         parser.add_argument('--time_min',
                             default=_datetime_to_gdatetime(today),
                             dest='time_min',
+                            help='Equivalent to `timeMin`. '
+                                 'Default: {0} (today)'.format(
+                                _datetime_to_gdatetime(today)
+                            ),
                             nargs='?',
                             type=str)
         parser.add_argument('--time_max',
                             default=_datetime_to_gdatetime(today_in_a_week),
                             dest='time_max',
+                            help='Equivalent to `timeMax`. '
+                                 'Default: {0} (today in a week)'.format(
+                                _datetime_to_gdatetime(today)
+                            ),
                             nargs='?',
                             type=str)
 
