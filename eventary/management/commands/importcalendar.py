@@ -143,8 +143,10 @@ class Command(BaseCommand):
                                      importuid=event_data['iCalUID'])
 
         self.stdout.write(self.style.SUCCESS(
-            'Successfully imported event into calendar "{calendar}"'.format(
+            'Successfully imported event "{event}"'
+            ' into calendar "{calendar}"'.format(
                 calendar=self.calendar.title,
+                event=event.title,
             )
         ))
 
