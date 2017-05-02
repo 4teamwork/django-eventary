@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.postgres.search import SearchVector
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.views.generic.edit import FormMixin
@@ -44,8 +45,18 @@ class EventFilterFormMixin(FormMixin):
 
     def apply_filter(self, form):
 
+        form_data = form.clean()
+
+        if 'search' in form_data and form_data.get('search'):
+            self.event_list = self.event_list.annotate(
+                search=SearchVector('calendar__title',
+                                    'host__name', 'host__info',
+                                    'title', 'location', 'address', 'city',
+                                    'zip_code', 'description')
+            ).filter(search=form_data.get('search'))
+
         self.event_list = self.event_list.filter(self.get_date_filter(
-            form.clean()
+            form_data
         ))
 
         # filter the queryset by the selected groups
