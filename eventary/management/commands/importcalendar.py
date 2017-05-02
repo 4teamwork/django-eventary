@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand, CommandError
 
 from ...models import Calendar, Event, EventHost, EventTimeDate
+from ...models import ImportedEvent
 
 URL = 'https://www.googleapis.com/calendar/v3/calendars/{gcal_id}/events'
 
@@ -70,8 +71,17 @@ class Command(BaseCommand):
             json = request.json()
             for event_data in json['items']:
                 # use iCalUID to check if the event was imported already
-                # todo: icaluid = event_data['iCalUID']
-                self.handle_event_data(event_data)
+                uid = event_data['iCalUID']
+                if not ImportedEvent.objects.filter(importuid=uid).exists():
+                    self.handle_event_data(event_data)
+                else:
+                    self.stdout.write(self.style.NOTICE(
+                        'Event "{event}" already imported'.format(
+                            event=event_data['summary'],
+                        )
+                    ))
+
+                
         else:
             raise CommandError(
                 'Import failed, request status code {status_code}'.format(
@@ -119,6 +129,9 @@ class Command(BaseCommand):
             event=event,
             **kwargs
         )
+
+        ImportedEvent.objects.create(event=event,
+                                     importuid=event_data['iCalUID'])
 
         self.stdout.write(self.style.SUCCESS(
             'Successfully imported event into calendar "{calendar}"'.format(
