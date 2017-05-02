@@ -168,7 +168,7 @@ class FilterForm(forms.Form):
         self.fields.update(_fields)
 
     def clean(self):
-        cleaned_data = super(GenericFilterForm, self).clean()
+        cleaned_data = super(FilterForm, self).clean()
         from_date = cleaned_data.get('from_date')
         to_date = cleaned_data.get('to_date')
 
