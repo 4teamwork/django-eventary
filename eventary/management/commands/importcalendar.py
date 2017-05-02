@@ -96,6 +96,15 @@ class Command(BaseCommand):
 
     def handle_event_data(self, event_data):
 
+        if ('recurringEventId' in event_data and
+            event_data.get('recurringEventId') != event_data.get('id')):
+                self.stdout.write(self.style.NOTICE(
+                    'Recurrence of "{event}" not imported'.format(
+                        event=event_data['summary'],
+                    )
+                ))
+                return
+
         # get or create the host
         host_data = event_data['organizer']
         host, created = EventHost.objects.get_or_create(
