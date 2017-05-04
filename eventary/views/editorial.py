@@ -98,22 +98,25 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
                     }
                 )})
 
-        if (self.steps.current == '2' and
-            self.get_cleaned_data_for_step('1').get('recurring')):
-            # get the initial values for the EventGroupingForm
+        if (self.steps.current == '2'):
             if self.storage.get_step_data('2') is not None:
                 context.update({'extraform': RecurrenceForm(
                     self.storage.get_step_data('2'),
                     prefix='recurrence'
                 )})
             else:
-                eventrecurrence, _ = EventRecurrence.objects.get_or_create(
-                    event=self.object
-                )
-                context.update({'extraform': RecurrenceForm(
-                    instance=eventrecurrence,
-                    prefix='recurrence'
-                )})
+                if self.object.recurring:
+                    eventrecurrence, _ = EventRecurrence.objects.get_or_create(
+                        event=self.object
+                    )
+                    context.update({'extraform': RecurrenceForm(
+                        instance=eventrecurrence,
+                        prefix='recurrence'
+                    )})
+                else:
+                    context.update({'extraform': RecurrenceForm(
+                        prefix='recurrence'
+                    )})
 
         return context
 
