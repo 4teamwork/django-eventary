@@ -2,6 +2,7 @@ import datetime
 
 from django import forms
 from django.conf import settings
+from django.template.defaultfilters import capfirst
 from django.utils.translation import ugettext as _
 
 from datetimepicker.widgets import DateTimePicker
@@ -174,6 +175,9 @@ class FilterForm(forms.Form):
         }
 
         self.fields.update(_fields)
+
+        for field in self:
+            field.field.widget.attrs['placeholder'] = capfirst(field.label)
 
     def clean(self):
         cleaned_data = super(FilterForm, self).clean()
