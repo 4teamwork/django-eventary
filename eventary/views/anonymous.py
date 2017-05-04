@@ -305,7 +305,6 @@ class LandingView(EventFilterFormMixin, TemplateView):
 class ProposalDetailView(EventDetailView):
 
     queryset = Event.objects.filter(published=False)
-    template_name = 'eventary/anonymous/proposed_event.html'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
