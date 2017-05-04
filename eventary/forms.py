@@ -174,6 +174,8 @@ class FilterForm(forms.Form):
             ) for grouping in _groupings
         }
 
+        self.filter_field_names = _fields.keys()
+
         self.fields.update(_fields)
 
         for field in self:
@@ -200,6 +202,15 @@ class FilterForm(forms.Form):
                     isinstance(data[grouping], list)):
                     groups.extend([int(pk) for pk in data[grouping]])
         return groups
+
+    def date_fields(self):
+        return [field for field in self if field.name in ['from_date', 'to_date']]
+
+    def filter_fields(self):
+        return [field for field in self if field.name in self.filter_field_names]
+
+    def search_fields(self):
+        return [field for field in self if field.name in ['search']]
 
     class Media:
         css = {'all': ('eventary/css/filterform.css',)}
