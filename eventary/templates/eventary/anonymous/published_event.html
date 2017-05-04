@@ -18,16 +18,17 @@
 
 {% trans 'date and time' as h_date %}
 
+<h1>{{ event.title }}</h1>
+
 <a class="btn btn-xs btn-default"
    href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}"
    {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
-   title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
-    <i class="glyphicon glyphicon-chevron-left"></i>
+   title="{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
+    <span class="glyphicon glyphicon-chevron-left">{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}</span>
 </a>
 
-<h1>{{ event.title }}</h1>
 
-<div>{{ event|actions:request.user }}</div>
+<div class="eventactions">{{ event|actions:request.user }}</div>
 
 <div class="row">
 <div class="eventcontentblock">
