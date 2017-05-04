@@ -11,7 +11,7 @@ from .anonymous import CalendarDetailView, EventCreateWizardView
 from .management import LandingView as ManagementLandingView
 from .mixins import EditorialOrManagementRequiredMixin, FilterFormMixin
 
-from ..forms import EventGroupingForm, RecurrenceForm
+from ..forms import EventGroupingForm, RecurrenceForm, FilterForm
 from ..models import Calendar, Event, EventTimeDate, Grouping, Secret
 from ..models import EventHost, Group, EventRecurrence
 
@@ -237,6 +237,7 @@ class EventListUpdateView(EditorialOrManagementRequiredMixin,
                           FilterFormMixin,
                           TemplateView):
 
+    form_class = FilterForm
     model = Calendar
     paginate_by = 10
     template_name = 'eventary/editorial/publish_event_list.html'
@@ -308,6 +309,20 @@ class EventListUpdateView(EditorialOrManagementRequiredMixin,
         )
         Secret.objects.filter(event__in=proposals).delete()
         proposals.delete()
+
+    def get_form(self):
+
+        form_class = self.get_form_class()
+
+        if len(self.request.GET):
+            self.form = form_class(self.request.GET,
+                                   calendar=self.object,
+                                   prefix='filter')
+        else:
+            self.form = form_class(calendar=self.object,
+                                   initial=self.initial,
+                                   prefix='filter')
+        return self.form
 
 
 class LandingView(EditorialOrManagementRequiredMixin, ManagementLandingView):
