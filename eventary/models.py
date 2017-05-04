@@ -3,7 +3,7 @@ import uuid
 
 from django.db import models
 from django.utils.text import slugify
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from autoslug import AutoSlugField
 from recurrence.fields import RecurrenceField
@@ -23,11 +23,13 @@ class Calendar(models.Model):
     # are related enabling event discrimination by calendar
     title = models.CharField(max_length=255, verbose_name=_('title'))
     slug = AutoSlugField(populate_from='title', verbose_name=_('slug'))
-    view_limit = models.IntegerField(help_text=_(
-                                        'limits the number of daily anonymous '
-                                        'views for proposed events'
-                                     ),
-                                     verbose_name=_('view limit'))
+    view_limit = models.IntegerField(
+        help_text=_(
+            'limits the number of daily anonymous '
+            'views for proposed events'
+        ),
+        verbose_name=_('view limit')
+    )
 
     def __str__(self):
         return self.title
@@ -214,6 +216,12 @@ class GroupingType(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class ImportedEvent(models.Model):
+
+    event = models.ForeignKey('Event', verbose_name=_('linked event'))
+    importuid = models.CharField(max_length=255, primary_key=True, unique=True)
 
 
 class Secret(models.Model):
