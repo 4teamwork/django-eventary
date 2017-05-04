@@ -197,12 +197,11 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=self.object)
 
-        return redirect(
-            'eventary:anonymous-proposal_details',
-            calendar_pk=self.object.calendar.pk,
-            pk=self.object.pk,
-            secret=str(secret.secret)
-        )
+        # prepare for redirection
+        self.calendar = self.object.calendar
+        self.event = self.object
+        self.secret = secret
+        return redirect(self.get_success_url())
 
 
 class EventHideView(EditorialOrManagementRequiredMixin,
@@ -217,7 +216,10 @@ class EventHideView(EditorialOrManagementRequiredMixin,
         # every proposal needs an access secret
         Secret.objects.get_or_create(event=self.object)
         self.object.save()
-        return redirect('eventary:redirector')
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('eventary:redirector')
 
 
 class EventPublishView(EditorialOrManagementRequiredMixin,
@@ -231,7 +233,10 @@ class EventPublishView(EditorialOrManagementRequiredMixin,
         self.object.published = True
         Secret.objects.filter(event=self.object).delete()
         self.object.save()
-        return redirect('eventary:redirector')
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('eventary:redirector')
 
 
 class EventListUpdateView(EditorialOrManagementRequiredMixin,

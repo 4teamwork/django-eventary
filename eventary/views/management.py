@@ -16,13 +16,8 @@ class CalendarCreateView(ManagementRequiredMixin, CreateView):
     template_name = 'eventary/management/create_calendar.html'
 
     def get_success_url(self):
-        """Returns the user to the details view of the created calendar."""
-
-        # todo: create a secret and create a link with 'n' previews per day
-        return reverse(
-            'eventary:anonymous-calendar_details',
-            args=[self.object.pk]
-        )
+        return reverse('eventary:anonymous-calendar_details',
+                       args=[self.object.pk])
 
 
 class CalendarDeleteView(ManagementRequiredMixin, DeleteView):

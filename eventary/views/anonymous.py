@@ -5,7 +5,7 @@ from os.path import join
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Case, IntegerField, Sum, When
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
@@ -130,6 +130,12 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 
         return context
 
+    def get_success_url(self):
+        return reverse('eventary:anonymous-proposal_details',
+                       calendar_pk=self.calendar.pk,
+                       pk=self.event.pk,
+                       secret=str(self.secret.secret))
+
     def done(self, form_list, form_dict, **kwargs):
 
         # store the host
@@ -186,12 +192,11 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=event)
 
-        return redirect(
-            'eventary:anonymous-proposal_details',
-            calendar_pk=self.object.pk,
-            pk=event.pk,
-            secret=str(secret.secret)
-        )
+        # prepare for redirection
+        self.calendar = self.object
+        self.event = event
+        self.secret = secret
+        return redirect(self.get_success_url())
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
