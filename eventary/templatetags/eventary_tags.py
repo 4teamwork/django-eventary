@@ -157,6 +157,65 @@ def full_date(event):
     return len(results) and ", ".join(results) or ""
 
 
+@register.filter(name='dates')
+def dates(event):
+    results = []
+    if isinstance(event, Event):
+
+        timedate = event.eventtimedate
+
+        if (timedate.end_date is not None and
+            timedate.end_date != timedate.start_date):
+
+            # generally, the start format is just the day, but we
+            # might change it if some of the values do not coincide
+            startformat = "%d.%m."
+            if timedate.start_date.year != timedate.end_date.year:
+                startformat += "%Y"
+
+            results.append("{0} - {1}".format(
+                timedate.start_date.strftime(startformat),
+                timedate.end_date.strftime("%d.%m.%Y"),
+            ))
+        else:
+            results.append(timedate.start_date.strftime("%d.%m.%Y"))
+
+    return len(results) and ", ".join(results) or ""
+
+
+@register.filter(name='times')
+def times(event):
+    results = []
+    if isinstance(event, Event):
+
+        timedate = event.eventtimedate
+
+        if (timedate.end_time is not None and
+            timedate.end_time != timedate.start_time):
+
+            results.append("{0} - {1}".format(
+                timedate.start_time.strftime("%H:%M"),
+                timedate.end_time.strftime("%H:%M"),
+            ))
+        elif timedate.start_time is not None:
+            results.append(timedate.start_time.strftime("%H:%M"))
+
+    return len(results) and ", ".join(results) or ""
+
+
+@register.filter(name='recursion')
+def recursion(event):
+    results = []
+    if isinstance(event, Event):
+        if event.recurring:
+            results.append(', '.join([
+                rule.to_text()
+                for rule in event.eventrecurrence.recurrences.rrules
+            ]))
+
+    return len(results) and ", ".join(results) or ""
+
+
 @register.filter(name='join')
 def join(value, arg):
     return str(arg).join([
