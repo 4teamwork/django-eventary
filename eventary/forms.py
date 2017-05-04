@@ -42,6 +42,10 @@ def _datetimepicker_format():
 
 class GenericFilterForm(forms.Form):
 
+    search = forms.CharField(
+        label=_('search'),
+        required=False,
+    )
     from_date = forms.DateField(
         label=_('from'),
         required=False,
@@ -106,7 +110,7 @@ class GenericFilterForm(forms.Form):
             data = self.clean()
             for grouping in data:
                 if (data[grouping] is not None and
-                    not isinstance(data[grouping], datetime.date)):
+                    isinstance(data[grouping], list)):
                     groups.extend([int(pk) for pk in data[grouping]])
         return groups
 
@@ -117,6 +121,10 @@ class GenericFilterForm(forms.Form):
 
 class FilterForm(forms.Form):
 
+    search = forms.CharField(
+        label=_('search'),
+        required=False,
+    )
     from_date = forms.DateField(
         label=_('from'),
         required=False,
@@ -184,10 +192,8 @@ class FilterForm(forms.Form):
             # get all the primary keys of the groups
             data = self.clean()
             for grouping in data:
-                if (
-                    data[grouping] is not None and
-                    not isinstance(data[grouping], datetime.date)
-                ):
+                if (data[grouping] is not None and
+                    isinstance(data[grouping], list)):
                     groups.extend([int(pk) for pk in data[grouping]])
         return groups
 

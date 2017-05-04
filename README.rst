@@ -4,6 +4,11 @@ Eventary
 
 Eventary is a simple Django inventary for events, ergo a calendar.
 
+Important
+---------
+
+Full text search requires a `postgresql` database.
+
 Quick start
 -----------
 
