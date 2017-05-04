@@ -26,8 +26,6 @@
 
 <div style="display: inline-block; vertical-align: 6px;">{{ calendar|actions:request.user }}</div>
 
-<h2>{{ h_upcoming|capfirst }}</h2>
-
 {% include 'eventary/filter_form.html' with form=form %}
 {% include 'eventary/lists/events.html' with request=request page=page prefix='event_page' calendar=calendar %}
 
