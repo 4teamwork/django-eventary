@@ -119,9 +119,11 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 
     def get_success_url(self):
         return reverse('eventary:anonymous-proposal_details',
-                       calendar_pk=self.calendar.pk,
-                       pk=self.event.pk,
-                       secret=str(self.secret.secret))
+                       kwargs={
+                           'calendar_pk': self.calendar.pk,
+                           'pk': self.event.pk,
+                           'secret': str(self.secret.secret),
+                       })
 
     def done(self, form_list, form_dict, **kwargs):
         # store the host
