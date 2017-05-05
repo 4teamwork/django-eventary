@@ -54,7 +54,6 @@ class CalendarDetailView(FilterFormMixin,
         return context
 
     def get_form(self):
-
         form_class = self.get_form_class()
 
         if len(self.request.GET):
@@ -137,7 +136,6 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
                        secret=str(self.secret.secret))
 
     def done(self, form_list, form_dict, **kwargs):
-
         # store the host
         host = form_dict['0'].save()
 
@@ -213,7 +211,6 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
             return super_response
 
     def render_done(self, form, **kwargs):
-
         final_forms = OrderedDict()
 
         for form_key in self.get_form_list():
