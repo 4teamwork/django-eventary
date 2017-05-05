@@ -27,12 +27,12 @@ class EditorialOrManagementRequiredMixin(PermissionRequiredMixin):
         ]).exists()
 
 
-class EventFilterFormMixin(FormMixin):
+class FilterFormMixin(FormMixin):
 
     form_class = GenericFilterForm
 
     def __init__(self, **kwargs):
-        super(EventFilterFormMixin, self).__init__(**kwargs)
+        super(FilterFormMixin, self).__init__(**kwargs)
 
         # initial filter
         self.initial = {
@@ -40,42 +40,50 @@ class EventFilterFormMixin(FormMixin):
             'to_date': (datetime.today() + timedelta(weeks=1))
         }
 
-        # events
         self.event_list = Event.objects.filter(published=True).distinct()
+        self.proposal_list = Event.objects.filter(published=False).distinct()
 
-    def apply_filter(self, form):
-
+    def apply_filter(self, form, object_list):
         form_data = form.clean()
 
+        # apply fulltext search
         if 'search' in form_data and form_data.get('search'):
-            self.event_list = self.event_list.annotate(
+            object_list = object_list.annotate(
                 search=SearchVector('calendar__title',
                                     'host__name', 'host__info',
                                     'title', 'location', 'address', 'city',
                                     'zip_code', 'description')
             ).filter(search=form_data.get('search'))
 
-        self.event_list = self.event_list.filter(self.get_date_filter(
+        # apply date filters
+        object_list = object_list.filter(self.get_date_filter(
             form_data
         ))
 
         # filter the queryset by the selected groups
         groups = form.groups()
         if len(groups) > 0:
-            self.event_list = self.event_list.filter(group__in=groups)
+            object_list = object_list.filter(group__in=groups)
+
+        return object_list
+
+    def apply_order(self, object_list):
+        return object_list.order_by('recurring')
 
     def get(self, request, *args, **kwargs):
-
         form = self.get_form()
 
         if len(self.request.GET) and form.is_valid():
-            self.apply_filter(form)
+            self.event_list = self.apply_filter(form, self.event_list)
+            self.proposal_list = self.apply_filter(form, self.proposal_list)
         else:
-            self.event_list = self.event_list.filter(
-                self.get_date_filter(self.initial)
-            )
+            date_filter = self.get_date_filter(self.initial)
+            self.event_list = self.event_list.filter(date_filter)
+            self.proposal_list = self.proposal_list.filter(date_filter)
 
-        self.event_list = self.event_list.order_by('recurring')
+        self.event_list = self.apply_order(self.event_list)
+        self.proposal_list = self.apply_order(self.proposal_list)
+
         context = self.get_context_data()
 
         return self.render_to_response(context)
@@ -84,17 +92,18 @@ class EventFilterFormMixin(FormMixin):
         fdate = data.get('from_date', None)
         tdate = data.get('to_date', None)
 
-        # this is needed a few times here
         def _to_datetime(date, min_or_max='min'):
+            """
+            Converts a date object into a datetime object
+            if min_or_max is set to "min" it will return the smallest possible time
+            if it is set to "max" it will return the greatest possible time
+            """
             if min_or_max not in ['min', 'max']:
                 raise ValueError('min_or_max has to be either "min" or "max"')
             _border = getattr(datetime, min_or_max, datetime.min)
             return datetime.combine(date, _border.time())
 
-        # find the right filter
         if fdate is not None and tdate is not None:
-
-            # recurrences requires a datetime object
             fdatetime = _to_datetime(fdate)
             tdatetime = _to_datetime(tdate, min_or_max='max')
 
@@ -112,10 +121,11 @@ class EventFilterFormMixin(FormMixin):
             )
 
             # now find all the events that have recurrences in the given span
-            event_pk = [recurrence.event.pk
-                        for recurrence in recurrences
-                        if len(recurrence.recurrences.between(fdatetime,
-                                                              tdatetime))]
+            event_pks = [
+                recurrence.event.pk
+                for recurrence in recurrences
+                if len(recurrence.recurrences.between(fdatetime, tdatetime))
+            ]
 
             return (Q(recurring=False) & (
                     Q(eventtimedate__start_date__gte=fdate,
@@ -125,11 +135,9 @@ class EventFilterFormMixin(FormMixin):
                       eventtimedate__end_date__gte=fdate,
                       eventtimedate__end_date__lte=tdate,
                       eventtimedate__end_date__isnull=False)) |
-                    Q(pk__in=event_pk))
+                    Q(pk__in=event_pks))
 
         elif tdate is not None:
-
-            # convert the to date to a datetime object
             tdatetime = _to_datetime(tdate, 'max')
 
             # find all the recurrences before the given date
@@ -155,8 +163,6 @@ class EventFilterFormMixin(FormMixin):
                       eventtimedate__end_date__lte=tdate)) |
                     Q(pk__in=event_pk))
         elif fdate is not None:
-
-            # convert the to date to a datetime object
             fdatetime = _to_datetime(fdate, 'min')
 
             # find all the recurrences before the given date
@@ -182,7 +188,6 @@ class EventFilterFormMixin(FormMixin):
         return Q()
 
     def get_form(self):
-
         form_class = self.get_form_class()
 
         if len(self.request.GET):
@@ -204,37 +209,3 @@ class EventFilterFormMixin(FormMixin):
             obj_list = paginator.page(paginator.num_pages)
 
         return obj_list, paginator
-
-
-class FilterFormMixin(EventFilterFormMixin):
-
-    def __init__(self, **kwargs):
-        super(FilterFormMixin, self).__init__(**kwargs)
-
-        # proposals
-        self.proposal_list = Event.objects.filter(published=False).distinct()
-
-    def apply_filter(self, form):
-        super(FilterFormMixin, self).apply_filter(form)
-
-        self.proposal_list = self.proposal_list.filter(self.get_date_filter(
-            form.clean()
-        ))
-
-        # filter the queryset by the selected groups
-        groups = form.groups()
-        if len(groups) > 0:
-            self.proposal_list = self.proposal_list.filter(group__in=groups)
-
-    def get(self, request, *args, **kwargs):
-        super(FilterFormMixin, self).get(request, *args, **kwargs)
-
-        if not len(request.GET):
-            self.proposal_list = self.proposal_list.filter(
-                self.get_date_filter(self.initial)
-            )
-
-        self.proposal_list = self.proposal_list.order_by('recurring')
-        context = self.get_context_data()
-
-        return self.render_to_response(context)
