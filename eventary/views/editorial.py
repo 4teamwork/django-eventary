@@ -3,7 +3,6 @@ import os
 from django.core.urlresolvers import reverse
 from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import DeleteView, SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
 from django.views.generic import ListView, View, TemplateView
 from django.shortcuts import get_object_or_404, redirect
 
@@ -240,7 +239,6 @@ class EventPublishView(EditorialOrManagementRequiredMixin,
 
 
 class EventListUpdateView(EditorialOrManagementRequiredMixin,
-                          MultipleObjectMixin,
                           SingleObjectMixin,
                           FilterFormMixin,
                           TemplateView):
@@ -275,26 +273,10 @@ class EventListUpdateView(EditorialOrManagementRequiredMixin,
         return super(EventListUpdateView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(MultipleObjectMixin, self).get_context_data(
+        context = super(EventListUpdateView, self).get_context_data(
             **kwargs
         )
         context.update({'calendar': self.object})
-
-        event_context = super(EventListUpdateView, self).get_context_data(
-            object_list=self.event_list
-        )
-        proposal_context = super(EventListUpdateView, self).get_context_data(
-            object_list=self.proposal_list
-        )
-        context.update({
-            'event_paginator': event_context.get('paginator'),
-            'event_page': event_context.get('page_obj'),
-            'event_list': event_context.get('object_list'),
-            'proposal_paginator': proposal_context.get('paginator'),
-            'proposal_page': proposal_context.get('page_obj'),
-            'proposal_list': proposal_context.get('object_list'),
-        })
-
         return context
 
     def publish(self, request):
