@@ -2,9 +2,10 @@ from datetime import datetime, timedelta
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.postgres.search import SearchVector
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.views.generic.edit import FormMixin
+from django.views.generic.list import MultipleObjectMixin
+
 
 from ..forms import GenericFilterForm
 from ..models import Event, EventRecurrence
@@ -27,14 +28,15 @@ class EditorialOrManagementRequiredMixin(PermissionRequiredMixin):
         ]).exists()
 
 
-class FilterFormMixin(FormMixin):
+class FilterFormMixin(MultipleObjectMixin, FormMixin):
 
     form_class = GenericFilterForm
+    paginate_by = 10
 
     def __init__(self, **kwargs):
         super(FilterFormMixin, self).__init__(**kwargs)
 
-        # initial filter
+        # initial date filter
         self.initial = {
             'from_date': datetime.today(),
             'to_date': (datetime.today() + timedelta(weeks=1))
@@ -87,6 +89,30 @@ class FilterFormMixin(FormMixin):
         context = self.get_context_data()
 
         return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super(MultipleObjectMixin, self).get_context_data(**kwargs)
+
+        self.page_kwarg = 'event_page'
+        self.object_list = self.event_list
+        event_context = super(FilterFormMixin, self).get_context_data(**kwargs)
+
+        self.page_kwarg = 'proposal_page'
+        self.object_list = self.proposal_list
+        proposal_context = super(FilterFormMixin, self).get_context_data(**kwargs)
+
+        context.update({
+            'event_page': event_context.get('page_obj'),
+            'event_paginator': event_context.get('paginator'),
+            'event_list': event_context.get('object_list'),
+            'event_page_kwarg': 'event_page',
+            'proposal_page': proposal_context.get('page_obj'),
+            'proposal_paginator': proposal_context.get('paginator'),
+            'proposal_list': proposal_context.get('object_list'),
+            'proposal_page_kwarg': 'proposal_page',
+        })
+
+        return context
 
     def get_date_filter(self, data):
         fdate = data.get('from_date', None)
@@ -196,16 +222,3 @@ class FilterFormMixin(FormMixin):
             self.form = form_class(prefix='filter',
                                    initial=self.initial)
         return self.form
-
-    def paginate_qs(self, qs, prefix='paginator'):
-        paginator = Paginator(qs, 10)
-
-        page = self.request.GET.get('{0}_page'.format(prefix), 1)
-        try:
-            obj_list = paginator.page(page)
-        except PageNotAnInteger:
-            obj_list = paginator.page(1)
-        except EmptyPage:
-            obj_list = paginator.page(paginator.num_pages)
-
-        return obj_list, paginator
