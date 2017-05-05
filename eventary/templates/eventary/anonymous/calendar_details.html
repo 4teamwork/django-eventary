@@ -17,16 +17,8 @@
 {% endblock %}
 
 {% block 'content' %}
-
-{% comment %}Translators: Calendar detail page{% endcomment %}
-{% comment %}Translators: Headers{% endcomment %}
-{% trans 'upcoming events' as h_upcoming %}
-
 <h1 style="display: inline-block; padding-right: 15px;">{{ calendar.title }}</h1>
-
 <div style="display: inline-block; vertical-align: 6px;">{{ calendar|actions:request.user }}</div>
-
 {% include 'eventary/filter_form.html' with form=form %}
-{% include 'eventary/lists/events.html' with request=request page=page prefix='event_page' calendar=calendar %}
-
+{% include 'eventary/lists/events.html' with request=request page=event_page prefix=event_page_kwarg calendar=calendar %}
 {% endblock %}
