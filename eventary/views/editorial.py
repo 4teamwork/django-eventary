@@ -100,7 +100,7 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
 
         if (self.steps.current == '2'):
             if self.storage.get_step_data('2') is not None:
-                context.update({'extraform': RecurrenceForm(
+                context.update({'extraform_first': RecurrenceForm(
                     self.storage.get_step_data('2'),
                     prefix='recurrence'
                 )})
@@ -109,12 +109,12 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
                     eventrecurrence, _ = EventRecurrence.objects.get_or_create(
                         event=self.object
                     )
-                    context.update({'extraform': RecurrenceForm(
+                    context.update({'extraform_first': RecurrenceForm(
                         instance=eventrecurrence,
                         prefix='recurrence'
                     )})
                 else:
-                    context.update({'extraform': RecurrenceForm(
+                    context.update({'extraform_first': RecurrenceForm(
                         prefix='recurrence'
                     )})
 

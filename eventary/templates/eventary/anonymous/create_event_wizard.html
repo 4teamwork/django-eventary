@@ -20,6 +20,11 @@
 {% for media in wizard.form|media:'css' %}
     {{ media }}
 {% endfor %}
+{% if extraform_first %}
+    {% for media in extraform_first|media:'css' %}
+        {{ media }}
+    {% endfor %}
+{% endif %}
 {% if extraform %}
     {% for media in extraform|media:'css' %}
         {{ media }}
@@ -49,6 +54,12 @@
     {% csrf_token %}
     {% wizard_status wizard wizard_steps_named valid_steps form_id="wizardform" %}
     {{ wizard.management_form }}
+    {% if extraform_first %}
+    <div id="extraform_first"{% if extraform_first.prefix %}
+	 class="{{ extraform_first.prefix }}"{% endif %}>
+	    {{ extraform_first|as_bootstrap }}
+    </div>
+    {% endif %}
     {% if wizard.form.forms %}
         {{ wizard.form.management_form }}
         {% for form in wizard.form.forms %}

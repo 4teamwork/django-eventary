@@ -107,12 +107,12 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         if (self.steps.current == '2'):
             # get the initial values for the EventGroupingForm
             if self.storage.get_step_data('2') is not None:
-                context.update({'extraform': RecurrenceForm(
+                context.update({'extraform_first': RecurrenceForm(
                     self.storage.get_step_data('2'),
                     prefix='recurrence'
                 )})
             else:
-                context.update({'extraform': RecurrenceForm(
+                context.update({'extraform_first': RecurrenceForm(
                     prefix='recurrence'
                 )})
 
