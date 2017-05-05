@@ -16,10 +16,10 @@ from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
 from ..forms import RecurrenceForm, FilterForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
 
-from .mixins import EventFilterFormMixin
+from .mixins import FilterFormMixin
 
 
-class CalendarDetailView(EventFilterFormMixin,
+class CalendarDetailView(FilterFormMixin,
                          SingleObjectMixin,
                          TemplateView):
 
@@ -269,7 +269,7 @@ class EventICSExportView(EventDetailView):
     template_name = 'eventary/anonymous/published_event.ics'
 
 
-class LandingView(EventFilterFormMixin, TemplateView):
+class LandingView(FilterFormMixin, TemplateView):
 
     template_name = 'eventary/anonymous/landing.html'
 
