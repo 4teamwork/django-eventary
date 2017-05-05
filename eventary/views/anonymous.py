@@ -19,8 +19,8 @@ from ..models import Calendar, Event, EventTimeDate, Group, Secret
 from .mixins import FilterFormMixin
 
 
-class CalendarDetailView(FilterFormMixin,
-                         SingleObjectMixin,
+class CalendarDetailView(SingleObjectMixin,
+                         FilterFormMixin,
                          TemplateView):
 
     form_class = FilterForm
@@ -35,22 +35,10 @@ class CalendarDetailView(FilterFormMixin,
         return super(CalendarDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(CalendarDetailView, self).get_context_data(**kwargs)
-        context['calendar'] = self.object
-
-        self.event_list = self.event_list.filter(calendar=self.object)
-
-        page, paginator = self.paginate_qs(self.event_list,
-                                           prefix='event')
-
-        # update the context
+        context = super(CalendarDetailView, self).get_context_data()
         context.update({
-            'paginator': paginator,
-            'page': page,
-            'object_list': self.event_list,
-            'event_list': self.event_list
+            'calendar': self.object,
         })
-
         return context
 
     def get_form(self):
