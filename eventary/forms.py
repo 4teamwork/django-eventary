@@ -301,8 +301,8 @@ class TimeDateForm(forms.Form):
     start_time = forms.TimeField(
         label=_('start time'),
         required=False,
-        widget=DateTimePicker(options={"format": "HH:mm",
-                                       "pickDate": False})
+        widget=DateTimePicker(options={'format': '%H:%M',
+                                       'pickDate': False})
     )
     end_date = forms.DateField(
         label=_('end date'),
@@ -319,8 +319,8 @@ class TimeDateForm(forms.Form):
     end_time = forms.TimeField(
         label=_('end time'),
         required=False,
-        widget=DateTimePicker(options={"format": "HH:mm",
-                                       "pickDate": False})
+        widget=DateTimePicker(options={'format': '%H:%M',
+                                       'pickDate': False})
     )
 
     def clean(self):
