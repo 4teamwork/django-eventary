@@ -9,6 +9,11 @@ from autoslug import AutoSlugField
 from recurrence.fields import RecurrenceField
 
 
+__all__ = ('Calendar', 'Event', 'EventHost', 'EventRecurrence',
+           'EventTimeDate', 'Group', 'Grouping', 'GroupingType',
+           'ImportedEvent', 'Secret', '_get_upload_path')
+
+
 def _get_upload_path(event, filename):
     return os.path.join(
         'calendar_{slug}'.format(slug=event.calendar.slug),
@@ -121,6 +126,7 @@ class EventHost(models.Model):
     )
     email = models.EmailField(verbose_name=_('email'))
     homepage = models.URLField(blank=True,
+                               help_text=_('http://...'),
                                null=True,
                                verbose_name=_('homepage'))
     notify = models.BooleanField(
