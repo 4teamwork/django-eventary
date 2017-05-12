@@ -70,7 +70,7 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
         return object_list
 
     def apply_order(self, object_list):
-        return object_list.order_by('recurring')
+        return object_list.order_by('eventtimedate__start_date')
 
     def get(self, request, *args, **kwargs):
         form = self.get_form()
