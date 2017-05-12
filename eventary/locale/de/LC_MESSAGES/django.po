@@ -127,7 +127,7 @@ msgstr "Bild"
 
 #: models.py:55
 msgid "accepted formats: pdf, jpg, png"
-msgstr "acceptierte formate: pdf, jpg, png"
+msgstr "erlaubte Formate: pdf, jpg, png"
 
 #: models.py:59
 msgid "document"
