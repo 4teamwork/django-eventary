@@ -416,6 +416,7 @@ class RecurrenceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RecurrenceForm, self).__init__(*args, **kwargs)
         self.fields['recurrences'].required = False
+        self.fields['recurrences'].label = capfirst(_('recurrences'))
 
     class Media:
         css = {'all': ('eventary/css/recurrences.css',)}
