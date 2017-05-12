@@ -21,15 +21,15 @@
 {% trans 'Propose your event now!' as btn_propose_text %}
 
 {% if page %}
-{% if form_action %}
+{% if form_action %}{% comment %}
 	<form action="{{ form_action }}" method="post">
 	{% csrf_token %}
 	{{ page|actions:request.user }}
-{% endif %}
+{% endcomment %}{% endif %}
 <ul class="eventlist">
 {% for event in page %}
 <li>
-    {% if form_action %}<div class="eventcheckbox"><input type="checkbox" name="pk" value="{{ event.pk }}"></div>{% endif %}
+    {% if form_action %}{% comment %}<div class="eventcheckbox"><input type="checkbox" name="pk" value="{{ event.pk }}"></div>{% endcomment %}{% endif %}
     <div class="eventpicture">
 	{% if event.image %}
 	{% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
@@ -65,10 +65,10 @@
 </li>
 {% endfor %}
 </ul>
-{% if form_action %}<div class="toggle_selection checkbox container"><label class="row">
+{% if form_action %}{% comment %}<div class="toggle_selection checkbox container"><label class="row">
     <input type="checkbox"> {{ toggle_selection|capfirst }}
-</label></div>{% endif %}
-{% if form_action %}</form>{% endif %}
+</label></div>
+</form>{% endcomment %}{% endif %}
 
 {% page_navigation page request prefix  %}
 

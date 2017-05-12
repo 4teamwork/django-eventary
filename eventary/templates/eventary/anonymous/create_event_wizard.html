@@ -20,6 +20,11 @@
 {% for media in wizard.form|media:'css' %}
     {{ media }}
 {% endfor %}
+{% if extraform_first %}
+    {% for media in extraform_first|media:'css' %}
+        {{ media }}
+    {% endfor %}
+{% endif %}
 {% if extraform %}
     {% for media in extraform|media:'css' %}
         {{ media }}
@@ -41,7 +46,7 @@
 
 {% trans 'first step' as btn_wizard_first %}
 {% trans 'previous step' as btn_wizard_previous %}
-{% trans 'submit' as btn_wizard_submit %}
+{% trans 'next' as btn_wizard_next %}
 
 <h1>{% blocktrans with calendar_title=calendar.title %}Propose an event for "{{ calendar_title }}"{% endblocktrans %}</h1>
 
@@ -49,6 +54,12 @@
     {% csrf_token %}
     {% wizard_status wizard wizard_steps_named valid_steps form_id="wizardform" %}
     {{ wizard.management_form }}
+    {% if extraform_first %}
+    <div id="extraform_first"{% if extraform_first.prefix %}
+	 class="{{ extraform_first.prefix }}"{% endif %}>
+	    {{ extraform_first|as_bootstrap }}
+    </div>
+    {% endif %}
     {% if wizard.form.forms %}
         {{ wizard.form.management_form }}
         {% for form in wizard.form.forms %}
@@ -64,10 +75,22 @@
     </div>
     {% endif %}
 
-    <button class="btn btn-primary"
+    {% if wizard.steps.prev %}
+    	{% if wizard.steps.prev != wizard.steps.first %}
+    <button class="context"
+	    name="wizard_submit_and_goto_step"
+	    type="submit"
+            value="{{ wizard.steps.first }}">{{ btn_wizard_first|capfirst }}</button>
+    	{% endif %}
+    <button class="context"
+	    name="wizard_submit_and_goto_step"
+	    type="submit"
+            value="{{ wizard.steps.prev }}">{{ btn_wizard_previous|capfirst }}</button>
+    {% endif %}
+    <button class="context btn btn-primary"
 	    title="{{ btn_wizard_submit|capfirst }}"
             type="submit">
-        {{ btn_wizard_submit|capfirst }}
+	{{ btn_wizard_next|capfirst }}
     </button>
 </form>
 

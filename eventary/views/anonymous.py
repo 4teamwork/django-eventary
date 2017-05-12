@@ -5,7 +5,7 @@ from os.path import join
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Case, IntegerField, Sum, When
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
@@ -16,11 +16,11 @@ from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
 from ..forms import RecurrenceForm, FilterForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
 
-from .mixins import EventFilterFormMixin
+from .mixins import FilterFormMixin
 
 
-class CalendarDetailView(EventFilterFormMixin,
-                         SingleObjectMixin,
+class CalendarDetailView(SingleObjectMixin,
+                         FilterFormMixin,
                          TemplateView):
 
     form_class = FilterForm
@@ -35,26 +35,13 @@ class CalendarDetailView(EventFilterFormMixin,
         return super(CalendarDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(CalendarDetailView, self).get_context_data(**kwargs)
-        context['calendar'] = self.object
-
-        self.event_list = self.event_list.filter(calendar=self.object)
-
-        page, paginator = self.paginate_qs(self.event_list,
-                                           prefix='event')
-
-        # update the context
+        context = super(CalendarDetailView, self).get_context_data()
         context.update({
-            'paginator': paginator,
-            'page': page,
-            'object_list': self.event_list,
-            'event_list': self.event_list
+            'calendar': self.object,
         })
-
         return context
 
     def get_form(self):
-
         form_class = self.get_form_class()
 
         if len(self.request.GET):
@@ -107,12 +94,12 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         if (self.steps.current == '2'):
             # get the initial values for the EventGroupingForm
             if self.storage.get_step_data('2') is not None:
-                context.update({'extraform': RecurrenceForm(
+                context.update({'extraform_first': RecurrenceForm(
                     self.storage.get_step_data('2'),
                     prefix='recurrence'
                 )})
             else:
-                context.update({'extraform': RecurrenceForm(
+                context.update({'extraform_first': RecurrenceForm(
                     prefix='recurrence'
                 )})
 
@@ -130,8 +117,15 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 
         return context
 
-    def done(self, form_list, form_dict, **kwargs):
+    def get_success_url(self):
+        return reverse('eventary:anonymous-proposal_details',
+                       kwargs={
+                           'calendar_pk': self.calendar.pk,
+                           'pk': self.event.pk,
+                           'secret': str(self.secret.secret),
+                       })
 
+    def done(self, form_list, form_dict, **kwargs):
         # store the host
         host = form_dict['0'].save()
 
@@ -186,12 +180,11 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=event)
 
-        return redirect(
-            'eventary:anonymous-proposal_details',
-            calendar_pk=self.object.pk,
-            pk=event.pk,
-            secret=str(secret.secret)
-        )
+        # prepare for redirection
+        self.calendar = self.object
+        self.event = event
+        self.secret = secret
+        return redirect(self.get_success_url())
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -208,7 +201,6 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
             return super_response
 
     def render_done(self, form, **kwargs):
-
         final_forms = OrderedDict()
 
         for form_key in self.get_form_list():
@@ -264,7 +256,7 @@ class EventICSExportView(EventDetailView):
     template_name = 'eventary/anonymous/published_event.ics'
 
 
-class LandingView(EventFilterFormMixin, TemplateView):
+class LandingView(FilterFormMixin, TemplateView):
 
     template_name = 'eventary/anonymous/landing.html'
 
@@ -305,7 +297,6 @@ class LandingView(EventFilterFormMixin, TemplateView):
 class ProposalDetailView(EventDetailView):
 
     queryset = Event.objects.filter(published=False)
-    template_name = 'eventary/anonymous/proposed_event.html'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()

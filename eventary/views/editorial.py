@@ -3,8 +3,7 @@ import os
 from django.core.urlresolvers import reverse
 from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import DeleteView, SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
-from django.views.generic import ListView, View, TemplateView
+from django.views.generic import ListView, RedirectView, TemplateView
 from django.shortcuts import get_object_or_404, redirect
 
 from .anonymous import CalendarDetailView, EventCreateWizardView
@@ -98,22 +97,25 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
                     }
                 )})
 
-        if (self.steps.current == '2' and
-            self.get_cleaned_data_for_step('1').get('recurring')):
-            # get the initial values for the EventGroupingForm
+        if (self.steps.current == '2'):
             if self.storage.get_step_data('2') is not None:
-                context.update({'extraform': RecurrenceForm(
+                context.update({'extraform_first': RecurrenceForm(
                     self.storage.get_step_data('2'),
                     prefix='recurrence'
                 )})
             else:
-                eventrecurrence, _ = EventRecurrence.objects.get_or_create(
-                    event=self.object
-                )
-                context.update({'extraform': RecurrenceForm(
-                    instance=eventrecurrence,
-                    prefix='recurrence'
-                )})
+                if self.object.recurring:
+                    eventrecurrence, _ = EventRecurrence.objects.get_or_create(
+                        event=self.object
+                    )
+                    context.update({'extraform_first': RecurrenceForm(
+                        instance=eventrecurrence,
+                        prefix='recurrence'
+                    )})
+                else:
+                    context.update({'extraform_first': RecurrenceForm(
+                        prefix='recurrence'
+                    )})
 
         return context
 
@@ -194,17 +196,16 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=self.object)
 
-        return redirect(
-            'eventary:anonymous-proposal_details',
-            calendar_pk=self.object.calendar.pk,
-            pk=self.object.pk,
-            secret=str(secret.secret)
-        )
+        # prepare for redirection
+        self.calendar = self.object.calendar
+        self.event = self.object
+        self.secret = secret
+        return redirect(self.get_success_url())
 
 
 class EventHideView(EditorialOrManagementRequiredMixin,
                     SingleObjectMixin,
-                    View):
+                    RedirectView):
 
     model = Event
 
@@ -214,12 +215,15 @@ class EventHideView(EditorialOrManagementRequiredMixin,
         # every proposal needs an access secret
         Secret.objects.get_or_create(event=self.object)
         self.object.save()
-        return redirect('eventary:redirector')
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('eventary:redirector')
 
 
 class EventPublishView(EditorialOrManagementRequiredMixin,
                        SingleObjectMixin,
-                       View):
+                       RedirectView):
 
     model = Event
 
@@ -228,11 +232,13 @@ class EventPublishView(EditorialOrManagementRequiredMixin,
         self.object.published = True
         Secret.objects.filter(event=self.object).delete()
         self.object.save()
-        return redirect('eventary:redirector')
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('eventary:redirector')
 
 
 class EventListUpdateView(EditorialOrManagementRequiredMixin,
-                          MultipleObjectMixin,
                           SingleObjectMixin,
                           FilterFormMixin,
                           TemplateView):
@@ -267,26 +273,10 @@ class EventListUpdateView(EditorialOrManagementRequiredMixin,
         return super(EventListUpdateView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(MultipleObjectMixin, self).get_context_data(
+        context = super(EventListUpdateView, self).get_context_data(
             **kwargs
         )
         context.update({'calendar': self.object})
-
-        event_context = super(EventListUpdateView, self).get_context_data(
-            object_list=self.event_list
-        )
-        proposal_context = super(EventListUpdateView, self).get_context_data(
-            object_list=self.proposal_list
-        )
-        context.update({
-            'event_paginator': event_context.get('paginator'),
-            'event_page': event_context.get('page_obj'),
-            'event_list': event_context.get('object_list'),
-            'proposal_paginator': proposal_context.get('paginator'),
-            'proposal_page': proposal_context.get('page_obj'),
-            'proposal_list': proposal_context.get('object_list'),
-        })
-
         return context
 
     def publish(self, request):
