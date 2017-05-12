@@ -62,10 +62,12 @@
       <div>{{ event.location }}<br>{{ event.address }}, {{ event.zip_code }} {{ event.city }}</div>
       {% include "eventary/gis.html" %}
     </div>
+    {% if event.entry_fee %}
     <div class="eventfeeportlet sl-block">
       <h3>{{ h_fee|capfirst }}</h3>
       <div>{{ event.entry_fee|safe }}</div>
     </div>
+    {% endif %}
     <div class="eventhostportlet sl-block">
       <h3>{{ h_host|capfirst }}</h3>
       <div>{{ event.host.name }}<br>{{ event.host.phone }}
