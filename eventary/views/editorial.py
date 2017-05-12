@@ -3,7 +3,7 @@ import os
 from django.core.urlresolvers import reverse
 from django.db.models import Case, IntegerField, Sum, When
 from django.views.generic.edit import DeleteView, SingleObjectMixin
-from django.views.generic import ListView, View, TemplateView
+from django.views.generic import ListView, RedirectView, TemplateView
 from django.shortcuts import get_object_or_404, redirect
 
 from .anonymous import CalendarDetailView, EventCreateWizardView
@@ -205,7 +205,7 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
 
 class EventHideView(EditorialOrManagementRequiredMixin,
                     SingleObjectMixin,
-                    View):
+                    RedirectView):
 
     model = Event
 
@@ -223,7 +223,7 @@ class EventHideView(EditorialOrManagementRequiredMixin,
 
 class EventPublishView(EditorialOrManagementRequiredMixin,
                        SingleObjectMixin,
-                       View):
+                       RedirectView):
 
     model = Event
 
