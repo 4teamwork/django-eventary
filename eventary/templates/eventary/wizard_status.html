@@ -1,30 +1,26 @@
 {% load i18n %}
 
 {% if wizard.steps.all|length > 1 %}
-<div class="wizard-status btn-group">
+<div class="wizard-status">
     {% for step, name in named_steps %}
-    <a
+    <span
         {% if step == wizard.steps.current %}
-            class="btn btn-success disabled"
+            class="current"
         {% else %}
             {% if step in valid_steps %}
-            class="btn btn-success"
+            class=""
             {% else %}
                 {% if step > wizard.steps.current %}
-                class="btn btn-primary disabled"
+                class="disabled"
                 {% else %}
-                class="btn btn-primary"
+                class=""
                 {% endif %}
             {% endif %}
-            title="{% blocktrans with step_name=name %}Go to {{ step_name }}.{% endblocktrans %}"
-            name="wizard_submit_and_goto_step"
-            onclick="document.getElementById('{{ form_id }}_clicked_link').setAttribute('value', this.getAttribute('data-step-number')); document.getElementById('{{ form_id }}').submit();"
         {% endif %}
             data-step-number="{{ step }}">
-        {{ name|capfirst }}
-    </a>
+	{{ step|add:"1" }}. {{ name|capfirst }}
+    </span>
     {% endfor %}
-    <input id="{{ form_id }}_clicked_link" type="hidden" name="wizard_submit_and_goto_step">
 </div>
 {% endif %}
 
