@@ -298,12 +298,6 @@ class TimeDateForm(forms.Form):
                      'pickTime': False}
         )
     )
-    start_time = forms.TimeField(
-        label=_('start time'),
-        required=False,
-        widget=DateTimePicker(options={'format': '%H:%M',
-                                       'pickDate': False})
-    )
     end_date = forms.DateField(
         label=_('end date'),
         required=False,
@@ -318,6 +312,12 @@ class TimeDateForm(forms.Form):
     )
     end_time = forms.TimeField(
         label=_('end time'),
+        required=False,
+        widget=DateTimePicker(options={'format': '%H:%M',
+                                       'pickDate': False})
+    )
+    start_time = forms.TimeField(
+        label=_('start time'),
         required=False,
         widget=DateTimePicker(options={'format': '%H:%M',
                                        'pickDate': False})
