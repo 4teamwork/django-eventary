@@ -29,39 +29,37 @@
 <ul class="eventlist">
 {% for event in page %}
 <li>
-    {% if form_action %}{% comment %}<div class="eventcheckbox"><input type="checkbox" name="pk" value="{{ event.pk }}"></div>{% endcomment %}{% endif %}
-    <div class="eventpicture">
-	{% if event.image %}
-	{% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
-	<img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
-	{% endif %}
-    </div>
-    <div class="eventdescription">
-	<div class="eventtitle">
     {% if event.published %}
-	<a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
-	   title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
-	    {{ event.title }}
-	</a>
+    <a href="{% url 'eventary:anonymous-event_details' event.calendar.pk event.pk %}"
+       title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
     {% else %}
-        <a href="{% url 'eventary:anonymous-proposal_details' event.calendar.pk event.pk event.secret.secret %}"
-           title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
-            {{ event.title }}
-    	    {% if not calendar %}({{ event.calendar.title }}){% endif %}
-        </a>
+    <a href="{% url 'eventary:anonymous-proposal_details' event.calendar.pk event.pk event.secret.secret %}"
+       title="{% blocktrans with event_title=event.title %}View {{ event_title }}{% endblocktrans %}">
     {% endif %}
-    	</div>
+        {% if form_action %}{% comment %}<div class="eventcheckbox"><input type="checkbox" name="pk" value="{{ event.pk }}"></div>{% endcomment %}{% endif %}
+        <div class="eventpicture">
+    	{% if event.image %}
+    	{% generateimage 'eventary:thumbnail' source=event.image as thumbnail %}
+    	<img src="{{ thumbnail.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
+    	{% endif %}
+        </div>
+        <div class="eventdescription">
+    	<div class="eventtitle">
+        	{{ event.title }}
+    		{% if not calendar %}({{ event.calendar.title }}){% endif %}
+        </div>
         <div class="eventdate">{{ event|dates }}</div>
-	<div class="eventgroups">
-    {% for group in event.group_set.all %}
-    	{{ group.title }}{% if not forloop.last %},{% endif %}
-    {% endfor %}
-    	</div>
-	<div class="eventtime">{{ event|times }}</div>
-	{% if event.recurring %}
-	<div class="eventrecursion discreet"><i class="fa fa-repeat" aria-hidden="true"></i> {{ event|recursion }}</div>
-	{% endif %}
-    </div>
+    	<div class="eventgroups">
+        {% for group in event.group_set.all %}
+        	{{ group.title }}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+        	</div>
+    	<div class="eventtime">{{ event|times }}</div>
+    	{% if event.recurring %}
+    	<div class="eventrecursion discreet"><i class="fa fa-repeat" aria-hidden="true"></i> {{ event|recursion }}</div>
+    	{% endif %}
+        </div>
+    </a>
 </li>
 {% endfor %}
 </ul>

@@ -310,14 +310,14 @@ class TimeDateForm(forms.Form):
                      'pickTime': False}
         )
     )
-    end_time = forms.TimeField(
-        label=_('end time'),
+    start_time = forms.TimeField(
+        label=_('start time'),
         required=False,
         widget=DateTimePicker(options={'format': '%H:%M',
                                        'pickDate': False})
     )
-    start_time = forms.TimeField(
-        label=_('start time'),
+    end_time = forms.TimeField(
+        label=_('end time'),
         required=False,
         widget=DateTimePicker(options={'format': '%H:%M',
                                        'pickDate': False})
@@ -416,6 +416,7 @@ class RecurrenceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RecurrenceForm, self).__init__(*args, **kwargs)
         self.fields['recurrences'].required = False
+        self.fields['recurrences'].label = capfirst(_('recurrences'))
 
     class Media:
         css = {'all': ('eventary/css/recurrences.css',)}
