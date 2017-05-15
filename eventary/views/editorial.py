@@ -185,14 +185,22 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
                     group.save()
 
         # store the recurrence information
+        recurrence_form = RecurrenceForm(self.storage.get_step_data('2'),
+                                         prefix='recurrence')
+        assert recurrence_form.is_valid()
+
         if self.object.recurring:
-            recurrence = RecurrenceForm(
-                self.storage.get_step_data('2'),
-                prefix='recurrence',
-            ).save(commit=False)
             self.object.eventrecurrence.delete()
+
+        if recurrence_form.clean().get('toggler'):
+            self.object.recurring = True
+            self.object.save()
+            recurrence = recurrence_form.save(commit=False)
             recurrence.event = self.object
             recurrence.save()
+        else:
+            self.object.recurring = False
+            self.object.save()
 
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=self.object)
