@@ -10,6 +10,7 @@ from .anonymous import CalendarDetailView, EventCreateWizardView
 from .management import LandingView as ManagementLandingView
 from .mixins import EditorialOrManagementRequiredMixin, FilterFormMixin
 
+from .. import emails
 from ..forms import EventGroupingForm, RecurrenceForm, FilterForm
 from ..models import Calendar, Event, EventTimeDate, Grouping, Secret
 from ..models import EventHost, Group, EventRecurrence
@@ -40,6 +41,14 @@ class EventDeleteView(EditorialOrManagementRequiredMixin, DeleteView):
 
     model = Event
     template_name = 'eventary/editorial/delete_event.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(EventDeleteView, self).dispatch(request,
+                                                         *args,
+                                                         **kwargs)
+        if self.object.host.notify:
+            emails.notify_delete(self.object)
+        return response
 
     def get_success_url(self):
         return reverse('eventary:redirector')
@@ -205,6 +214,9 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=self.object)
 
+        if self.object.host.notify:
+            emails.notify_update(self.object)
+
         # prepare for redirection
         self.calendar = self.object.calendar
         self.event = self.object
@@ -217,6 +229,14 @@ class EventHideView(EditorialOrManagementRequiredMixin,
                     RedirectView):
 
     model = Event
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(EventHideView, self).dispatch(request,
+                                                       *args,
+                                                       **kwargs)
+        if self.object.host.notify:
+            emails.notify_hide(self.object)
+        return response
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -235,6 +255,14 @@ class EventPublishView(EditorialOrManagementRequiredMixin,
                        RedirectView):
 
     model = Event
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(EventPublishView, self).dispatch(request,
+                                                          *args,
+                                                          **kwargs)
+        if self.object.host.notify:
+            emails.notify_publish(self.object)
+        return response
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
