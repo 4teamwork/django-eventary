@@ -49,13 +49,15 @@
       {% if event.recurring %}
       <div class="eventrecursion discreet"><i class="glyphicon glyphicon-repeat" aria-hidden="true"></i> {{ event|recursion }}</div>
       {% endif %}
-      <a class="eventdownload"
-	 href="{% url 'eventary:anonymous-export_event_to_ics' event.calendar.pk event.pk %}"
-	 role="button"
-	 target="_blank"
-	 title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
-	<span class="glyphicon glyphicon-download">{{ download_event|capfirst }}</span>
-      </a>
+      <div>
+        <a class="eventdownload"
+	   href="{% url 'eventary:anonymous-export_event_to_ics' event.calendar.pk event.pk %}"
+	   role="button"
+	   target="_blank"
+	   title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
+	  <span class="glyphicon glyphicon-download">{{ download_event|capfirst }}</span>
+        </a>
+      </div>
     </div>
     <div class="eventlocationportlet sl-block">
       <h3>{{ h_location|capfirst }}</h3>
