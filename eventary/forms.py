@@ -410,8 +410,15 @@ class HostForm(forms.ModelForm):
 
 class RecurrenceForm(forms.ModelForm):
 
-    toggler = forms.BooleanField(label=_('recurring event'),
-                                 required=False)
+    toggler = forms.BooleanField(
+        help_text=_('Define the recurrence rules for your event. '
+                    'Examples: "Weekly, every Monday and Friday", '
+                    '"Monthly, every first Sunday of the month". '
+                    'Please consider supplying the date of the first and the '
+                    'last occurrence of your event.'),
+        label=_('recurring event'),
+        required=False,
+    )
 
     def __init__(self, *args, **kwargs):
         super(RecurrenceForm, self).__init__(*args, **kwargs)
