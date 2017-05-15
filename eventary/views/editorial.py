@@ -109,6 +109,7 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
                         event=self.object
                     )
                     context.update({'extraform_first': RecurrenceForm(
+                        initial={'toggler': True},
                         instance=eventrecurrence,
                         prefix='recurrence'
                     )})
