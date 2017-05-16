@@ -20,7 +20,7 @@
 
 <h1>{{ event.title }}</h1>
 
-<a class="btn btn-xs btn-default"
+<a class="btn btn-xs btn-default back-to-calendar-details"
    href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}"
    {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
    title="{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
