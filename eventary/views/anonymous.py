@@ -257,6 +257,7 @@ class EventDetailView(DetailView):
 class EventICSExportView(EventDetailView):
 
     content_type = 'text/calendar'
+    queryset = Event.objects.all()
     template_name = 'eventary/anonymous/published_event.ics'
 
 
