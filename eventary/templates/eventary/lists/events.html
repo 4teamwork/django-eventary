@@ -71,12 +71,5 @@
 {% page_navigation page request prefix  %}
 
 {% else %}
-    {% if calendar %}
-        <p>{{ cannot_find_event }}</p>
-        <a class="btn btn-primary"
-           href="{% url 'eventary:anonymous-create_event' calendar.pk %}"
-           title="{{ btn_propose_title|capfirst }}">
-            {{ btn_propose_text|capfirst }}
-        </a>
-    {% endif %}
+  <p>{{ cannot_find_event }}</p>
 {% endif %}
