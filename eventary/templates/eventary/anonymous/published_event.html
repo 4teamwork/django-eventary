@@ -73,8 +73,8 @@
     <div class="eventhostportlet sl-block">
       <h3>{{ h_host|capfirst }}</h3>
       <div>{{ event.host.name }}<br>{{ event.host.phone }}
-	{% if event.host.email %}<br><a href="mailto:{{ event.host.email }}" target="_blank">{{ event.host.email }}</a>{% endif %}
-	{% if event.host.homepage %}<br><a href="{{ event.host.homepage }}" target="_blank">{{ event.host.homepage }}</a>{% endif %}
+	{% if event.host.email %}<br><a href="mailto:{{ event.host.email }}" class="ellipsisoverflow" target="_blank">{{ event.host.email }}</a>{% endif %}
+	{% if event.host.homepage %}<br><a href="{{ event.host.homepage }}"  class="ellipsisoverflow" target="_blank">{{ event.host.homepage }}</a>{% endif %}
       </div>
     </div>
   </div>
