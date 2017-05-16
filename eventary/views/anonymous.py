@@ -12,6 +12,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from formtools.wizard.views import SessionWizardView
 
+from .. import emails
 from ..forms import EventForm, TimeDateForm, EventGroupingForm, HostForm
 from ..forms import RecurrenceForm, FilterForm
 from ..models import Calendar, Event, EventTimeDate, Group, Secret
@@ -180,6 +181,9 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         # create the secret for the proposal
         secret, _ = Secret.objects.get_or_create(event=event)
 
+        if host.notify:
+            emails.notify_create(event)
+
         # prepare for redirection
         self.calendar = self.object
         self.event = event
@@ -253,6 +257,7 @@ class EventDetailView(DetailView):
 class EventICSExportView(EventDetailView):
 
     content_type = 'text/calendar'
+    queryset = Event.objects.all()
     template_name = 'eventary/anonymous/published_event.ics'
 
 

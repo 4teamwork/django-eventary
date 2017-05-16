@@ -114,7 +114,6 @@ class EventHost(models.Model):
     name = models.CharField(max_length=50, verbose_name=_('host name'))
     info = models.CharField(
         blank=True,
-        help_text=_('todo: this info field requires a helptext'),
         max_length=50,
         null=True,
         verbose_name=_('info'),
@@ -159,7 +158,6 @@ class EventTimeDate(models.Model):
                                 null=True,
                                 verbose_name=_('end time'))
     comment = models.CharField(blank=True,
-                               help_text=_('comment'),
                                max_length=255,
                                null=True,
                                verbose_name=_('comment'))

@@ -1,0 +1,7 @@
+{% load i18n %}
+{% trans 'Hey!' %}
+
+{% blocktrans with event_title=event.title %}Your event {{ event_title }} has just been deleted.{% endblocktrans %}
+{% blocktrans with calendar_title=event.calendar.title %}One of our editors deleted it and it will not longer appear on the {{ calendar_title }}'s page.{% endblocktrans %}
+
+{% trans 'See you soon!' %}

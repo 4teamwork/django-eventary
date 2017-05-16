@@ -1,0 +1,13 @@
+{% extends 'eventary/email/base.html' %}
+
+{% load i18n %}
+
+{% block 'body' %}
+{% trans 'Hey!' %}<br>
+<br>
+{% blocktrans with event_title=event.title %}Your event {{ event_title }} has just been published.{% endblocktrans %}<br>
+{% blocktrans with calendar_title=event.calendar.title %}It now appears on the {{ calendar_title }}'s page.{% endblocktrans %}<br>
+{% trans 'Go and check it out!' %}<br>
+<br>
+{% trans 'See you soon!' %}
+{% endblock %}
