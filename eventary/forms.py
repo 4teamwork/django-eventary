@@ -174,7 +174,7 @@ class FilterForm(forms.Form):
             ) for grouping in _groupings
         }
 
-        self.filter_field_names = _fields.keys()
+        self.filter_field_names = sorted(_fields.keys())
 
         self.fields.update(_fields)
 
