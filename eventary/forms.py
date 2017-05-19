@@ -125,6 +125,7 @@ class FilterForm(forms.Form):
         required=False,
     )
     from_date = forms.DateField(
+        error_messages={'invalid': _('please enter a valid start date')},
         label=_('from'),
         required=False,
         widget=DateTimePicker(
@@ -132,6 +133,7 @@ class FilterForm(forms.Form):
                      "pickTime": False}),
     )
     to_date = forms.DateField(
+        error_messages={'invalid': _('please enter a valid end date')},
         label=_('to'),
         required=False,
         widget=DateTimePicker(
@@ -172,7 +174,7 @@ class FilterForm(forms.Form):
             ) for grouping in _groupings
         }
 
-        self.filter_field_names = _fields.keys()
+        self.filter_field_names = sorted(_fields.keys())
 
         self.fields.update(_fields)
 
@@ -271,7 +273,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = [
             'title', 'location', 'address', 'city', 'zip_code', 'image',
-            'document', 'homepage', 'description', 'entry_fee', 'comment'
+            'document', 'homepage', 'description', 'entry_fee',
         ]
 
     class Media:

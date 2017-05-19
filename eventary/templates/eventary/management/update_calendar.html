@@ -14,6 +14,13 @@
 {% comment %}Translators: Title{% endcomment %}
 <h1>{% blocktrans with calendar_title=calendar.title %}Update {{ calendar_title }}{% endblocktrans %}</h1>
 
+<a class="btn btn-xs btn-default back-to-calendar-details"
+   href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
+   {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
+   title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
+    <span class="glyphicon glyphicon-chevron-left">{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}</span>
+</a>
+
 <form method="post">
     {% csrf_token %}
     {{ form|as_bootstrap }}

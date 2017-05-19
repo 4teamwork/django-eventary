@@ -10,7 +10,7 @@ def _event_notification(receiver, event, verb):
         receiver = [receiver]
 
     # prepare the subject
-    subject = _('your event has been {verb}'.format(verb=verb))
+    subject = _('your event has been {verb}').format(verb=_(verb))
 
     # prepare the messages
     context = {

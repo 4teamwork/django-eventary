@@ -42,10 +42,8 @@ class EventDeleteView(EditorialOrManagementRequiredMixin, DeleteView):
     model = Event
     template_name = 'eventary/editorial/delete_event.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        response = super(EventDeleteView, self).dispatch(request,
-                                                         *args,
-                                                         **kwargs)
+    def post(self, request, *args, **kwargs):
+        response = super(EventDeleteView, self).post(request, *args, **kwargs)
         if self.object.host.notify:
             emails.notify_delete(self.object)
         return response

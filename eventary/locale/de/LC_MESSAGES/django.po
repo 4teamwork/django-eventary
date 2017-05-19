@@ -21,9 +21,6 @@ msgstr ""
 msgid "recurring event"
 msgstr "periodische Veranstaltung"
 
-msgid "your event has been {verb}"
-msgstr "periodische Veranstaltung"
-
 #: forms.py:45 forms.py:124 templates/eventary/editorial/list_proposals.html:26
 #: templates/eventary/editorial/publish_event_list.html:38
 #: templates/eventary/filter_form.html:6
@@ -34,13 +31,19 @@ msgstr "suchen"
 msgid "from"
 msgstr "von"
 
+msgid "please enter a valid start date"
+msgstr "Bitte ein gültiges Anfangsdatum eingeben"
+
+msgid "please enter a valid end date"
+msgstr "Bitte ein gültiges Enddatum eingeben"
+
 #: forms.py:57 forms.py:135
 msgid "to"
 msgstr "bis"
 
 #: forms.py:101 forms.py:189
 msgid "\"from date\" is greater than \"to date\""
-msgstr "\"von\" kann nicht nach \"bis\" liegen"
+msgstr "Bitte überprüfen Sie das Anfangs- und Enddatum"
 
 #: forms.py:221
 msgid "groupings"
@@ -182,10 +185,6 @@ msgstr "http://..."
 #: models/base.py:79 models/base.py:131
 msgid "homepage"
 msgstr "Homepage"
-
-#: models/base.py:80
-msgid "published"
-msgstr "Publiziert"
 
 #: models/base.py:83 templates/eventary/anonymous/published_event.html:13
 #: templates/eventary/components/event_details_as_table.html:8
@@ -498,7 +497,7 @@ msgstr "nähere Angaben"
 #: templates/eventary/editorial/publish_event_list.html:44
 #, python-format
 msgid "back to %(calendar_title)s"
-msgstr "zu %(calendar_title)s zurück gehen"
+msgstr "zurück zu %(calendar_title)s"
 
 #. Translators: Title (first header)
 #: templates/eventary/anonymous/proposed_event.html:30
@@ -519,6 +518,12 @@ msgid "Last anonymous call %(last_call)s."
 msgstr "Letzter anonymer Zugriff am %(last_call)s."
 
 #: templates/eventary/anonymous/published_event.html:14
+msgid "download event"
+msgstr "Kalendereintrag"
+
+msgid "download document"
+msgstr "Dokument herunterladen"
+
 msgid "download"
 msgstr "Downloads"
 
@@ -611,10 +616,8 @@ msgstr "bevorstehende Veranstaltungsvorschläge"
 
 #. Translators: No calendars found
 #: templates/eventary/editorial/list_calendars.html:12
-#, fuzzy
-#| msgid "calendars"
 msgid "no calendars found"
-msgstr "Kalender"
+msgstr "kein Kalender gefunden"
 
 #. Translators: Search button title
 #: templates/eventary/editorial/list_proposals.html:25
@@ -742,13 +745,13 @@ msgstr "Es erschein nun auf der Seite des %(calendar_title)s-Kalenders"
 #: templates/eventary/email/event_published.html:10
 #: templates/eventary/email/event_published.txt:6
 msgid "Go and check it out!"
-msgstr ""
+msgstr "Schau es Dir an!"
 
 #: templates/eventary/email/event_updated.html:8
 #: templates/eventary/email/event_updated.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been updated."
-msgstr ""
+msgstr "Die Veranstaltung %(event_title)s wurde soeben aktualisiert."
 
 #. Translators: Text to incite the user to propose a calendar
 #: templates/eventary/lists/calendars.html:10
@@ -885,17 +888,13 @@ msgstr "Liste"
 #. Translators: Pagination
 #. Translators: Title of the previous page link
 #: templates/eventary/wizard_buttons.html:6
-#, fuzzy
-#| msgid "previous"
 msgid "previous form"
-msgstr "zurück"
+msgstr "ein Formular zurück"
 
 #. Translators: Title of the next page link
 #: templates/eventary/wizard_buttons.html:10
-#, fuzzy
-#| msgid "next"
 msgid "next form"
-msgstr "weiter"
+msgstr "ein Formular weiter"
 
 #: templates/eventary/wizard_buttons.html:21
 #, python-format
@@ -923,3 +922,22 @@ msgstr "Keine Veranstaltungsvorschläge!"
 
 msgid "View %(proposal_title)s"
 msgstr "%(proposal_title)s ansehen"
+
+#: emails.py
+msgid "published"
+msgstr "publiziert"
+
+msgid "created"
+msgstr "eingereicht"
+
+msgid "deleted"
+msgstr "gelöscht"
+
+msgid "updated"
+msgstr "aktualisiert"
+
+msgid "hidden"
+msgstr "versteckt"
+
+msgid "your event has been {verb}"
+msgstr "die Veranstaltung wurde {verb}"
