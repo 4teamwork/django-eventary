@@ -504,7 +504,7 @@ msgstr "nähere Angaben"
 #: templates/eventary/editorial/publish_event_list.html:44
 #, python-format
 msgid "back to %(calendar_title)s"
-msgstr "zu %(calendar_title)s zurück gehen"
+msgstr "zurück zu %(calendar_title)s"
 
 #. Translators: Title (first header)
 #: templates/eventary/anonymous/proposed_event.html:30
