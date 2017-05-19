@@ -11,7 +11,8 @@
 {% comment %}Translators: Headers {% endcomment %}
 {% trans 'details' as h_details %}
 {% trans 'description' as h_description %}
-{% trans 'download' as download_event %}
+{% trans 'download event' as download_event %}
+{% trans 'download document' as download_document %}
 {% trans 'location' as h_location %}
 {% trans 'entry fee' as h_fee %}
 {% trans 'host' as h_host %}
@@ -27,8 +28,9 @@
     <span class="glyphicon glyphicon-chevron-left">{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}</span>
 </a>
 
-
+{% if not request.user.is_anonymous %}
 <div class="eventactions">{{ event|actions:request.user }}</div>
+{% endif %}
 
 <div class="row">
 <div class="eventcontentblock">
@@ -36,8 +38,23 @@
   {% generateimage 'eventary:eventpicture' source=event.image as image %}
   <img src="{{ image.url }}" title="{{ event.title }}" alt="{{ event.title }}" />
   {% endif %}
+  {% if event.description %}
   <h2>{{ h_description|capfirst }}</h2>
   {{ event.description|safe }}
+  {% endif %}
+  {% if event.document %}
+  <div>
+    <br>
+    <a class="eventdownload"
+       href="{{ event.document.url }}"
+       role="button"
+       target="_blank"
+       title="{{ download_document|capfirst }}">
+      <span class="glyphicon glyphicon-download">{{ download_document|capfirst }}</span>
+    </a>
+  </div>
+  {% endif %}
+
 </div><!-- this comment removes white space, which breaks percentage computations with display:inline-block
 --><div class="eventdetailsblock SimplelayoutPortlet">
   <div class="sl-layout">
@@ -55,7 +72,7 @@
 	   role="button"
 	   target="_blank"
 	   title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
-	  <span class="glyphicon glyphicon-download">{{ download_event|capfirst }}</span>
+	  <span class="glyphicon glyphicon-calendar-plus-o">{{ download_event|capfirst }}</span>
         </a>
       </div>
     </div>
@@ -73,8 +90,9 @@
     <div class="eventhostportlet sl-block">
       <h3>{{ h_host|capfirst }}</h3>
       <div>{{ event.host.name }}<br>{{ event.host.phone }}
-	{% if event.host.email %}<br><a href="mailto:{{ event.host.email }}" class="ellipsisoverflow" target="_blank">{{ event.host.email }}</a>{% endif %}
-	{% if event.host.homepage %}<br><a href="{{ event.host.homepage }}"  class="ellipsisoverflow" target="_blank">{{ event.host.homepage }}</a>{% endif %}
+	{% if event.host.email or event.host.homepage %}<br>{% endif %}
+	{% if event.host.email %}<a href="mailto:{{ event.host.email }}" class="ellipsisoverflow" target="_blank">{{ event.host.email }}</a>{% endif %}
+	{% if event.host.homepage %}<a href="{{ event.host.homepage }}"  class="ellipsisoverflow" target="_blank">{{ event.host.homepage }}</a>{% endif %}
       </div>
     </div>
   </div>

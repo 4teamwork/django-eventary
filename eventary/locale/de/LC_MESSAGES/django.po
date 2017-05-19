@@ -525,6 +525,12 @@ msgid "Last anonymous call %(last_call)s."
 msgstr "Letzter anonymer Zugriff am %(last_call)s."
 
 #: templates/eventary/anonymous/published_event.html:14
+msgid "download event"
+msgstr "Kalendereintrag"
+
+msgid "download document"
+msgstr "Dokument herunterladen"
+
 msgid "download"
 msgstr "Downloads"
 
