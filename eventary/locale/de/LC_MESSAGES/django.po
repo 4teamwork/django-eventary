@@ -34,13 +34,19 @@ msgstr "suchen"
 msgid "from"
 msgstr "von"
 
+msgid "please enter a valid start date"
+msgstr "Bitte ein gültiges Anfangsdatum eingeben"
+
+msgid "please enter a valid end date"
+msgstr "Bitte ein gültiges Enddatum eingeben"
+
 #: forms.py:57 forms.py:135
 msgid "to"
 msgstr "bis"
 
 #: forms.py:101 forms.py:189
 msgid "\"from date\" is greater than \"to date\""
-msgstr "\"von\" kann nicht nach \"bis\" liegen"
+msgstr "Bitte überprüfen Sie das Anfangs- und Enddatum"
 
 #: forms.py:221
 msgid "groupings"

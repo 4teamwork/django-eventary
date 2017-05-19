@@ -125,6 +125,7 @@ class FilterForm(forms.Form):
         required=False,
     )
     from_date = forms.DateField(
+        error_messages={'invalid': _('please enter a valid start date')},
         label=_('from'),
         required=False,
         widget=DateTimePicker(
@@ -132,6 +133,7 @@ class FilterForm(forms.Form):
                      "pickTime": False}),
     )
     to_date = forms.DateField(
+        error_messages={'invalid': _('please enter a valid end date')},
         label=_('to'),
         required=False,
         widget=DateTimePicker(
