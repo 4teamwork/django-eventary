@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from autoslug import AutoSlugField
 from recurrence.fields import RecurrenceField
 
+from ..validators import validate_file_extension, validate_image_extension
+
 
 __all__ = ('Calendar', 'Event', 'EventHost', 'EventRecurrence',
            'EventTimeDate', 'Group', 'Grouping', 'GroupingType',
@@ -55,12 +57,14 @@ class Event(models.Model):
                               max_length=255,
                               null=True,
                               upload_to=_get_upload_path,
+                              validators=[validate_image_extension],
                               verbose_name=_('image'))
     document = models.FileField(blank=True,
                                 help_text=_('accepted formats: pdf, jpg, png'),
                                 max_length=255,
                                 null=True,
                                 upload_to=_get_upload_path,
+                                validators=[validate_file_extension],
                                 verbose_name=_('document'))
     title = models.CharField(max_length=255, verbose_name=_('title'))
     location = models.CharField(help_text=_("ex. Wendy's"),

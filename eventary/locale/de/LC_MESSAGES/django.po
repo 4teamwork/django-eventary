@@ -923,6 +923,18 @@ msgstr "Keine Veranstaltungsvorschläge!"
 msgid "View %(proposal_title)s"
 msgstr "%(proposal_title)s ansehen"
 
+#: validators.py
+msgid "Unsupported image format."
+msgstr ""
+"Bitte ein gültiges Bild hochladen. "
+"Die hochgeladene Datei ist kein Bild oder ist defekt."
+
+msgid "Unsupported file extension."
+msgstr ""
+"Bitte ein Datei mit gültigem Format hochladen. "
+"Das Format der hochgeladenen Datei wird nicht "
+"unterstützt oder ist defekt."
+
 #: emails.py
 msgid "published"
 msgstr "publiziert"
