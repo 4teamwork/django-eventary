@@ -21,9 +21,6 @@ msgstr ""
 msgid "recurring event"
 msgstr "periodische Veranstaltung"
 
-msgid "your event has been {verb}"
-msgstr "periodische Veranstaltung"
-
 #: forms.py:45 forms.py:124 templates/eventary/editorial/list_proposals.html:26
 #: templates/eventary/editorial/publish_event_list.html:38
 #: templates/eventary/filter_form.html:6
@@ -188,10 +185,6 @@ msgstr "http://..."
 #: models/base.py:79 models/base.py:131
 msgid "homepage"
 msgstr "Homepage"
-
-#: models/base.py:80
-msgid "published"
-msgstr "Publiziert"
 
 #: models/base.py:83 templates/eventary/anonymous/published_event.html:13
 #: templates/eventary/components/event_details_as_table.html:8
@@ -623,10 +616,8 @@ msgstr "bevorstehende Veranstaltungsvorschläge"
 
 #. Translators: No calendars found
 #: templates/eventary/editorial/list_calendars.html:12
-#, fuzzy
-#| msgid "calendars"
 msgid "no calendars found"
-msgstr "Kalender"
+msgstr "kein Kalender gefunden"
 
 #. Translators: Search button title
 #: templates/eventary/editorial/list_proposals.html:25
@@ -897,17 +888,13 @@ msgstr "Liste"
 #. Translators: Pagination
 #. Translators: Title of the previous page link
 #: templates/eventary/wizard_buttons.html:6
-#, fuzzy
-#| msgid "previous"
 msgid "previous form"
-msgstr "zurück"
+msgstr "ein Formular zurück"
 
 #. Translators: Title of the next page link
 #: templates/eventary/wizard_buttons.html:10
-#, fuzzy
-#| msgid "next"
 msgid "next form"
-msgstr "weiter"
+msgstr "ein Formular weiter"
 
 #: templates/eventary/wizard_buttons.html:21
 #, python-format
