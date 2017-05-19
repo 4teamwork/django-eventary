@@ -742,13 +742,13 @@ msgstr "Es erschein nun auf der Seite des %(calendar_title)s-Kalenders"
 #: templates/eventary/email/event_published.html:10
 #: templates/eventary/email/event_published.txt:6
 msgid "Go and check it out!"
-msgstr ""
+msgstr "Schau es Dir an!"
 
 #: templates/eventary/email/event_updated.html:8
 #: templates/eventary/email/event_updated.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been updated."
-msgstr ""
+msgstr "Die Veranstaltung %(event_title)s wurde soeben aktualisiert."
 
 #. Translators: Text to incite the user to propose a calendar
 #: templates/eventary/lists/calendars.html:10
@@ -923,3 +923,22 @@ msgstr "Keine Veranstaltungsvorschläge!"
 
 msgid "View %(proposal_title)s"
 msgstr "%(proposal_title)s ansehen"
+
+#: emails.py
+msgid "published"
+msgstr "publiziert"
+
+msgid "created"
+msgstr "eingereicht"
+
+msgid "deleted"
+msgstr "gelöscht"
+
+msgid "updated"
+msgstr "aktualisiert"
+
+msgid "hidden"
+msgstr "versteckt"
+
+msgid "your event has been {verb}"
+msgstr "die Veranstaltung wurde {verb}"
