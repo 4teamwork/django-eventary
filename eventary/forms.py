@@ -273,7 +273,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = [
             'title', 'location', 'address', 'city', 'zip_code', 'image',
-            'document', 'homepage', 'description', 'entry_fee', 'comment'
+            'document', 'homepage', 'description', 'entry_fee',
         ]
 
     class Media:

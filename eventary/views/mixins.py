@@ -52,9 +52,10 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
         if 'search' in form_data and form_data.get('search'):
             object_list = object_list.annotate(
                 search=SearchVector('calendar__title',
-                                    'host__name', 'host__info',
+                                    'host__name',
                                     'title', 'location', 'address', 'city',
-                                    'zip_code', 'description')
+                                    'entry_fee', 'zip_code', 'description',
+                                    'group__title')
             ).filter(search=form_data.get('search'))
 
         # apply date filters

@@ -82,11 +82,6 @@ class Event(models.Model):
                                    null=True,
                                    verbose_name=_('description'))
     proposed = models.DateField(auto_now_add=True)
-    comment = models.CharField(blank=True,
-                               help_text=_('comment'),
-                               max_length=255,
-                               null=True,
-                               verbose_name=_('comment'))
     entry_fee = models.TextField(blank=True,
                                  null=True,
                                  verbose_name=_('entry fee'))
@@ -112,12 +107,6 @@ class EventHost(models.Model):
     #   username, password, email, first_name, last_name
     # For our purpose we need further fields
     name = models.CharField(max_length=50, verbose_name=_('host name'))
-    info = models.CharField(
-        blank=True,
-        max_length=50,
-        null=True,
-        verbose_name=_('info'),
-    )
     phone = models.CharField(
         max_length=20,
         help_text=_("this field is displayed in the events' details"),
@@ -157,10 +146,6 @@ class EventTimeDate(models.Model):
                                 help_text=_('end time'),
                                 null=True,
                                 verbose_name=_('end time'))
-    comment = models.CharField(blank=True,
-                               max_length=255,
-                               null=True,
-                               verbose_name=_('comment'))
 
     def __str__(self):
 
