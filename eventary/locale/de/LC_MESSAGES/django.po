@@ -522,7 +522,7 @@ msgid "download event"
 msgstr "Kalendereintrag"
 
 msgid "download document"
-msgstr "Dokument herunterladen"
+msgstr "weitere Informationen"
 
 msgid "download"
 msgstr "Downloads"
