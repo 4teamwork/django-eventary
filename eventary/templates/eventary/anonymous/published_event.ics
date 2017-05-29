@@ -11,6 +11,6 @@ DTEND:{{ object.eventtimedate.start_date|date:"omd" }}T{{ object.eventtimedate.e
 DTEND:{{ object.eventtimedate.end_date|date:"omd" }}T{{ object.eventtimedate.end_time|time:"Hi"|default:"2000"}}00{% endif %}{% endif %}
 SUMMARY:{{ object.title }}{% if object.location %}
 LOCATION:{{ object.location }}{% endif %}{% if object.description %}
-DESCRIPTION:{{ object.description }}{% endif %}
+DESCRIPTION:{{ object.description|striptags }}{% endif %}
 END:VEVENT
 END:VCALENDAR
