@@ -42,19 +42,6 @@ class CalendarDetailView(SingleObjectMixin,
         })
         return context
 
-    def get_form(self):
-        form_class = self.get_form_class()
-
-        if len(self.request.GET):
-            self.form = form_class(self.request.GET,
-                                   calendar=self.object,
-                                   prefix='filter')
-        else:
-            self.form = form_class(calendar=self.object,
-                                   initial=self.initial,
-                                   prefix='filter')
-        return self.form
-
 
 class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 

@@ -217,9 +217,27 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
     def get_form(self):
         form_class = self.get_form_class()
 
+        grouping_names = [
+            'filter-{title}'.format(title=grouping.title)
+            for grouping in self.object.grouping_set.all()
+        ]
+
         if len(self.request.GET):
-            self.form = form_class(self.request.GET, prefix='filter')
+            data = {
+                key: self.request.GET.get(key)
+                for key in self.request.GET
+                if '[]' not in key and key not in grouping_names
+            }
+            data.update({
+                key.replace('[]', ''): self.request.GET.getlist(key)
+                for key in self.request.GET
+                if '[]' in key or key in grouping_names
+            })
+            self.form = form_class(data,
+                                   calendar=self.object,
+                                   prefix='filter')
         else:
-            self.form = form_class(prefix='filter',
-                                   initial=self.initial)
+            self.form = form_class(calendar=self.object,
+                                   initial=self.initial,
+                                   prefix='filter')
         return self.form
