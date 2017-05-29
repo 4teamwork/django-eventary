@@ -168,9 +168,9 @@ class FilterForm(forms.Form):
         # Now that we have the choices, generate MultipleChoiceFields with them
         _fields = {
             grouping.title: forms.MultipleChoiceField(
+                choices=_choices[grouping],
                 required=False,
                 widget=Select2MultipleWidget,
-                choices=_choices[grouping]
             ) for grouping in _groupings
         }
 
