@@ -190,17 +190,19 @@ class FilterForm(forms.Form):
             raise forms.ValidationError(
                 _('"from date" is greater than "to date"')
             )
+
         return cleaned_data
 
     def groups(self):
         groups = []
         if self.is_valid():
-            # get all the primary keys of the groups
             data = self.clean()
-            for grouping in data:
-                if (data[grouping] is not None and
-                    isinstance(data[grouping], list)):
-                    groups.extend([int(pk) for pk in data[grouping]])
+            # get all the primary keys of the groups
+            for grouping in self.filter_field_names:
+                groups.extend([
+                    int(pk)
+                    for pk in data.get(grouping)
+                ])
         return groups
 
     def date_fields(self):
