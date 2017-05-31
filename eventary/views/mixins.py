@@ -151,7 +151,11 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
             event_pks = [
                 recurrence.event.pk
                 for recurrence in recurrences
-                if len(recurrence.recurrences.between(fdatetime, tdatetime))
+                if len(recurrence.recurrences.between(
+                    fdatetime,
+                    tdatetime,
+                    dtstart=fdatetime - timedelta(seconds=1)
+                ))
             ]
 
             return (Q(recurring=False) & (
@@ -179,7 +183,10 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
                 for recurrence in recurrences
                 if len(recurrence.recurrences.between(
                     _to_datetime(recurrence.event.eventtimedate.start_date),
-                    tdatetime
+                    tdatetime,
+                    dtstart=_to_datetime(
+                        recurrence.event.eventtimedate.start_date
+                    ) - timedelta(seconds=1)
                 ))
             ]
 
@@ -205,7 +212,10 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
             event_pk = [
                 recurrence.event.pk
                 for recurrence in recurrences
-                if recurrence.recurrences.after(fdatetime) is not None
+                if recurrence.recurrences.after(
+                    fdatetime,
+                    dtstart=fdatetime - timedelta(seconds=1)
+                ) is not None
             ]
 
             return (Q(recurring=False,
