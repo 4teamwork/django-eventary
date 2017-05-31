@@ -1,3 +1,5 @@
+import html
+
 from django import template
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -258,6 +260,11 @@ def pick(page, nr_picks=10):
 def to_rrule(recurrence):
     return ';'.join([str(rrule.to_dateutil_rrule()).split('\n')[-1]
                      for rrule in recurrence.recurrences.rrules])
+
+
+@register.filter(name='unescape')
+def unescape(text):
+    return html.unescape(text)
 
 
 #  Tags
