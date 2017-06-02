@@ -680,7 +680,7 @@ msgstr "Hallo!"
 #: templates/eventary/email/event_created.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been proposed."
-msgstr "Der Veranstaltungsvorschlag %(event_title)s wurde soeben eingereicht."
+msgstr "Deine Veranstaltung \"%(event_title)s\" wurde soeben eingereicht."
 
 #: templates/eventary/email/event_created.html:9
 #: templates/eventary/email/event_created.txt:5
@@ -693,8 +693,8 @@ msgid ""
 "It will appear on the %(calendar_title)s's page as soon as one of our "
 "editors publishes it."
 msgstr ""
-"Es wird auf der Seite des %(calendar_title)s-Kalenders erscheinen, sobald "
-"es von einem der zuständigen Redaktoren publiziert wurde."
+"Deine Veranstaltung wird auf der Seite \"%(calendar_title)s\" publiziert, "
+"sobald Sie von uns geprüft wurde."
 
 #: templates/eventary/email/event_created.html:11
 #: templates/eventary/email/event_created.txt:7
@@ -713,7 +713,7 @@ msgstr "Auf Wiedersehen!"
 #: templates/eventary/email/event_deleted.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been deleted."
-msgstr "Die Veranstaltung %(event_title)s wurde soeben entfernt."
+msgstr "Deine Veranstaltung \"%(event_title)s\" wurde entfernt."
 
 #: templates/eventary/email/event_deleted.html:9
 #: templates/eventary/email/event_deleted.txt:5
@@ -722,36 +722,36 @@ msgid ""
 "One of our editors deleted it and it will not longer appear on the "
 "%(calendar_title)s's page."
 msgstr ""
-"Ein zuständiger Redaktor hat die Veranstaltung entfernt, diese wird "
-"nicht weiter auf der Seite des %(calendar_title)s-Kalenders erscheinen."
+"Ein zuständiger Redaktor hat deine Veranstaltung entfernt, diese wird "
+"nicht weiter auf der Seite \"%(calendar_title)s\" erscheinen."
 
 #: templates/eventary/email/event_hidden.html:8
 #: templates/eventary/email/event_hidden.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been hidden."
-msgstr "Die Veranstaltung %(event_title)s wurde soeben versteckt."
+msgstr "Deine Veranstaltung \"%(event_title)s\" wurde versteckt."
 
 #: templates/eventary/email/event_published.html:8
 #: templates/eventary/email/event_published.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been published."
-msgstr "Die Veranstaltung %(event_title)s wurde soeben publiziert."
+msgstr "Deine Veranstaltung \"%(event_title)s\" wurde publiziert."
 
 #: templates/eventary/email/event_published.html:9
 #: templates/eventary/email/event_published.txt:5
 msgid "It now appears on the %(calendar_title)s's page."
-msgstr "Es erschein nun auf der Seite des %(calendar_title)s-Kalenders"
+msgstr "Diese erscheint nun auf der Seite \"%(calendar_title)s\""
 
 #: templates/eventary/email/event_published.html:10
 #: templates/eventary/email/event_published.txt:6
 msgid "Go and check it out!"
-msgstr "Schau es Dir an!"
+msgstr "Schau sie Dir an!"
 
 #: templates/eventary/email/event_updated.html:8
 #: templates/eventary/email/event_updated.txt:4
 #, python-format
 msgid "Your event %(event_title)s has just been updated."
-msgstr "Die Veranstaltung %(event_title)s wurde soeben aktualisiert."
+msgstr "Deine Veranstaltung \"%(event_title)s\" wurde aktualisiert."
 
 #. Translators: Text to incite the user to propose a calendar
 #: templates/eventary/lists/calendars.html:10
@@ -952,4 +952,4 @@ msgid "hidden"
 msgstr "versteckt"
 
 msgid "your event has been {verb}"
-msgstr "die Veranstaltung wurde {verb}"
+msgstr "deine Veranstaltung wurde {verb}"
