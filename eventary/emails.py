@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.template.defaultfilters import capfirst
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
@@ -10,7 +11,7 @@ def _event_notification(receiver, event, verb):
         receiver = [receiver]
 
     # prepare the subject
-    subject = _('your event has been {verb}').format(verb=_(verb))
+    subject = capfirst(_('your event has been {verb}').format(verb=_(verb)))
 
     # prepare the messages
     context = {
