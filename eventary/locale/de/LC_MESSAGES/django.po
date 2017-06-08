@@ -119,8 +119,7 @@ msgstr "Normalisierung"
 #: models/base.py:33
 msgid "limits the number of daily anonymous views for proposed events"
 msgstr ""
-"limitiert die number der täglichen Zugriffe für nicht publizierte "
-"Veranstaltungen"
+"Anzahl der täglichen Zugriffe für nicht publizierte Veranstaltungen"
 
 #: models/base.py:36
 msgid "view limit"
