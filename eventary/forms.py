@@ -193,17 +193,28 @@ class FilterForm(forms.Form):
 
         return cleaned_data
 
+    def grouped_groups(self):
+        _groups = {}
+        if self.is_valid():
+            data = self.clean()
+            _groups.update({
+                grouping: data.get(grouping)
+                for grouping in self.filter_field_names
+                if len(data.get(grouping))
+            })
+        return _groups
+
     def groups(self):
-        groups = []
+        _groups = []
         if self.is_valid():
             data = self.clean()
             # get all the primary keys of the groups
             for grouping in self.filter_field_names:
-                groups.extend([
+                _groups.extend([
                     int(pk)
                     for pk in data.get(grouping)
                 ])
-        return groups
+        return _groups
 
     def date_fields(self):
         return [field for field in self if field.name in ['from_date', 'to_date']]
