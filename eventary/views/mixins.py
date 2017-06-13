@@ -64,9 +64,9 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
         ))
 
         # filter the queryset by the selected groups
-        groups = form.groups()
-        if len(groups) > 0:
-            object_list = object_list.filter(group__in=groups)
+        grouped_groups = form.grouped_groups()
+        for grouplist in grouped_groups.values():
+            object_list = object_list.filter(group__in=grouplist)
 
         return object_list.distinct()
 
