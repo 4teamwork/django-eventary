@@ -1,4 +1,12 @@
 *.pyc
+__pycache__
 .coverage
 *.egg-info
+pip-selfcheck.json
+pyvenv.cfg
 dist/*
+
+bin
+include
+lib
+sample/db.sqlite3
