@@ -109,7 +109,6 @@ class Command(BaseCommand):
         host_data = event_data['organizer']
         host, created = EventHost.objects.get_or_create(
             name='DWS Google Calendar',
-            info='DWS Google Calendar',
             phone='DWS Google Calendar',
             email=host_data['email'],
             notify=False,
