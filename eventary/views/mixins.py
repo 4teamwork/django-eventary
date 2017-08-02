@@ -7,7 +7,7 @@ from django.views.generic.edit import FormMixin
 from django.views.generic.list import MultipleObjectMixin
 
 
-from ..forms import GenericFilterForm
+from ..forms import FilterForm
 from ..models import Event, EventRecurrence
 
 
@@ -30,7 +30,7 @@ class EditorialOrManagementRequiredMixin(PermissionRequiredMixin):
 
 class FilterFormMixin(MultipleObjectMixin, FormMixin):
 
-    form_class = GenericFilterForm
+    form_class = FilterForm
     paginate_by = 10
 
     def __init__(self, **kwargs):

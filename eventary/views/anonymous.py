@@ -24,7 +24,6 @@ class CalendarDetailView(SingleObjectMixin,
                          FilterFormMixin,
                          TemplateView):
 
-    form_class = FilterForm
     model = Calendar
     template_name = 'eventary/anonymous/calendar_details.html'
 
