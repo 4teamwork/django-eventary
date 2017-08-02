@@ -5,6 +5,31 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
 
+def notify_calendar_admins(receivers, event):
+
+    subject = _('A new event has been submitted')
+
+    context = {
+        'event': event,
+    }
+    txt_message = render_to_string(
+        'eventary/email/notify_calendar_admin.txt',
+        context,
+    )
+    html_message = render_to_string(
+        'eventary/email/notify_calendar_admin.html',
+        context,
+    )
+
+    send_mail(
+        subject,
+        txt_message,
+        settings.DEFAULT_FROM_EMAIL,
+        receivers,
+        html_message=html_message
+    )
+
+
 def _event_notification(receiver, event, verb):
 
     if type(receiver) is not list:

@@ -1,0 +1,7 @@
+{% load i18n %}
+{% trans 'Hey administrator!' %}
+
+{% blocktrans with event_title=event.title calendar_title=event.calendar.title %}A new event "{{ event_title }}" has been submitted to the calendar "{{ calendar_title }}".{% endblocktrans %}
+{% trans 'Please deal with it' %}
+
+{% trans 'See you soon!' %}
