@@ -28,6 +28,13 @@ msgid "search"
 msgstr "suchen"
 
 #: forms.py:49 forms.py:128 templatetags/eventary_tags.py:121
+
+msgid "filter time span amount"
+msgstr "Zeitspanne für Suchformular"
+
+msgid "filter time span unit"
+msgstr ""
+
 msgid "from"
 msgstr "von"
 

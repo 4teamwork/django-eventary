@@ -247,6 +247,10 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
                                    calendar=self.object,
                                    prefix='filter')
         else:
+            self.initial.update({
+                'to_date': (self.initial['from_date'] +
+                            self.object.filter_time_span),
+            })
             self.form = form_class(calendar=self.object,
                                    initial=self.initial,
                                    prefix='filter')

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django import forms
 from django.conf import settings
 from django.template.defaultfilters import capfirst
@@ -238,6 +240,18 @@ class CalendarForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
 
+    filter_time_span_amount = forms.IntegerField(
+        label=_('filter time span amount'),
+        required=True,
+        min_value=1
+    )
+    filter_time_span_unit = forms.ChoiceField(
+        choices=(('days', _('days')),
+                 ('weeks', _('weeks'))),
+        label=_('filter time span unit'),
+        required=True,
+    )
+
     def __init__(self, *args, **kwargs):
         super(CalendarForm, self).__init__(*args, **kwargs)
 
@@ -253,6 +267,13 @@ class CalendarForm(forms.ModelForm):
                 )
             ]
 
+            if not self.instance.filter_time_span.days % 7:
+                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days // 7
+                self.fields['filter_time_span_unit'].initial = 'weeks'
+            else:
+                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days
+                self.fields['filter_time_span_unit'].initial = 'days'
+
     def save(self, *args, **kwargs):
         super(CalendarForm, self).save(*args, **kwargs)
 
@@ -263,6 +284,11 @@ class CalendarForm(forms.ModelForm):
 
         for grouping in Grouping.objects.exclude(pk__in=groupings):
             grouping.calendars.remove(self.instance)
+
+        self.instance.filter_time_span = timedelta(**{
+            data.get('filter_time_span_unit'): data.get('filter_time_span_amount')
+        })
+        self.instance.save()
 
         return self.instance
 
