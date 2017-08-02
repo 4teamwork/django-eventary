@@ -1,6 +1,5 @@
 {% extends 'eventary/base.html' %}
 
-{% load bootstrap_tags %}
 {% load i18n %}
 
 {% block 'content' %}
@@ -22,8 +21,10 @@
 </a>
 
 <form method="post">
-    {% csrf_token %}
-    {{ form|as_bootstrap }}
+    <div>
+        {% csrf_token %}
+        {{ form }}
+    </div>
     <button type="submit"
             class="btn btn-primary"
             title="{{ btn_update_title|capfirst }}">
