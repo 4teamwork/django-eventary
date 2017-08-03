@@ -1,6 +1,8 @@
 import os
 import uuid
 
+from datetime import timedelta
+
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -30,6 +32,11 @@ class Calendar(models.Model):
     # are related enabling event discrimination by calendar
     title = models.CharField(max_length=255, verbose_name=_('title'))
     slug = AutoSlugField(populate_from='title', verbose_name=_('slug'))
+    filter_time_span = models.DurationField(
+        default=timedelta(days=7),
+        help_text=_('configure the default search form time span filter'),
+        verbose_name=_('default time span filter')
+    )
     view_limit = models.IntegerField(
         help_text=_(
             'limits the number of daily anonymous '

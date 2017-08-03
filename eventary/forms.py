@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django import forms
 from django.conf import settings
 from django.template.defaultfilters import capfirst
@@ -37,85 +39,6 @@ def _datetimepicker_format():
         format_string = format_string.replace(placeholder, replacement)
 
     return format_string
-
-
-class GenericFilterForm(forms.Form):
-
-    search = forms.CharField(
-        label=_('search'),
-        required=False,
-    )
-    from_date = forms.DateField(
-        label=_('from'),
-        required=False,
-        widget=DateTimePicker(options={
-            "format": settings.DATE_INPUT_FORMATS[0],
-            "pickTime": False
-        })
-    )
-    to_date = forms.DateField(
-        label=_('to'),
-        required=False,
-        widget=DateTimePicker(options={
-            "format": settings.DATE_INPUT_FORMATS[0],
-            "pickTime": False
-        })
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(GenericFilterForm, self).__init__(*args, **kwargs)
-
-        # group the groups by groupingstypes
-        _groupings = {}
-        for group in Group.objects.all():
-            # if the group was not added before, do it now
-            if group.grouping.grouping_type not in _groupings:
-                _groupings[group.grouping.grouping_type] = []
-            _groupings[group.grouping.grouping_type].append(group)
-
-        # generate choices using the sorted groupings
-        _choices = {
-            grouping: [
-                (group.pk, group.title) for group in _groupings[grouping]
-            ] for grouping in _groupings
-        }
-
-        # Now that we have the choices, generate MultipleChoiceFields with them
-        _fields = {
-            grouping.label: forms.MultipleChoiceField(
-                required=False,
-                widget=Select2MultipleWidget,
-                choices=_choices[grouping],
-            ) for grouping in _groupings
-        }
-
-        self.fields.update(_fields)
-
-    def clean(self):
-        cleaned_data = super(GenericFilterForm, self).clean()
-        from_date = cleaned_data.get('from_date')
-        to_date = cleaned_data.get('to_date')
-
-        if from_date and to_date and from_date > to_date:
-            raise forms.ValidationError(
-                _('"from date" is greater than "to date"')
-            )
-        return cleaned_data
-
-    def groups(self):
-        groups = []
-        if self.is_valid():
-            # get all the primary keys of the groups
-            data = self.clean()
-            for grouping in data:
-                if (data[grouping] is not None and
-                    isinstance(data[grouping], list)):
-                    groups.extend([int(pk) for pk in data[grouping]])
-        return groups
-
-    class Media:
-        css = {'all': ('eventary/css/filterform.css',)}
-        js = ('eventary/js/filterform.js',)
 
 
 class FilterForm(forms.Form):
@@ -238,6 +161,18 @@ class CalendarForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
 
+    filter_time_span_amount = forms.IntegerField(
+        label=_('filter time span amount'),
+        required=True,
+        min_value=1
+    )
+    filter_time_span_unit = forms.ChoiceField(
+        choices=(('days', _('days')),
+                 ('weeks', _('weeks'))),
+        label=_('filter time span unit'),
+        required=True,
+    )
+
     def __init__(self, *args, **kwargs):
         super(CalendarForm, self).__init__(*args, **kwargs)
 
@@ -253,6 +188,13 @@ class CalendarForm(forms.ModelForm):
                 )
             ]
 
+            if not self.instance.filter_time_span.days % 7:
+                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days // 7
+                self.fields['filter_time_span_unit'].initial = 'weeks'
+            else:
+                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days
+                self.fields['filter_time_span_unit'].initial = 'days'
+
     def save(self, *args, **kwargs):
         super(CalendarForm, self).save(*args, **kwargs)
 
@@ -263,6 +205,11 @@ class CalendarForm(forms.ModelForm):
 
         for grouping in Grouping.objects.exclude(pk__in=groupings):
             grouping.calendars.remove(self.instance)
+
+        self.instance.filter_time_span = timedelta(**{
+            data.get('filter_time_span_unit'): data.get('filter_time_span_amount')
+        })
+        self.instance.save()
 
         return self.instance
 
