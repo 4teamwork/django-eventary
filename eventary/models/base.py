@@ -44,6 +44,18 @@ class Calendar(models.Model):
         ),
         verbose_name=_('view limit')
     )
+    notify_on_submission = models.TextField(
+        default='',
+        blank=True,
+        help_text=_('email addresses to notify on new event submissions'),
+        verbose_name=_('notified via email')
+    )
+
+    @property
+    def notification_emails(self):
+        return filter(len, map(
+            lambda x: x.strip(),
+            self.notify_on_submission.split('\n')))
 
     def __str__(self):
         return self.title

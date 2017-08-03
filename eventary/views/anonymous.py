@@ -174,6 +174,10 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
         self.calendar = self.object
         self.event = event
         self.secret = secret
+
+        # notify admins
+        emails.notify_calendar_admins(self.calendar.notification_emails,
+                                      self.event)
         return redirect(self.get_success_url())
 
     def post(self, request, *args, **kwargs):

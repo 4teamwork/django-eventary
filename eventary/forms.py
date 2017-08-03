@@ -2,6 +2,8 @@ from datetime import timedelta
 
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.template.defaultfilters import capfirst
 from django.utils.translation import ugettext as _
 
@@ -140,10 +142,10 @@ class FilterForm(forms.Form):
         return _groups
 
     def date_fields(self):
-        return [field for field in self if field.name in ['from_date', 'to_date']]
+        return [field for field in self if field.name in ['from_date', 'to_date']]  # noqa
 
     def filter_fields(self):
-        return [field for field in self if field.name in self.filter_field_names]
+        return [field for field in self if field.name in self.filter_field_names]  # noqa
 
     def search_fields(self):
         return [field for field in self if field.name in ['search']]
@@ -189,11 +191,33 @@ class CalendarForm(forms.ModelForm):
             ]
 
             if not self.instance.filter_time_span.days % 7:
-                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days // 7
+                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days // 7  # noqa
                 self.fields['filter_time_span_unit'].initial = 'weeks'
             else:
-                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days
+                self.fields['filter_time_span_amount'].initial = self.instance.filter_time_span.days  # noqa
                 self.fields['filter_time_span_unit'].initial = 'days'
+
+    def clean(self):
+        data = super().clean()
+
+        invalid_emails = []
+        for email in filter(len, map(
+                lambda x: x.strip(),
+                data.get('notify_on_submission').split('\n'))):
+            email = email.strip()
+            if len(email):
+                try:
+                    validate_email(email)
+                except ValidationError:
+                    invalid_emails.append(email)
+
+        if len(invalid_emails):
+            raise ValidationError(
+                _('Invalid email addresses: %(invalid_emails)s'),
+                params={'invalid_emails': ', '.join(invalid_emails)},
+                code='invalid')
+
+        return data
 
     def save(self, *args, **kwargs):
         super(CalendarForm, self).save(*args, **kwargs)
@@ -207,7 +231,7 @@ class CalendarForm(forms.ModelForm):
             grouping.calendars.remove(self.instance)
 
         self.instance.filter_time_span = timedelta(**{
-            data.get('filter_time_span_unit'): data.get('filter_time_span_amount')
+            data.get('filter_time_span_unit'): data.get('filter_time_span_amount')  # noqa
         })
         self.instance.save()
 
@@ -215,7 +239,7 @@ class CalendarForm(forms.ModelForm):
 
     class Meta:
         model = Calendar
-        fields = ['title', 'view_limit']
+        fields = ['title', 'view_limit', 'notify_on_submission']
 
 
 class EventForm(forms.ModelForm):
@@ -254,7 +278,7 @@ class TimeDateForm(forms.Form):
         widget=DateTimePicker(
             attrs={
                 'non-recurrence-label': capfirst(_('start date')),
-                'recurrence-label': capfirst(_('date of the first recurrence')),
+                'recurrence-label': capfirst(_('date of the first recurrence')),  # noqa
             },
             options={'format': settings.DATE_INPUT_FORMATS[0],
                      'pickTime': False}
