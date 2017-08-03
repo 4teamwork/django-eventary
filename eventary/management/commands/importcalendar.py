@@ -1,7 +1,9 @@
+import os
 import requests
 
 from datetime import datetime, timedelta
 
+from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
 
 from ...models import Calendar, Event, EventHost, EventTimeDate
@@ -54,6 +56,15 @@ class Command(BaseCommand):
                             ),
                             nargs='?',
                             type=str)
+        parser.add_argument('--logo',
+                            default=os.path.join(
+                                os.path.dirname(os.path.realpath(__file__)),
+                                'default.png'),
+                            dest='logo',
+                            help='The image to display for imported events. '
+                                 'Default: default.png',
+                            nargs='?',
+                            type=str)
 
     def handle_calendar(self, gcal_id):
         request = requests.get(
@@ -68,20 +79,21 @@ class Command(BaseCommand):
             }
         )
         if request.status_code is 200:
-            json = request.json()
-            for event_data in json['items']:
-                # use iCalUID to check if the event was imported already
-                uid = event_data['iCalUID']
-                if not ImportedEvent.objects.filter(importuid=uid).exists():
-                    self.handle_event_data(event_data)
-                else:
-                    self.stdout.write(self.style.NOTICE(
-                        'Event "{event}" already imported'.format(
-                            event=event_data['summary'],
-                        )
-                    ))
-
-                
+            # the event's image is loaded here to prevent multiple loads
+            with open(self.options.get('logo'), 'rb') as image:
+                json = request.json()
+                for event_data in json['items']:
+                    # use iCalUID to check if the event was imported already
+                    uid = event_data['iCalUID']
+                    if not ImportedEvent.objects.filter(importuid=uid).exists():  # noqa
+                        event_data.update({'image': image})
+                        self.handle_event_data(event_data)
+                    else:
+                        self.stdout.write(self.style.NOTICE(
+                            'Event "{event}" already imported'.format(
+                                event=event_data['summary'],
+                            )
+                        ))
         else:
             raise CommandError(
                 'Import failed, request status code {status_code}'.format(
@@ -125,6 +137,9 @@ class Command(BaseCommand):
             description=event_data.get('description'),
             recurring='recurringEventId' in event_data,
         )
+
+        # set the image
+        event.image.save('logo.png', File(event_data['image']))
 
         # get or create the date and times
         kwargs = {}
