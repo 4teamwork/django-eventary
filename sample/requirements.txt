@@ -1,0 +1,31 @@
+certifi==2017.7.27.1
+chardet==3.0.4
+Django==1.11.4
+django-appconf==1.0.2
+django-autoslug==1.9.3
+django-bootstrap-themes==3.3.6
+django-compressor==2.1.1
+-e git+https://github.com/escodebar/django-datetimepicker@3f6b38d83bf52d3f48dca0ad843e4fdbf342a0f7#egg=django_datetimepicker
+-e ../
+django-forms-bootstrap==3.1.0
+django-formtools==2.0
+django-imagekit==4.0.1
+django-recurrence==1.4.1
+django-searchable-select==1.4.5
+Django-Select2==5.11.1
+django-trix==0.3.0
+idna==2.5
+olefile==0.44
+pilkit==2.0
+Pillow==4.2.1
+psycopg2==2.7.3
+pypandoc==1.4
+python-dateutil==2.6.1
+python-slugify==1.2.4
+pytz==2017.2
+rcssmin==1.0.6
+requests==2.18.3
+rjsmin==1.0.12
+six==1.10.0
+Unidecode==0.4.21
+urllib3==1.22

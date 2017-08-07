@@ -1,0 +1,175 @@
+[
+{
+    "model": "eventary.calendar",
+    "pk": 1,
+    "fields": {
+        "title": "Sportveranstaltungen",
+        "slug": "sportveranstaltungen",
+        "filter_time_span": "7 00:00:00",
+        "view_limit": 4,
+        "notify_on_submission": "notified@sportveranstaltung.en"
+    }
+},
+{
+    "model": "eventary.calendar",
+    "pk": 2,
+    "fields": {
+        "title": "Musikveranstaltungen",
+        "slug": "musikveranstaltungen",
+        "filter_time_span": "14 00:00:00",
+        "view_limit": 4,
+        "notify_on_submission": "notified@musikveranstaltung.en"
+    }
+},
+{
+    "model": "eventary.event",
+    "pk": 1,
+    "fields": {
+        "calendar": 1,
+        "host": 1,
+        "image": "sample/sample/fixture_files/sport_image.jpg",
+        "document": "sample/sample/fixture_files/sport_document.pdf",
+        "title": "Sportveranstaltung",
+        "location": "Veranstaltungsort",
+        "address": "Veranstaltungsadresse",
+        "city": "Veranstaltungsstadt",
+        "zip_code": "PLZ",
+        "homepage": "http://veranstaltungs.websei.te",
+        "published": false,
+        "description": "Beschreibung der Veranstaltung",
+        "proposed": "2017-08-07",
+        "entry_fee": "Veranstaltungskosten",
+        "recurring": false
+    }
+},
+{
+    "model": "eventary.event",
+    "pk": 2,
+    "fields": {
+        "calendar": 2,
+        "host": 2,
+        "image": "sample/sample/fixture_files/musik_image.jpg",
+        "document": "sample/sample/fixture_files/musik_document.pdf",
+        "title": "Musikveranstaltung",
+        "location": "Veranstaltungsort",
+        "address": "Veranstaltungsadresse",
+        "city": "Veranstaltungsstadt",
+        "zip_code": "PLZ",
+        "homepage": "http://veranstaltungs.websei.te",
+        "published": false,
+        "description": "Beschreibung der Veranstaltung",
+        "proposed": "2017-08-07",
+        "entry_fee": "Veranstaltungskosten",
+        "recurring": false
+    }
+},
+{
+    "model": "eventary.eventhost",
+    "pk": 1,
+    "fields": {
+        "name": "Sporthost",
+        "phone": "+41 TE LEP HO NE",
+        "email": "sp@rtho.st",
+        "homepage": "http://spo.rtho.st",
+        "notify": true
+    }
+},
+{
+    "model": "eventary.eventhost",
+    "pk": 2,
+    "fields": {
+        "name": "Musikhost",
+        "phone": "+41 TE LEP HO NE",
+        "email": "musik@ho.st",
+        "homepage": "http://musik.ho.st",
+        "notify": true
+    }
+},
+{
+    "model": "eventary.eventtimedate",
+    "pk": 1,
+    "fields": {
+        "event": 1,
+        "start_date": "2017-08-07",
+        "start_time": "14:20:00",
+        "end_date": "2017-08-14",
+        "end_time": "17:20:00"
+    }
+},
+{
+    "model": "eventary.eventtimedate",
+    "pk": 2,
+    "fields": {
+        "event": 2,
+        "start_date": "2017-08-07",
+        "start_time": "14:20:00",
+        "end_date": "2017-08-14",
+        "end_time": "17:20:00"
+    }
+},
+{
+    "model": "eventary.grouping",
+    "pk": 1,
+    "fields": {
+        "title": "Zielgruppe",
+        "grouping_type": 1,
+        "calendars": [
+            1, 2
+        ]
+    }
+},
+{
+    "model": "eventary.grouping",
+    "pk": 2,
+    "fields": {
+        "title": "Sportart",
+        "grouping_type": 2,
+        "calendars": [
+            1
+        ]
+    }
+},
+{
+    "model": "eventary.grouping",
+    "pk": 3,
+    "fields": {
+        "title": "Veranstaltungstyp",
+        "grouping_type": 3,
+        "calendars": [
+            1, 2
+        ]
+    }
+},
+{
+    "model": "eventary.grouping",
+    "pk": 4,
+    "fields": {
+        "title": "Musikart",
+        "grouping_type": 2,
+        "calendars": [
+            2
+        ]
+    }
+},
+{
+    "model": "eventary.groupingtype",
+    "pk": 1,
+    "fields": {
+        "label": "Wen"
+    }
+},
+{
+    "model": "eventary.groupingtype",
+    "pk": 2,
+    "fields": {
+        "label": "Was"
+    }
+},
+{
+    "model": "eventary.groupingtype",
+    "pk": 3,
+    "fields": {
+        "label": "Wie"
+    }
+}
+]
