@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eventary', '0013_add_validators'),
+        ('eventary', '0014_calendar_filter_time_span'),
     ]
 
     operations = [
