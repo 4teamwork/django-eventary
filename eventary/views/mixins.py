@@ -32,15 +32,10 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
 
     form_class = FilterForm
     paginate_by = 10
+    prefix = 'filter'
 
     def __init__(self, **kwargs):
         super(FilterFormMixin, self).__init__(**kwargs)
-
-        # initial date filter
-        self.initial = {
-            'from_date': datetime.today(),
-            'to_date': (datetime.today() + timedelta(weeks=1))
-        }
 
         self.event_list = Event.objects.filter(published=True).distinct()
         self.proposal_list = Event.objects.filter(published=False).distinct()
@@ -80,7 +75,7 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
             self.event_list = self.apply_filter(form, self.event_list)
             self.proposal_list = self.apply_filter(form, self.proposal_list)
         else:
-            date_filter = self.get_date_filter(self.initial)
+            date_filter = self.get_date_filter(self.get_initial())
             self.event_list = self.event_list.filter(date_filter)
             self.proposal_list = self.proposal_list.filter(date_filter)
 
@@ -225,14 +220,20 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
         return Q()
 
     def get_form(self):
-        form_class = self.get_form_class()
+        if getattr(self, 'form', None) is None:
+            self.form = super(FilterFormMixin, self).get_form()
+        return self.form
 
-        grouping_names = [
-            'filter-{title}'.format(title=grouping.title)
-            for grouping in self.object.grouping_set.all()
-        ]
 
+    def get_form_kwargs(self):
+        kwargs = super(FilterFormMixin, self).get_form_kwargs()
+        if getattr(self, 'object') is not None:
+            kwargs.update({'calendar': self.object})
         if len(self.request.GET):
+            grouping_names = [
+                'filter-{title}'.format(title=grouping.title)
+                for grouping in self.object.grouping_set.all()
+            ]
             data = {
                 key: self.request.GET.get(key)
                 for key in self.request.GET
@@ -243,15 +244,24 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
                 for key in self.request.GET
                 if '[]' in key or key in grouping_names
             })
-            self.form = form_class(data,
-                                   calendar=self.object,
-                                   prefix='filter')
-        else:
-            self.initial.update({
-                'to_date': (self.initial['from_date'] +
-                            self.object.filter_time_span),
-            })
-            self.form = form_class(calendar=self.object,
-                                   initial=self.initial,
-                                   prefix='filter')
-        return self.form
+            prefilled_fields = {fieldname: '{prefix}-{fieldname}'.format(
+                                    prefix=self.prefix,
+                                    fieldname=fieldname)
+                                for fieldname in ('from_date', 'to_date')}
+            for fieldname, prefixed_fieldname in prefilled_fields.items():
+                if prefixed_fieldname not in data:
+                    data[prefixed_fieldname] = self.get_initial().get(fieldname)
+
+            kwargs.update({'data': data})
+        return kwargs
+
+    def get_initial(self):
+        # initial date filter
+        td = timedelta(days=7)
+        if getattr(self, 'object') is not None:
+            td = self.object.filter_time_span
+        return {
+            'from_date': datetime.today().date(),
+            'to_date': (datetime.today() + td).date()
+        }
+
