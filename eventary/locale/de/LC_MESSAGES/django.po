@@ -150,11 +150,12 @@ msgstr "Ansichtsbegrenzung"
 
 #: models/base.py:43
 msgid "email addresses to notify on new event submissions"
-msgstr "bei neuen Veranstaltungen benachrichtigte E-Mail-Adressen"
+msgstr "Bei neuen Veranstaltungen benachrichtigte E-Mail-Adressen "
+"(eine E-Mail-Adresse pro Zeile)"
 
 #: models/base.py:44
 msgid "notified via email"
-msgstr "Via E-Mail benachrichtig"
+msgstr "E-Mail Benachrichtigung"
 
 #: models/base.py:62 models/base.py:211 templates/eventary/lists/events.html:9
 msgid "calendar"
