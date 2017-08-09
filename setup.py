@@ -4,6 +4,8 @@ from setuptools import find_packages, setup
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     README = readme.read()
 
+with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as file:
+    REQUIREMENTS = [line.strip() for line in file.readlines()]
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
@@ -35,25 +37,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
-    install_requires=[
-        'Django',
-        'django-appconf',
-        'django-autoslug',
-        'django-bootstrap-themes',
-        'django-datetimepicker',
-        'django_compressor',
-        'django-forms-bootstrap',
-        'django-formtools',
-        'django-imagekit',
-        'django-recurrence',
-        'django-searchable-select',
-        'Django-Select2',
-        'django-trix',
-        'olefile',
-        'Pillow',
-        'psycopg2',
-        'python-slugify',
-        'requests',
-        'Unidecode',
-    ],
+    install_requires=REQUIREMENTS,
 )

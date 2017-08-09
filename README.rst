@@ -28,3 +28,12 @@ Quick start
 4. ???
 
 5. Profit
+
+Testing
+-------
+
+- Clone the git repo.
+- Create a virtual env: `python3.6 -m venv venv`.
+- Activate the virtual env: `source venv/bin/activate`.
+- Install the testing requirements: `pip install -r requirements_test.txt`.
+- Run the test: `pytest`.
