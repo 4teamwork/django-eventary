@@ -37,3 +37,4 @@ Testing
 - Activate the virtual env: `source venv/bin/activate`.
 - Install the testing requirements: `pip install -r requirements_test.txt`.
 - Run the test: `pytest`.
+- Optionally generate the coverage report: `pytest --cov=eventary --cov-report=html`
