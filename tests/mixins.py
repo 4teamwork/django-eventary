@@ -5,8 +5,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
 
-from ..models import Calendar, Event, EventTimeDate, EventHost
-from ..models import EventRecurrence, Secret
+from eventary.models import Calendar, Event, EventTimeDate, EventHost
+from eventary.models import EventRecurrence, Secret
 
 
 class AccessTestMixin(TestCase):

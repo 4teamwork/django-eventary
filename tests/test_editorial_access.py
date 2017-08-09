@@ -4,8 +4,7 @@ from django.shortcuts import reverse
 from django.test import TestCase
 from django.urls.exceptions import NoReverseMatch
 
-from .. import urls
-
+from eventary import urls
 from .mixins import AccessTestMixin
 
 
@@ -23,7 +22,6 @@ class EditorialUserAccess(AccessTestMixin, TestCase):
 
         # the special cases need arguments
         self.redirection_special_cases = {
-            'management-delete_calendar': {'pk': self.calendar.pk},
             'management-update_calendar': {'pk': self.calendar.pk},
         }
         self.access_special_cases = {
@@ -42,7 +40,6 @@ class EditorialUserAccess(AccessTestMixin, TestCase):
                                      'pk': self.event_to_hide.pk,
                                      # redirection after publishing
                                      'status': 302},
-            'editorial-list_proposals': {'pk': self.calendar.pk},
             'editorial-publish_event': {'calendar_pk': self.calendar.pk,
                                         'pk': self.proposal.pk,
                                         # redirection after publishing

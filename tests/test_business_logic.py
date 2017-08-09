@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group, User
 from django.shortcuts import reverse
 from django.test import Client, TestCase
 
-from ..models import Calendar, Event
+from eventary.models import Calendar, Event
 
 
 class BusinessLogicTest(TestCase):

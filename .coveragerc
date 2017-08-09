@@ -2,7 +2,7 @@
 branch = True
 omit =
     eventary/migrations/*
-    eventary/tests/*
+    tests/*
 
 [html]
 directory = htmlcov

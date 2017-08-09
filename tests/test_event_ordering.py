@@ -1,9 +1,8 @@
+import recurrence
 from django.shortcuts import reverse
 from django.test import TestCase
 
 from .mixins import EventTestMixin
-
-import recurrence
 
 
 class EventOrderTest(EventTestMixin, TestCase):

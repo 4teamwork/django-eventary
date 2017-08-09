@@ -1,12 +1,9 @@
 import os
 
-from datetime import datetime, timedelta
-
-from django.conf import settings
 from django.shortcuts import reverse
 from django.test import Client, TestCase
 
-from ..models import Calendar
+from eventary.models import Calendar
 
 
 class EventCreation(TestCase):
