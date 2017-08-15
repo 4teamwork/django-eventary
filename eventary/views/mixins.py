@@ -37,8 +37,18 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
     def __init__(self, **kwargs):
         super(FilterFormMixin, self).__init__(**kwargs)
 
-        self.event_list = Event.objects.filter(published=True).distinct()
-        self.proposal_list = Event.objects.filter(published=False).distinct()
+        if hasattr(self, 'object'):
+            self.event_list = Event.objects.filter(
+                calendar=self.object,
+                published=True,
+            ).distinct()
+            self.proposal_list = Event.objects.filter(
+                calendar=self.object,
+                published=False,
+            ).distinct()
+        else:
+            self.event_list = Event.objects.filter(published=True).distinct()
+            self.proposal_list = Event.objects.filter(published=False).distinct()
 
     def apply_filter(self, form, object_list):
         form_data = form.clean()
