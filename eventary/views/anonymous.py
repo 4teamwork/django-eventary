@@ -32,6 +32,14 @@ class CalendarDetailView(SingleObjectMixin,
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Calendar.objects.all())
+        self.event_list = Event.objects.filter(
+                calendar=self.object,
+                published=True,
+        ).distinct()
+        self.proposal_list = Event.objects.filter(
+            calendar=self.object,
+            published=False,
+        ).distinct()
         return super(CalendarDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
