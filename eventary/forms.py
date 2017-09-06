@@ -239,7 +239,8 @@ class CalendarForm(forms.ModelForm):
 
     class Meta:
         model = Calendar
-        fields = ['title', 'view_limit', 'notify_on_submission']
+        fields = ['title', 'view_limit', 'notify_on_submission',
+                  'allow_anonymous_event_proposals']
 
 
 class EventForm(forms.ModelForm):

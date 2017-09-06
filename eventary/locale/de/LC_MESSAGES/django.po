@@ -157,7 +157,11 @@ msgstr "Bei neuen Veranstaltungen benachrichtigte E-Mail-Adressen "
 msgid "notified via email"
 msgstr "E-Mail Benachrichtigung"
 
-#: models/base.py:62 models/base.py:211 templates/eventary/lists/events.html:9
+#: models/base.py:55
+msgid "visitor is allowed to propose events"
+msgstr "Benutzer kann Veranstaltung melden"
+
+#: models/base.py:73 models/base.py:222 templates/eventary/lists/events.html:9
 msgid "calendar"
 msgstr "Kalender"
 

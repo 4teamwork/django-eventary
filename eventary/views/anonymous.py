@@ -4,6 +4,7 @@ from os.path import join
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import PermissionDenied
 from django.db.models import Case, IntegerField, Sum, When
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.translation import ugettext as _
@@ -63,6 +64,9 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if (not request.user.is_authenticated and
+                not self.object.allow_anonymous_event_proposals):
+            raise PermissionDenied
         return super(EventCreateWizardView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, form, **kwargs):
@@ -190,6 +194,9 @@ class EventCreateWizardView(SingleObjectMixin, SessionWizardView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if (not request.user.is_authenticated and
+                not self.object.allow_anonymous_event_proposals):
+            raise PermissionDenied()
 
         super_response = super(EventCreateWizardView, self).post(request,
                                                                  *args,
