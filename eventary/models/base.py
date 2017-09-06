@@ -50,6 +50,10 @@ class Calendar(models.Model):
         help_text=_('email addresses to notify on new event submissions'),
         verbose_name=_('notified via email')
     )
+    allow_anonymous_event_proposals = models.BooleanField(
+        default=False,
+        verbose_name=_('visitor is allowed to propose events')
+    )
 
     @property
     def notification_emails(self):
