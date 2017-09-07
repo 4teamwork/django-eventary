@@ -117,9 +117,18 @@ class Event(models.Model):
         help_text=_('is your event a recurring event?'),
         verbose_name=_('recurring')
     )
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "{0} @ {1} by {2}".format(self.title, self.location, self.host)
+
+    @property
+    def last_updated(self):
+        _max = max(self.updated, self.host.updated,
+                   self.eventtimedate.updated)
+        if self.recurring:
+            _max = max(_max, self.eventrecurrence.updated)
+        return _max
 
     def slug():
         def fget(self):
@@ -150,11 +159,13 @@ class EventHost(models.Model):
                     'published, hidden or updated?'),
         verbose_name=_('activate email notifications')
     )
+    updated = models.DateTimeField(auto_now=True)
 
 
 class EventRecurrence(models.Model):
     event = models.OneToOneField('Event', verbose_name=_('event'))
     recurrences = RecurrenceField()
+    updated = models.DateTimeField(auto_now=True)
 
 
 class EventTimeDate(models.Model):
@@ -173,6 +184,7 @@ class EventTimeDate(models.Model):
                                 help_text=_('end time'),
                                 null=True,
                                 verbose_name=_('end time'))
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
 
