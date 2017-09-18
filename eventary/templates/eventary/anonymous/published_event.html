@@ -5,6 +5,8 @@
 {% load imagekit %}
 {% load static %}
 
+{% block 'title' %}{{ event.calendar.title }} | {{ event.title }}{% endblock %}
+
 {% block 'content' %}
 
 {% comment %}Translators: Event detail page{% endcomment %}
