@@ -70,7 +70,7 @@ class Command(BaseCommand):
         request = requests.get(
             URL.format(gcal_id=gcal_id),
             params={
-                'key': 'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs',
+                'key': 'AIzaSyCoSXK_a-0V5Ow5UCmLuIdt9Xlyu26qHSY',
                 'singleEvents': True,
                 'timeZone': 'Europe/Zurich',
                 'maxResults': 250,
