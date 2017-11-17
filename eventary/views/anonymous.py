@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from datetime import datetime
 from os.path import join
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -242,6 +243,55 @@ class EventDetailView(DetailView):
     queryset = Event.objects.filter(published=True)
     template_name = 'eventary/anonymous/published_event.html'
 
+    def get_search_filter_querystring(self, request):
+        if 'HTTP_REFERER' not in request.META:
+            return ''
+
+        parse_result = urlparse(request.META.get('HTTP_REFERER'))
+        query_data = parse_qs(parse_result.query)
+
+        filter_fields = [obj.title for obj in self.object.calendar.grouping_set.all()]
+
+        form_data = {key.strip('[]'): key.strip('filter-').strip('[]') not in filter_fields and value[0] or value
+                     for key, value in query_data.items()}
+
+        form = FilterForm(
+            calendar=self.object.calendar,
+            data=form_data,
+            prefix='filter')
+
+        if not form.is_valid():
+            return ''
+
+        data = {key: value
+                for key, value in form.clean().items()
+                if bool(value)}
+
+        if not len(data):
+            return ''
+
+        date_format = settings.DATE_INPUT_FORMATS[0]
+
+        query_data = {
+            'filter-{key}'.format(key=key): value.strftime(date_format)
+            for key, value in data.items()
+            if hasattr(value, 'strftime')
+        }
+        query_data.update({
+            'filter-{key}'.format(key=key): value
+            for key, value in data.items()
+            if not hasattr(value, 'strftime')
+        })
+
+        query_data.update({
+            'filter-{key}'.format(key=key): value
+            for key, value in data.items()
+            if key in filter_fields
+        })
+
+        return '?{query_string}'.format(query_string=urlencode(query_data, True))
+
+
     def get_context_data(self, **kwargs):
         context = super(EventDetailView, self).get_context_data(**kwargs)
 
@@ -253,7 +303,8 @@ class EventDetailView(DetailView):
 
         context.update({
             'timedates': self.object.eventtimedate,
-            'groupings': groupings
+            'groupings': groupings,
+            'filter_querystring': self.get_search_filter_querystring(self.request),
         })
 
         return context
