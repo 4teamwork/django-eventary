@@ -156,7 +156,10 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
             return os.path.split(_f)[1][-15:]
 
         if image is not None:
-            self.object.image.save(_file_name(image.name), image, save=True)
+            if image is False:
+                self.object.image.delete()
+            else:
+                self.object.image.save(_file_name(image.name), image, save=True)
         if document is not None:
             self.object.document.save(_file_name(document.name),
                                       document,
