@@ -86,7 +86,9 @@ class FilterForm(forms.Form):
         # generate choices using the sorted groupings
         _choices = {
             grouping: [
-                (group.pk, group.title) for group in _groupings[grouping]
+                (group.pk, group.title)
+                for group in sorted(_groupings[grouping],
+                                    key=lambda g: g.title)
             ] for grouping in _groupings
         }
 
