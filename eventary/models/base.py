@@ -6,6 +6,7 @@ from datetime import timedelta
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils._os import safe_join
 
 from autoslug import AutoSlugField
 from recurrence.fields import RecurrenceField
@@ -19,7 +20,7 @@ __all__ = ('Calendar', 'Event', 'EventHost', 'EventRecurrence',
 
 
 def _get_upload_path(event, filename):
-    return os.path.join(
+    return safe_join(
         'calendar_{slug}'.format(slug=event.calendar.slug),
         'event_{slug}'.format(slug=event.slug),
         filename
