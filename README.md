@@ -1,6 +1,6 @@
 # Eventary
 
-Eventary is a simple Django inventary for events, ergo a calendar.
+Eventary is a simple Django inventory for events, ergo a calendar.
 
 ## Important
 
