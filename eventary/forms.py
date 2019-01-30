@@ -88,7 +88,7 @@ class FilterForm(forms.Form):
             grouping: [
                 (group.pk, group.title)
                 for group in sorted(_groupings[grouping],
-                                    key=lambda g: g.title)
+                                    key=lambda g: g.title.lower())
             ] for grouping in _groupings
         }
 
@@ -370,7 +370,8 @@ class EventGroupingForm(forms.Form):
             self._choices = {
                 grouping: [
                     (group.pk, group.title)
-                    for group in self._groupings[grouping]
+                    for group in sorted(self._groupings[grouping],
+                                        key=lambda g: g.title.lower())
                 ] for grouping in self._groupings
             }
 
