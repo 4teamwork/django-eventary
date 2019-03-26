@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from urllib.parse import unquote_plus
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.postgres.search import SearchVector
@@ -235,7 +236,7 @@ class FilterFormMixin(MultipleObjectMixin, FormMixin):
                 for grouping in self.object.grouping_set.all()
             ]
             data = {
-                key: self.request.GET.get(key)
+                key: unquote_plus(self.request.GET.get(key))
                 for key in self.request.GET
                 if '[]' not in key and key not in grouping_names
             }
