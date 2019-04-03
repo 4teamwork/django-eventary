@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import timedelta
 
 from django import forms
@@ -67,16 +68,22 @@ class FilterForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        """
+        Dynamically build the fields of the filter forms by the groups and groupings.
+        Django uses an ordered dict to store the form fields, in order to ensure the ordering
+        when rendering the form fields. We must do the same, otherwise the order of the
+        form fields may change when restarting the app.
+        """
         calendar = kwargs.pop('calendar', None)
         super(FilterForm, self).__init__(*args, **kwargs)
 
         # get the groups
         _groups = Group.objects.filter(
             grouping__calendars=calendar
-        ).order_by('grouping').distinct()
+        ).order_by('grouping__order').distinct()  # The ordering is important here.
 
         # group the groups by groupings
-        _groupings = {}
+        _groupings = OrderedDict()
         for group in _groups:
             # if the group was not added before, do it now
             if group.grouping not in _groupings:
@@ -93,13 +100,19 @@ class FilterForm(forms.Form):
         }
 
         # Now that we have the choices, generate MultipleChoiceFields with them
-        _fields = {
-            grouping.title: forms.MultipleChoiceField(
-                choices=_choices[grouping],
-                required=False,
-                widget=Select2MultipleWidget,
-            ) for grouping in _groupings
-        }
+        _fields = OrderedDict(
+            [
+                (
+                    grouping.title,
+                    forms.MultipleChoiceField(
+                        choices=_choices[grouping],
+                        required=False,
+                        widget=Select2MultipleWidget,
+                    )
+                )
+                for grouping in _groupings
+            ]
+        )
 
         self.filter_field_names = sorted(_fields.keys())
 

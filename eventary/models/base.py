@@ -235,6 +235,12 @@ class Grouping(models.Model):
                                        verbose_name=_('calendar'))
     grouping_type = models.ForeignKey('GroupingType',
                                       verbose_name=_('grouping type'))
+    order = models.IntegerField('Order',
+                                default=0,
+                                help_text="Used to order the filter form fields. Needs a restart of the application.")
+
+    class Meta:
+        ordering = ('order', 'id', )
 
     def __str__(self):
         return self.title
