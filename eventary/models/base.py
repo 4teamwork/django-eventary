@@ -137,6 +137,10 @@ class Event(models.Model):
         return locals()
     slug = property(**slug())
 
+    @property
+    def groups(self):
+        return self.group_set.all().order_by("grouping__order", "title")
+
 
 class EventHost(models.Model):
     # The host contains all the information about the host.
