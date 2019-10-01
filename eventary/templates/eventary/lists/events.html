@@ -50,7 +50,7 @@
         </div>
         <div class="eventdate">{{ event|dates }}</div>
     	<div class="eventgroups">
-        {% for group in event.group_set.all %}
+        {% for group in event.groups %}
         	{{ group.title }}{% if not forloop.last %},{% endif %}
         {% endfor %}
         	</div>
