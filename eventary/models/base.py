@@ -3,6 +3,7 @@ import uuid
 
 from datetime import timedelta
 
+from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -21,6 +22,7 @@ __all__ = ('Calendar', 'Event', 'EventHost', 'EventRecurrence',
 
 def _get_upload_path(event, filename):
     return safe_join(
+        settings.MEDIA_ROOT,
         'calendar_{slug}'.format(slug=event.calendar.slug),
         'event_{slug}'.format(slug=event.slug),
         filename
