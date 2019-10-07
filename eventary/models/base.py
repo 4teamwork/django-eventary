@@ -26,7 +26,7 @@ def _get_upload_path(event, filename):
         'calendar_{slug}'.format(slug=event.calendar.slug),
         'event_{slug}'.format(slug=event.slug),
         filename
-    )
+    ).replace(settings.MEDIA_ROOT, "")
 
 
 class Calendar(models.Model):
