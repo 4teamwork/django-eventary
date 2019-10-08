@@ -3,12 +3,10 @@ import uuid
 
 from datetime import timedelta
 
-from django.conf import settings
 from django.db import models
+from django.utils.text import get_valid_filename
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-from django.utils._os import safe_join
-
 from autoslug import AutoSlugField
 from recurrence.fields import RecurrenceField
 
@@ -21,12 +19,14 @@ __all__ = ('Calendar', 'Event', 'EventHost', 'EventRecurrence',
 
 
 def _get_upload_path(event, filename):
-    return safe_join(
-        settings.MEDIA_ROOT,
+    """
+    Copied from https://github.com/4teamwork/veranstaltungen_ai/blob/2db64d60bf5194ecddbe4a9d2b2229d0e20d43ea/eventary/models/helpers.py
+    """
+    return os.path.join(
         'calendar_{slug}'.format(slug=event.calendar.slug),
         'event_{slug}'.format(slug=event.slug),
-        filename
-    ).replace(settings.MEDIA_ROOT, "")
+        get_valid_filename(filename),
+    )
 
 
 class Calendar(models.Model):
