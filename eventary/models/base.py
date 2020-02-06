@@ -160,6 +160,12 @@ class EventHost(models.Model):
                                help_text=_('http://...'),
                                null=True,
                                verbose_name=_('homepage'))
+    homepage_label = models.CharField(
+        max_length=255,
+        verbose_name=_('Titel der Homepage'),
+        default="",
+        blank=True,
+    )
     notify = models.BooleanField(
         default=True,
         help_text=_('do you want to receive an email when your event has been '

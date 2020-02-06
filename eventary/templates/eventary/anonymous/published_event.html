@@ -94,7 +94,7 @@
       <div>{{ event.host.name }}<br>{{ event.host.phone }}
 	{% if event.host.email or event.host.homepage %}<br>{% endif %}
 	{% if event.host.email %}<a href="mailto:{{ event.host.email }}" class="ellipsisoverflow" target="_blank">{{ event.host.email }}</a>{% endif %}
-	{% if event.host.homepage %}<a href="{{ event.host.homepage }}"  class="ellipsisoverflow" target="_blank">{{ event.host.homepage }}</a>{% endif %}
+	{% if event.host.homepage %}<a href="{{ event.host.homepage }}"  class="ellipsisoverflow" target="_blank">{{ event.host.homepage_label|default:event.host.homepage }}</a>{% endif %}
       </div>
     </div>
   </div>
