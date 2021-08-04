@@ -161,9 +161,12 @@ class EventEditWizardView(EditorialOrManagementRequiredMixin,
             else:
                 self.object.image.save(_file_name(image.name), image, save=True)
         if document is not None:
-            self.object.document.save(_file_name(document.name),
-                                      document,
-                                      save=True)
+            if document is False:
+                self.object.document.delete()
+            else:
+                self.object.document.save(_file_name(document.name),
+                                          document,
+                                          save=True)
 
         # update the time and date
         data = form_dict['2'].clean()
