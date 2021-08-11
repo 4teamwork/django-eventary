@@ -17,7 +17,7 @@
    href="{% url 'eventary:anonymous-calendar_details' calendar.pk %}"
    {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
    title="{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
-    <span class="glyphicon glyphicon-chevron-left">{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}</span>
+    <i class="glyphicon glyphicon-chevron-left"></i>{% blocktrans with calendar_title=calendar.title %}back to {{ calendar_title }}{% endblocktrans %}
 </a>
 
 <form method="post">

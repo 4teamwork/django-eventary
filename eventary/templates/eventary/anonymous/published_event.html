@@ -27,7 +27,7 @@
    href="{% url 'eventary:anonymous-calendar_details' event.calendar.pk %}{% if filter_querystring %}{{ filter_querystring }}{% endif %}"
    {% comment %}Translators: Title of link back to calendar details page{% endcomment %}
    title="{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}">
-    <span class="glyphicon glyphicon-chevron-left">{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}</span>
+    <i class="glyphicon glyphicon-chevron-left" />{% blocktrans with calendar_title=event.calendar.title %}back to {{ calendar_title }}{% endblocktrans %}
 </a>
 
 {% if not request.user.is_anonymous %}
@@ -52,7 +52,7 @@
        role="button"
        target="_blank"
        title="{{ download_document|capfirst }}">
-      <span class="glyphicon glyphicon-download">{{ download_document|capfirst }}</span>
+      <i class="glyphicon glyphicon-download"></i>{{ download_document|capfirst }}
     </a>
   </div>
   {% endif %}
@@ -74,7 +74,7 @@
 	   role="button"
 	   target="_blank"
 	   title="{% blocktrans with event_title=event.title %}Download {{ event_title }}{% endblocktrans %}">
-	  <span class="glyphicon glyphicon-calendar-plus-o">{{ download_event|capfirst }}</span>
+	  <i class="glyphicon glyphicon-calendar-plus-o" />{{ download_event|capfirst }}
         </a>
       </div>
     </div>
